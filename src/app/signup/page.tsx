@@ -1,8 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const SignPage = () => {
+  const router = useRouter();
   const [schoolData, setSchoolData] = useState({
     schoolName: "",
     email: "",
@@ -21,7 +25,26 @@ const SignPage = () => {
     });
   };
 
-  const handleSignup = () => {};
+  const handleSignup = async () => {
+    const { schoolName, email, password } = schoolData;
+    if (schoolName.length > 0 && email.length > 0 && password.length > 0) {
+      try {
+        const postUser = await axios.post("/api/users/signup", schoolData);
+        console.log("postUser", postUser);
+        toast.success((postUser as any).data.message);
+        setSchoolData({
+          schoolName: "",
+          email: "",
+          password: "",
+        });
+        router.push("/login");
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    } else {
+      toast.error("Please fill required data");
+    }
+  };
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center">
@@ -31,7 +54,7 @@ const SignPage = () => {
         <div className="flex flex-col gap-2 my-4">
           <label htmlFor="schoolName">School Name:</label>
           <input
-            className="border shadow-md focus:outline-none focus:border-blue-700 shadow-zinc-200 py-2 px-3 rounded-lg"
+            className="border shadow-md focus:outline-none focus:border-blue-700 shadow-zinc-200 py-3 px-3 rounded-lg"
             placeholder="Please enter school name"
             name="schoolName"
             value={schoolData.schoolName}
@@ -41,7 +64,7 @@ const SignPage = () => {
         <div className="flex flex-col gap-2 my-4">
           <label htmlFor="email">Email:</label>
           <input
-            className="border shadow-md focus:outline-none focus:border-blue-700 shadow-zinc-200 py-2 px-3 rounded-lg"
+            className="border shadow-md focus:outline-none focus:border-blue-700 shadow-zinc-200 py-3 px-3 rounded-lg"
             placeholder="Please enter school email"
             name="email"
             value={schoolData.email}
@@ -51,7 +74,7 @@ const SignPage = () => {
         <div className="flex flex-col gap-2 my-4">
           <label htmlFor="password">Password:</label>
           <input
-            className="border shadow-md focus:outline-none focus:border-blue-700 shadow-zinc-200 py-2 px-3 rounded-lg"
+            className="border shadow-md focus:outline-none focus:border-blue-700 shadow-zinc-200 py-3 px-3 rounded-lg"
             placeholder="Please enter password"
             type="password"
             name="password"
@@ -60,7 +83,7 @@ const SignPage = () => {
           />
         </div>
         <button
-          onClick={handleSignup}
+          onClick={() => handleSignup()}
           className="w-full py-3 bg-blue-500 mt-4 rounded-lg text-white hover:bg-blue-600"
         >
           Sign Up
