@@ -8,7 +8,6 @@ databseConnect();
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
-    console.log("reqBody", reqBody);
     const { schoolName, email, password } = reqBody;
 
     // first find the user in data base if it exist
@@ -34,7 +33,6 @@ export async function POST(request: NextRequest) {
     });
 
     const savedUser = await newUser.save();
-    console.log(savedUser);
 
     return NextResponse.json(
       {
@@ -43,11 +41,11 @@ export async function POST(request: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    console.log(error.message);
     return NextResponse.json(
       {
-        error: error,
+        error: error.message,
       },
       { status: 500 }
     );

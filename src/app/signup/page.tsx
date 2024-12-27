@@ -30,7 +30,6 @@ const SignPage = () => {
     if (schoolName.length > 0 && email.length > 0 && password.length > 0) {
       try {
         const postUser = await axios.post("/api/users/signup", schoolData);
-        console.log("postUser", postUser);
         toast.success((postUser as any).data.message);
         setSchoolData({
           schoolName: "",

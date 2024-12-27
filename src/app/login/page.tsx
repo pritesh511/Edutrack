@@ -1,8 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
+  const router = useRouter();
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -20,7 +24,23 @@ const LoginPage = () => {
     });
   };
 
-  const handleLogin = () => {};
+  const handleLogin = async () => {
+    const { email, password } = loginData;
+    if (email.length > 0 && password.length > 0) {
+      try {
+        const response = await axios.post("/api/users/login", loginData);
+        toast.success(response.data.message);
+        router.push("/dashboard");
+      } catch (error: any) {
+        console.log(error);
+        if (error.status === 400) {
+          toast.error(error.response.data.message);
+        }
+      }
+    } else {
+      toast.error("Please fill required data");
+    }
+  };
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center">
