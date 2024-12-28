@@ -6,7 +6,7 @@ interface Props {
   };
 }
 
-const Student = (props: Props) => {
+const Student = (props: any) => {
   const { params } = props;
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center">
