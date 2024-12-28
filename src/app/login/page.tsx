@@ -50,7 +50,7 @@ const LoginPage = () => {
         <div className="flex flex-col gap-2 my-4">
           <label htmlFor="email">Email:</label>
           <input
-            className="border shadow-md focus:outline-none focus:border-blue-700 shadow-zinc-200 py-2 px-3 rounded-lg"
+            className="border shadow-md focus:outline-none focus:border-blue-700 shadow-zinc-200 py-3 px-3 rounded-lg"
             placeholder="Please enter school email"
             name="email"
             value={loginData.email}
@@ -60,7 +60,7 @@ const LoginPage = () => {
         <div className="flex flex-col gap-2 my-4">
           <label htmlFor="password">Password:</label>
           <input
-            className="border shadow-md focus:outline-none focus:border-blue-700 shadow-zinc-200 py-2 px-3 rounded-lg"
+            className="border shadow-md focus:outline-none focus:border-blue-700 shadow-zinc-200 py-3 px-3 rounded-lg"
             placeholder="Please enter password"
             type="password"
             name="password"
