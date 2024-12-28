@@ -3,6 +3,8 @@ import { NextResponse, NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const currentPath = request.nextUrl.pathname;
 
+  if(currentPath === "/") return;
+  
   const isPublicUrl = currentPath === "/login" || currentPath === "/signup";
 
   const token = request.cookies.get("token")?.value || "";
