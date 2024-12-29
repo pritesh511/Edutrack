@@ -1,27 +1,22 @@
 import Link from "next/link";
-import {
-  FaUserAlt,
-  FaEnvelope,
-  FaFacebook,
-  FaTwitter,
-  FaInstagram,
-} from "react-icons/fa";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { FaFacebook, FaTwitter, FaInstagram, FaSchool } from "react-icons/fa";
+import Image from "next/image";
 
 export default function Home() {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="bg-blue-600 text-white p-4 shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
+      <header className="bg-blue-700 text-white py-4 shadow-md">
+        <div className="container mx-auto flex justify-between items-center px-6">
           <div className="flex items-center space-x-4">
-            <img
-              src="https://play-lh.googleusercontent.com/INY4vfQNUb6DmvSAmEDqcZAJzYbDkPa9WORf0AdZMeJQDBXkPeQypC-25Cl1Rc1XLzA"
-              alt="School Logo"
-              className="h-10"
-            />
+            <FaSchool className="text-3xl" />
             <h1 className="text-2xl font-bold">EduTrack</h1>
           </div>
-          <nav className="flex flex-row items-center space-x-4">
+          <nav className="flex items-center space-x-4">
             <a href="#about" className="hover:underline">
               About Us
             </a>
@@ -32,17 +27,11 @@ export default function Home() {
               Contact Us
             </a>
             <div className="flex space-x-2">
-              <Link
-                href={"/login"}
-                className="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100"
-              >
-                Login
+              <Link href="/login">
+                <Button variant={"secondary"}>Login</Button>
               </Link>
-              <Link
-                href={"/signup"}
-                className="bg-blue-800 px-4 py-2 rounded hover:bg-blue-700"
-              >
-                Sign Up
+              <Link href="/signup">
+                <Button variant={"secondary"}>Sign Up</Button>
               </Link>
             </div>
           </nav>
@@ -50,140 +39,155 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gray-100 text-center py-20 relative">
-        <div className="container mx-auto relative">
+      <section className="bg-gray-50 py-20 text-center">
+        <div className="container mx-auto">
           <img
             src="https://aws.vedmarg.com/wp-content/uploads/2022/09/ved-blog-1.png"
             alt="School Management"
             className="mx-auto mb-8 max-w-md"
           />
-          <h2 className="text-4xl font-bold mb-4">
-            Welcome to Our School Management System
-          </h2>
+          <h2 className="text-4xl font-bold mb-4">Welcome to EduTrack</h2>
           <p className="text-lg text-gray-600 mb-8">
             Streamlining education with modern solutions.
           </p>
-          <button className="bg-blue-600 text-white px-6 py-3 rounded shadow hover:bg-blue-700">
-            Get Started
-          </button>
+          <Link href={"/signup"}>
+            <Button
+              size="lg"
+              className="bg-blue-700 hover:bg-blue-800 text-white"
+            >
+              Get Started
+            </Button>
+          </Link>
         </div>
       </section>
 
       {/* About Us Section */}
-      <section id="about" className="py-20 px-20 bg-white">
-        <div className="container mx-auto text-center">
+      <section id="about" className="py-20 bg-white">
+        <div className="container mx-auto text-center px-6">
           <h3 className="text-3xl font-bold mb-8">About Us</h3>
-          <div className="grid grid-cols-2 md:flex-row items-center gap-8">
-            <div className="rounded shadow-lg w-full h-full">
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOyj0X6r1LTNkwS_Y-JH5gJNPwJ7eUPBVW3A&s"
-                alt="About Us"
-                className="size-full"
-              />
-            </div>
-            <p className="text-lg text-gray-700 max-w-xl">
-              We are dedicated to providing top-notch educational management
-              solutions that empower schools and streamline administrative
-              processes.
-            </p>
-          </div>
+          <p className="text-lg text-gray-700">
+            We provide comprehensive educational management solutions that
+            simplify administrative processes and enhance learning outcomes.
+          </p>
         </div>
       </section>
 
       {/* Services Section */}
-      <section id="services" className="bg-gray-100 py-20">
-        <div className="container mx-auto">
-          <h3 className="text-3xl font-bold text-center mb-8">Our Services</h3>
+      <section id="services" className="py-20 bg-gray-100">
+        <div className="container mx-auto text-center px-6">
+          <h3 className="text-3xl font-bold mb-8">Our Services</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 shadow rounded text-center hover:shadow-lg transition">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/271/271229.png"
-                alt="Student Management"
-                className="mx-auto mb-4 w-20"
-              />
-              <h4 className="text-xl font-bold mb-4">Student Management</h4>
-              <p className="text-gray-600">
-                Keep track of student records, attendance, and performance
-                seamlessly.
-              </p>
-            </div>
-            <div className="bg-white p-6 shadow rounded text-center hover:shadow-lg transition">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/3176/3176361.png"
-                alt="Teacher Scheduling"
-                className="mx-auto mb-4 w-20"
-              />
-              <h4 className="text-xl font-bold mb-4">Teacher Scheduling</h4>
-              <p className="text-gray-600">
-                Easily schedule classes and manage teacher workloads
-                efficiently.
-              </p>
-            </div>
-            <div className="bg-white p-6 shadow rounded text-center hover:shadow-lg transition">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/906/906175.png"
-                alt="Parent Communication"
-                className="mx-auto mb-4 w-20"
-              />
-              <h4 className="text-xl font-bold mb-4">Parent Communication</h4>
-              <p className="text-gray-600">
-                Facilitate better communication between schools and parents.
-              </p>
-            </div>
+            {[
+              {
+                title: "Student Management",
+                description:
+                  "Manage student records, attendance, and performance.",
+                icon: "https://cdn-icons-png.flaticon.com/512/271/271229.png",
+              },
+              {
+                title: "Teacher Scheduling",
+                description:
+                  "Schedule classes and manage teacher workloads efficiently.",
+                icon: "https://cdn-icons-png.flaticon.com/512/3176/3176361.png",
+              },
+              {
+                title: "Parent Communication",
+                description:
+                  "Enhance communication between schools and parents.",
+                icon: "https://cdn-icons-png.flaticon.com/512/906/906175.png",
+              },
+            ].map((service, index) => (
+              <Card
+                key={index}
+                className="text-center shadow-md hover:shadow-lg transition"
+              >
+                <CardContent>
+                  <img
+                    src={service.icon}
+                    alt={service.title}
+                    className="mx-auto mb-4 w-20"
+                  />
+                  <h4 className="text-xl font-bold mb-2">{service.title}</h4>
+                  <p className="text-gray-600">{service.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 bg-blue-50">
+        <div className="container mx-auto text-center px-6">
+          <h3 className="text-3xl font-bold mb-8">What Our Users Say</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              "Streamlined our school processes!",
+              "Amazing features and support!",
+              "Highly recommended!",
+            ].map((testimonial, index) => (
+              <blockquote
+                key={index}
+                className="bg-white p-6 rounded shadow-md flex flex-col items-center"
+              >
+                <Image
+                  className="mb-4 rounded-md"
+                  src={"/assets/testimonial_avtar.jpg"}
+                  alt="Testimonial-image"
+                  width={80}
+                  height={80}
+                  objectFit="cover"
+                />
+                <p className="text-gray-600">“{testimonial}”</p>
+                <footer className="mt-4 text-sm text-gray-500">
+                  - Satisfied User
+                </footer>
+              </blockquote>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Contact Us Section */}
       <section id="contact" className="py-20">
-        <h3 className="text-3xl font-bold text-center mb-8">Contact Us</h3>
-        <div className="container mx-auto max-w-xl">
-          <form className="bg-white p-6 shadow rounded">
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2" htmlFor="name">
-                Name
-              </label>
-              <div className="flex items-center border border-gray-300 p-2 rounded">
-                <FaUserAlt className="text-gray-400 mr-2" />
-                <input
-                  type="text"
-                  id="name"
-                  className="w-full focus:outline-none"
-                />
-              </div>
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2" htmlFor="email">
-                Email
-              </label>
-              <div className="flex items-center border border-gray-300 p-2 rounded">
-                <FaEnvelope className="text-gray-400 mr-2" />
-                <input
-                  type="email"
-                  id="email"
-                  className="w-full focus:outline-none"
-                />
-              </div>
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2" htmlFor="message">
-                Message
-              </label>
-              <textarea
-                id="message"
-                rows={4}
-                className="w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-              ></textarea>
-            </div>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-              Send Message
-            </button>
-          </form>
+        <div className="container mx-auto px-6">
+          <Card className="max-w-xl mx-auto">
+            <CardHeader className="text-center">
+              <h3 className="text-3xl font-bold mb-4">Contact Us</h3>
+            </CardHeader>
+            <CardContent>
+              <form className="space-y-4">
+                <div>
+                  <Label htmlFor="name">Name</Label>
+                  <Input id="name" placeholder="Enter your name" />
+                </div>
+                <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input id="email" placeholder="Enter your email" />
+                </div>
+                <div>
+                  <Label htmlFor="message">Message</Label>
+                  <textarea
+                    id="message"
+                    rows={4}
+                    placeholder="Write your message here..."
+                    className="w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full bg-blue-700 hover:bg-blue-800 text-white"
+                >
+                  Send Message
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-blue-600 text-white text-center p-6">
+      <footer className="bg-blue-700 text-white text-center py-6">
         <div className="flex justify-center space-x-4 mb-4">
           <a href="#" className="hover:text-gray-300">
             <FaFacebook size={24} />
@@ -195,10 +199,7 @@ export default function Home() {
             <FaInstagram size={24} />
           </a>
         </div>
-        <p>
-          &copy; {new Date().getFullYear()} School Management System. All rights
-          reserved.
-        </p>
+        <p>&copy; {new Date().getFullYear()} EduTrack. All rights reserved.</p>
       </footer>
     </div>
   );

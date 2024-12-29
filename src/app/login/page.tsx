@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -21,7 +21,7 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
-  const [loading, setLoading] = useState(false);
+  const [isPending, setTransition] = useTransition();
 
   const handleChangeData = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -32,23 +32,44 @@ const LoginPage = () => {
     }));
   };
 
+  // Before useTransition hook
+
+  // const handleLogin = async () => {
+  //   const { email, password } = loginData;
+  //   if (email.length > 0 && password.length > 0) {
+  //     try {
+  //       setLoading(true);
+  //       const response = await axios.post("/api/users/login", loginData);
+  //       toast.success(response.data.message);
+  //       router.push("/dashboard");
+  //     } catch (error: any) {
+  //       if (error.response?.status === 400) {
+  //         toast.error(error.response.data.message);
+  //       } else {
+  //         toast.error("Something went wrong. Please try again.");
+  //       }
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   } else {
+  //     toast.error("Please fill in all required fields.");
+  //   }
+  // };
+
+  // After useTransition hook
+
   const handleLogin = async () => {
     const { email, password } = loginData;
     if (email.length > 0 && password.length > 0) {
-      try {
-        setLoading(true);
-        const response = await axios.post("/api/users/login", loginData);
-        toast.success(response.data.message);
-        router.push("/dashboard");
-      } catch (error: any) {
-        if (error.response?.status === 400) {
+      setTransition(async () => {
+        try {
+          const response = await axios.post("/api/users/login", loginData);
+          toast.success(response.data.message);
+          router.push("/dashboard");
+        } catch (error: any) {
           toast.error(error.response.data.message);
-        } else {
-          toast.error("Something went wrong. Please try again.");
         }
-      } finally {
-        setLoading(false);
-      }
+      });
     } else {
       toast.error("Please fill in all required fields.");
     }
@@ -90,9 +111,9 @@ const LoginPage = () => {
             size="lg"
             className="w-full"
             onClick={handleLogin}
-            disabled={loading}
+            disabled={isPending}
           >
-            {loading ? <CircularProgress /> : "Login"}
+            {isPending ? <CircularProgress /> : "Login"}
           </Button>
           <p className="text-sm text-gray-600">
             Don&apos;t have an account?
