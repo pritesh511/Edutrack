@@ -20,7 +20,9 @@ const StudentTabView = () => {
         <CardContent className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold">Students List</h2>
-            <Button onClick={() => setIsModalOpen(true)}>Add Student</Button>
+            <Button onClick={() => setIsModalOpen(true)} size={"lg"}>
+              Add Student
+            </Button>
           </div>
           <Table>
             <TableHeader>

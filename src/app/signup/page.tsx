@@ -4,6 +4,16 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import CircularProgress from "@/components/customComponents/CircularProgress";
 
 const SignPage = () => {
   const router = useRouter();
@@ -12,25 +22,24 @@ const SignPage = () => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleChangeData = (
-    event: React.ChangeEvent<{ name: string; value: string }>
-  ) => {
-    const name = event.target.name;
-    const value = event.target.value;
+  const handleChangeData = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
 
-    setSchoolData({
-      ...schoolData,
+    setSchoolData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
   const handleSignup = async () => {
     const { schoolName, email, password } = schoolData;
-    if (schoolName.length > 0 && email.length > 0 && password.length > 0) {
+    if (schoolName && email && password) {
       try {
+        setLoading(true);
         const postUser = await axios.post("/api/users/signup", schoolData);
-        toast.success((postUser as any).data.message);
+        toast.success(postUser.data.message);
         setSchoolData({
           schoolName: "",
           email: "",
@@ -38,64 +47,73 @@ const SignPage = () => {
         });
         router.push("/login");
       } catch (error: any) {
-        toast.error(error.message);
+        toast.error(error.response?.data?.message || "Something went wrong");
+      } finally {
+        setLoading(false);
       }
     } else {
-      toast.error("Please fill required data");
+      toast.error("Please fill in all required fields.");
     }
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center">
-      <h1 className="text-2xl mb-4 font-bold">Sign Up</h1>
-      <hr />
-      <div className="max-w-[500px] w-full p-4 border shadow-lg shadow-zinc-200 rounded-lg">
-        <div className="flex flex-col gap-2 my-4">
-          <label htmlFor="schoolName">School Name:</label>
-          <input
-            className="border shadow-md focus:outline-none focus:border-blue-700 shadow-zinc-200 py-3 px-3 rounded-lg"
-            placeholder="Please enter school name"
-            name="schoolName"
-            value={schoolData.schoolName}
-            onChange={(event) => handleChangeData(event)}
-          />
-        </div>
-        <div className="flex flex-col gap-2 my-4">
-          <label htmlFor="email">Email:</label>
-          <input
-            className="border shadow-md focus:outline-none focus:border-blue-700 shadow-zinc-200 py-3 px-3 rounded-lg"
-            placeholder="Please enter school email"
-            name="email"
-            value={schoolData.email}
-            onChange={(event) => handleChangeData(event)}
-          />
-        </div>
-        <div className="flex flex-col gap-2 my-4">
-          <label htmlFor="password">Password:</label>
-          <input
-            className="border shadow-md focus:outline-none focus:border-blue-700 shadow-zinc-200 py-3 px-3 rounded-lg"
-            placeholder="Please enter password"
-            type="password"
-            name="password"
-            value={schoolData.password}
-            onChange={(event) => handleChangeData(event)}
-          />
-        </div>
-        <button
-          onClick={() => handleSignup()}
-          className="w-full py-3 bg-blue-500 mt-4 rounded-lg text-white hover:bg-blue-600"
-        >
-          Sign Up
-        </button>
-      </div>
-      <div className="mt-3">
-        <p>
-          Please login if you already register
-          <Link href="/login" className="ml-2 text-blue-500 underline">
-            Login here
-          </Link>
-        </p>
-      </div>
+    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
+      <Card className="w-full max-w-md p-6 shadow-lg">
+        <CardHeader>
+          <h1 className="text-2xl font-bold text-center">Sign Up</h1>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-4">
+            <div>
+              <Label htmlFor="schoolName">School Name</Label>
+              <Input
+                id="schoolName"
+                name="schoolName"
+                placeholder="Enter your school name"
+                value={schoolData.schoolName}
+                onChange={handleChangeData}
+              />
+            </div>
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                value={schoolData.email}
+                onChange={handleChangeData}
+              />
+            </div>
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Enter your password"
+                value={schoolData.password}
+                onChange={handleChangeData}
+              />
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter className="flex flex-col items-center gap-4">
+          <Button
+            size="lg"
+            className="w-full"
+            onClick={handleSignup}
+            disabled={loading}
+          >
+            {loading ? <CircularProgress /> : "Sign Up"}
+          </Button>
+          <p className="text-sm text-gray-600">
+            Already have an account?
+            <Link href="/login" className="text-blue-600 underline ml-1">
+              Login here
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   );
 };

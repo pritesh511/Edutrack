@@ -27,14 +27,16 @@ const Sidebar = (props: Props) => {
       } md:translate-x-0 transition-transform duration-300 ease-in-out`}
     >
       <div className="p-6">
-        <h2 className="text-2xl font-bold text-gray-800">EduTrack</h2>
+        <h2 className="text-2xl font-bold text-gray-800 text-center">
+          EduTrack
+        </h2>
       </div>
-      <nav className="mt-6">
+      <nav className="mt-6 px-4">
         {tabs.map((tab) => (
           <div
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex flex-row items-center gap-3 px-6 py-3 hover:bg-blue-600 hover:text-white cursor-pointer transition-colors ${
+            className={`flex flex-row items-center gap-3 px-6 py-3 mb-2 rounded-[8px] hover:bg-blue-600 hover:text-white cursor-pointer transition-colors ${
               activeTab === tab.id ? "bg-blue-600 text-white" : ""
             }`}
           >

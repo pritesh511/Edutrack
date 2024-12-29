@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   FaUserAlt,
   FaEnvelope,
-  FaPhoneAlt,
   FaFacebook,
   FaTwitter,
   FaInstagram,
@@ -20,7 +19,7 @@ export default function Home() {
               alt="School Logo"
               className="h-10"
             />
-            <h1 className="text-2xl font-bold">Eskool</h1>
+            <h1 className="text-2xl font-bold">EduTrack</h1>
           </div>
           <nav className="flex flex-row items-center space-x-4">
             <a href="#about" className="hover:underline">
