@@ -5,7 +5,8 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
     const { email, name, message } = reqBody;
-    // Looking to send emails in production? Check out our Email API/SMTP product!
+
+    console.log(process.env.MAIL_TRAP_USERID)
     var transport = nodemailer.createTransport({
       host: "sandbox.smtp.mailtrap.io",
       port: 2525,
@@ -20,14 +21,17 @@ export async function POST(request: NextRequest) {
       to: "patelpritesh313@gmail.com",
       subject: "Contact Us",
       html: `<html>
-      <body>
-        <h3>${name}</> Try to contact to you regarding edutrack.
-        <p>${message}</p>
-      </body>
-        </html>`,
+                <body>
+                    <h3>${name}</> Try to contact to you regarding edutrack.
+                    <p>${message}</p>
+                </body>
+            </html>`,
     });
 
     const sendMsg = await transport.sendMail(info);
+    return NextResponse.json({
+        message: sendMsg,
+      });
     return sendMsg;
   } catch (error: any) {
     return NextResponse.json({

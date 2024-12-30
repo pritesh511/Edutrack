@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import AddStudentModal from "./AddStudentModal";
+import AddStudentModal from "../dialogs/AddStudentModal";
 
 const StudentTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

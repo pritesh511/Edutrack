@@ -2,6 +2,7 @@ import React from "react";
 import { FaTachometerAlt, FaRegCalendarCheck } from "react-icons/fa";
 import { IoPeople, IoBookSharp } from "react-icons/io5";
 import { BsPersonWorkspace, BsFileEarmarkTextFill } from "react-icons/bs";
+import { SiBookstack } from "react-icons/si";
 
 interface Props {
   setActiveTab: (value: string) => void;
@@ -14,6 +15,7 @@ const tabs = [
   { id: "students", icon: <IoPeople />, label: "Students" },
   { id: "teachers", icon: <BsPersonWorkspace />, label: "Teachers" },
   { id: "classes", icon: <IoBookSharp />, label: "Classes" },
+  { id: "subjects", icon: <SiBookstack />, label: "Subjects" },
   { id: "attendance", icon: <FaRegCalendarCheck />, label: "Attendance" },
   { id: "reports", icon: <BsFileEarmarkTextFill />, label: "Reports" },
 ];

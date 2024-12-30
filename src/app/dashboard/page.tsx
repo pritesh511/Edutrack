@@ -2,11 +2,12 @@
 import React, { useState } from "react";
 import Header from "@/components/dashboard/Header";
 import Sidebar from "@/components/dashboard/Sidebar";
-import StudentTabView from "@/components/dashboard/StudentTabView";
-import DashboardTabView from "@/components/dashboard/DashboardTabView";
+import StudentTabView from "@/components/dashboard/tabview/StudentTabView";
+import DashboardTabView from "@/components/dashboard/tabview/DashboardTabView";
+import SubjectTabView from "@/components/dashboard/tabview/SubjectTabView";
 
 const App = () => {
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState("subjects");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -25,6 +26,8 @@ const App = () => {
           {activeTab === "dashboard" && <DashboardTabView />}
 
           {activeTab === "students" && <StudentTabView />}
+
+          {activeTab === "subjects" && <SubjectTabView />}
         </main>
       </div>
     </div>

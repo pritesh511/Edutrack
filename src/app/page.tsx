@@ -110,7 +110,6 @@ export default function Home() {
                   alt="Testimonial-image"
                   width={80}
                   height={80}
-                  objectFit="cover"
                 />
                 <p className="text-gray-600">“{testimonial}”</p>
                 <footer className="mt-4 text-sm text-gray-500">

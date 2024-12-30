@@ -41,8 +41,10 @@ const Header = (props: Props) => {
   };
 
   useEffect(() => {
-    getCurrentUser();
-  });
+    if (!currentUser) {
+      getCurrentUser();
+    }
+  }, []);
 
   return (
     <header className="bg-white shadow-sm">
