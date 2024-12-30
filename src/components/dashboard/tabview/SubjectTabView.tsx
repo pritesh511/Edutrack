@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -16,6 +16,7 @@ const SubjectTabView = () => {
   const closeSubjectDialog = () => {
     setIsModalOpen(false);
   };
+
   return (
     <>
       <Card>
@@ -27,72 +28,43 @@ const SubjectTabView = () => {
             </Button>
           </div>
           <div className="flex flex-col gap-4">
-            <Card>
-              <CardContent className="p-6 flex flex-row items-center justify-between">
-                <div className="flex flex-row items-center">
-                  <Image
-                    src={"/assets/subject.jpg"}
-                    alt="Subject"
-                    width={80}
-                    height={80}
-                    className="rounded-lg"
-                  />
-                  <div className="ml-4">
-                    <h4 className="text-xl font-semibold">Maths</h4>
-                    <p>
-                      Math, or mathematics, is the study of numbers, shapes, and
-                      logic.
-                    </p>
-                  </div>
-                </div>
-                <Popover>
-                  <PopoverTrigger className="w-6 h-6">
-                    <IoMdMore className="size-full" />
-                  </PopoverTrigger>
-                  <PopoverContent className="max-w-32 px-0">
-                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                      Edit
-                    </p>
-                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                      Delete
-                    </p>
-                  </PopoverContent>
-                </Popover>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-6 flex flex-row items-center justify-between">
-                <div className="flex flex-row items-center">
-                  <Image
-                    src={"/assets/subject.jpg"}
-                    alt="Subject"
-                    width={80}
-                    height={80}
-                    className="rounded-lg"
-                  />
-                  <div className="ml-4">
-                    <h4 className="text-xl font-semibold">Maths</h4>
-                    <p>
-                      Math, or mathematics, is the study of numbers, shapes, and
-                      logic.
-                    </p>
-                  </div>
-                </div>
-                <Popover>
-                  <PopoverTrigger className="w-6 h-6">
-                    <IoMdMore className="size-full" />
-                  </PopoverTrigger>
-                  <PopoverContent className="max-w-32 px-0">
-                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                      Edit
-                    </p>
-                    <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                      Delete
-                    </p>
-                  </PopoverContent>
-                </Popover>
-              </CardContent>
-            </Card>
+            {[1, 2].map((item) => {
+              return (
+                <Card key={item}>
+                  <CardContent className="p-6 flex flex-row items-center justify-between">
+                    <div className="flex flex-row items-center">
+                      <Image
+                        src={"/assets/subject.jpg"}
+                        alt="Subject"
+                        width={80}
+                        height={80}
+                        className="rounded-lg"
+                      />
+                      <div className="ml-4">
+                        <h4 className="text-xl font-semibold">Maths</h4>
+                        <p>
+                          Math, or mathematics, is the study of numbers, shapes,
+                          and logic.
+                        </p>
+                      </div>
+                    </div>
+                    <Popover>
+                      <PopoverTrigger className="w-6 h-6">
+                        <IoMdMore className="size-full" />
+                      </PopoverTrigger>
+                      <PopoverContent className="max-w-32 px-0">
+                        <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                          Edit
+                        </p>
+                        <p className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                          Delete
+                        </p>
+                      </PopoverContent>
+                    </Popover>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </CardContent>
       </Card>

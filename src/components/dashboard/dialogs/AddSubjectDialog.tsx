@@ -22,7 +22,7 @@ const AddSubjectDialog = (props: Props) => {
         <DialogHeader>
           <DialogTitle>Add New Subject</DialogTitle>
         </DialogHeader>
-        <form className="space-y-4">
+        <div className="space-y-4">
           <Input placeholder="Subject Name" />
           <textarea
             id="description"
@@ -38,7 +38,7 @@ const AddSubjectDialog = (props: Props) => {
             </Button>
             <Button type="submit">Save</Button>
           </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

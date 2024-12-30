@@ -31,12 +31,17 @@ const ContactUs = () => {
   const [error, submitAction, isPending] = useActionState(
     async (_previousState: any, _formData: any) => {
       try {
-        const response = await axios.post(
-          "/api/users/contactUs",
-          contactusForm
-        );
-        if (response.data.message.accepted) {
-          setIsThankYouShow(true);
+        const { email, message, name } = contactusForm;
+        if (email && message && name) {
+          const response = await axios.post(
+            "/api/users/contactUs",
+            contactusForm
+          );
+          if (response.data.message.accepted) {
+            setIsThankYouShow(true);
+          }
+        } else {
+          toast.error("Please fill required data");
         }
       } catch (error: any) {
         toast.error(error.message);
