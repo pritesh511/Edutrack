@@ -1,9 +1,12 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { BsList } from "react-icons/bs";
 import { IoMdLogOut } from "react-icons/io";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface Props {
   setIsSidebarOpen: (value: boolean) => void;
@@ -12,6 +15,7 @@ interface Props {
 
 const Header = (props: Props) => {
   const router = useRouter();
+  const [currentUser, setCurrentUser] = useState("");
   const { setIsSidebarOpen, isSidebarOpen } = props;
 
   const handleLogout = async () => {
@@ -27,6 +31,19 @@ const Header = (props: Props) => {
     }
   };
 
+  const getCurrentUser = async () => {
+    try {
+      const response = await axios.get("/api/users/currentUser");
+      setCurrentUser(response.data.user.schoolName);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getCurrentUser();
+  });
+
   return (
     <header className="bg-white shadow-sm">
       <div className="flex items-center justify-between px-6 py-4">
@@ -40,14 +57,17 @@ const Header = (props: Props) => {
         <div className="flex flex-row items-center justify-between w-full">
           <div className="flex items-center space-x-4">
             <div className="relative">
-              <Button variant="ghost" className="flex items-center space-x-2">
-                <img
-                  src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff"
-                  alt="Profile"
-                  className="w-8 h-8 rounded-full"
-                />
-                <span className="text-gray-700">Admin</span>
-              </Button>
+              {currentUser && (
+                <div className="flex items-center space-x-2">
+                  <Avatar>
+                    <AvatarImage src="" />
+                    <AvatarFallback className="uppercase bg-blue-500 text-white">
+                      {currentUser[0] + currentUser[1]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-gray-700">{currentUser}</span>
+                </div>
+              )}
             </div>
           </div>
           <IoMdLogOut

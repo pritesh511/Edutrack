@@ -1,42 +1,16 @@
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { FaFacebook, FaTwitter, FaInstagram, FaSchool } from "react-icons/fa";
+import { Card, CardContent } from "@/components/ui/card";
+import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 import Image from "next/image";
+import LandingPageHeader from "@/components/landigPage/LandingPageHeader";
+import ContactUs from "@/components/landigPage/ContactUs";
 
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="bg-blue-700 text-white py-4 shadow-md">
-        <div className="container mx-auto flex justify-between items-center px-6">
-          <div className="flex items-center space-x-4">
-            <FaSchool className="text-3xl" />
-            <h1 className="text-2xl font-bold">EduTrack</h1>
-          </div>
-          <nav className="flex items-center space-x-4">
-            <a href="#about" className="hover:underline">
-              About Us
-            </a>
-            <a href="#services" className="hover:underline">
-              Services
-            </a>
-            <a href="#contact" className="hover:underline">
-              Contact Us
-            </a>
-            <div className="flex space-x-2">
-              <Link href="/login">
-                <Button variant={"secondary"}>Login</Button>
-              </Link>
-              <Link href="/signup">
-                <Button variant={"secondary"}>Sign Up</Button>
-              </Link>
-            </div>
-          </nav>
-        </div>
-      </header>
+      <LandingPageHeader />
 
       {/* Hero Section */}
       <section className="bg-gray-50 py-20 text-center">
@@ -149,42 +123,7 @@ export default function Home() {
       </section>
 
       {/* Contact Us Section */}
-      <section id="contact" className="py-20">
-        <div className="container mx-auto px-6">
-          <Card className="max-w-xl mx-auto">
-            <CardHeader className="text-center">
-              <h3 className="text-3xl font-bold mb-4">Contact Us</h3>
-            </CardHeader>
-            <CardContent>
-              <form className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Name</Label>
-                  <Input id="name" placeholder="Enter your name" />
-                </div>
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" placeholder="Enter your email" />
-                </div>
-                <div>
-                  <Label htmlFor="message">Message</Label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    placeholder="Write your message here..."
-                    className="w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full bg-blue-700 hover:bg-blue-800 text-white"
-                >
-                  Send Message
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+      <ContactUs />
 
       {/* Footer */}
       <footer className="bg-blue-700 text-white text-center py-6">

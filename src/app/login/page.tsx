@@ -13,7 +13,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import CircularProgress from "@/components/customComponents/CircularProgress";
+import CircularProgress from "@/components/common/CircularProgress";
 
 const LoginPage = () => {
   const router = useRouter();

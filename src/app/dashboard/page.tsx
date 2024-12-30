@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import Header from "@/components/customComponents/Header";
-import Sidebar from "@/components/customComponents/Sidebar";
-import StudentTabView from "@/components/customComponents/StudentTabView";
-import DashboardTabView from "@/components/customComponents/DashboardTabView";
+import Header from "@/components/dashboard/Header";
+import Sidebar from "@/components/dashboard/Sidebar";
+import StudentTabView from "@/components/dashboard/StudentTabView";
+import DashboardTabView from "@/components/dashboard/DashboardTabView";
 
 const App = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
