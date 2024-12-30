@@ -31,8 +31,7 @@ export async function POST(request: NextRequest) {
     const sendMsg = await transport.sendMail(info);
     return NextResponse.json({
         message: sendMsg,
-      });
-    return sendMsg;
+      }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({
       message: error.message,
