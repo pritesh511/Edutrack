@@ -2,7 +2,6 @@ import { NextResponse, NextRequest } from "next/server";
 import User from "@/models/user.model";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import { databseConnect } from "@/dbConfig/dbConfig";
-import { getImageUrl } from "@/helpers/imageServices";
 
 databseConnect();
 

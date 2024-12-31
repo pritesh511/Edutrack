@@ -4,7 +4,6 @@ import Link from "next/link";
 import { FaSchool } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import toast from "react-hot-toast";
 
 const LandingPageHeader = () => {
   const [currentUser, setCurrentUser] = useState("");
@@ -14,7 +13,7 @@ const LandingPageHeader = () => {
       const response = await axios.get("/api/users/currentUser");
       setCurrentUser(response.data.user.schoolName);
     } catch (error: any) {
-      toast.error(error.message);
+      console.log(error.message);
     }
   };
 

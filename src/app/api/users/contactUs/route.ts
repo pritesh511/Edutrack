@@ -6,7 +6,6 @@ export async function POST(request: NextRequest) {
     const reqBody = await request.json();
     const { email, name, message } = reqBody;
 
-    console.log(process.env.MAIL_TRAP_USERID)
     var transport = nodemailer.createTransport({
       host: "sandbox.smtp.mailtrap.io",
       port: 2525,

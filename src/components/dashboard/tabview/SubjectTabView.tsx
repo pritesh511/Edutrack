@@ -10,12 +10,27 @@ import {
 } from "@/components/ui/popover";
 import { IoMdMore } from "react-icons/io";
 import AddSubjectDialog from "../dialogs/AddSubjectDialog";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const SubjectTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const closeSubjectDialog = () => {
     setIsModalOpen(false);
   };
+
+  const getAllSubjects = async () => {
+    try {
+      const response = await axios.get("/api/dashboard/subject");
+      console.log("response", response);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  useEffect(() => {
+    getAllSubjects();
+  }, []);
 
   return (
     <>
