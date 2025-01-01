@@ -1,8 +1,8 @@
-import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, GetObjectCommand, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const newclient = new S3Client({
-  region: "eu-north-1",
+  region: process.env.REGION_NAME!,
   credentials: {
     accessKeyId: process.env.AWS_USER_ACCESSKEY!,
     secretAccessKey: process.env.AWS_USER_SECRETKEY!,
@@ -15,7 +15,7 @@ export const generateUrl = async (key: string) => {
       Bucket: process.env.BUCKET_NAME!,
       Key: key,
     });
-    const url = await getSignedUrl(newclient, command, { expiresIn: 3600 });
+    const url = await getSignedUrl(newclient, command);
     return url;
   } catch (error) {
     console.error("Error generating URL:", error);
@@ -39,6 +39,14 @@ export const uploadImageToS3 = async (fileBuffer: any, fileName: any, type: any)
     Key: fileName,
     Body: fileBuffer,
     ContentType: type
+  });
+  await newclient.send(command);
+};
+
+export const deleteImageFromS3 = async (fileName: any) => {
+  const command = new DeleteObjectCommand({
+    Bucket: process.env.BUCKET_NAME!,
+    Key: fileName,
   });
   await newclient.send(command);
 };

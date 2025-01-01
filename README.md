@@ -17,3 +17,4 @@
 - Chart.js
 - Axios
 - Nodemailer
+- AWS S3 - for image store
