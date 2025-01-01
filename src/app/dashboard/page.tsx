@@ -5,9 +5,11 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import StudentTabView from "@/components/dashboard/tabview/StudentTabView";
 import DashboardTabView from "@/components/dashboard/tabview/DashboardTabView";
 import SubjectTabView from "@/components/dashboard/tabview/SubjectTabView";
+import { ADMIN_EMAIL } from "@/utils/constant";
+import NotAccessTab from "@/components/dashboard/NotAccessTab";
 
 const App = () => {
-  const [activeTab, setActiveTab] = useState("subjects");
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -27,7 +29,14 @@ const App = () => {
 
           {activeTab === "students" && <StudentTabView />}
 
-          {activeTab === "subjects" && <SubjectTabView />}
+          {activeTab === "teachers" && <p>Working in progress</p>}
+
+          {activeTab === "subjects" &&
+            (ADMIN_EMAIL === process.env.ADMIN_EMAIL! ? (
+              <SubjectTabView />
+            ) : (
+              <NotAccessTab />
+            ))}
         </main>
       </div>
     </div>
