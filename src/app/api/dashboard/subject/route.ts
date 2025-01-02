@@ -6,11 +6,15 @@ import {
 } from "@/helpers/awsServices";
 import Subject from "@/models/subject.model";
 import { NextRequest, NextResponse } from "next/server";
+import { getDataFromToken } from "@/helpers/getDataFromToken";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // Fetch subjects and convert them to plain objects
-    const subjects = await Subject.find().lean();
+    // get id from token user
+    const userId = await getDataFromToken(request);
+
+    const subjects = await Subject.find({ user: userId }).lean();
+    
     const newsubjectList = await Promise.all(
       subjects.map(async (subject) => {
         const url = await getImageUrl(subject.image); // Get the signed URL
@@ -64,10 +68,14 @@ export async function POST(request: NextRequest) {
 
     await uploadImageToS3(buffer, s3Key, file.type);
 
+    // get id from token
+    const userId = await getDataFromToken(request);
+
     const subject = await Subject.create({
       subjectName,
       description,
       image: s3Key,
+      user: userId,
     });
 
     return NextResponse.json(
