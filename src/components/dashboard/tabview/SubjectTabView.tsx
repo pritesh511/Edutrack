@@ -16,6 +16,7 @@ import CircularProgress from "@/components/common/CircularProgress";
 import { renderOnConditionBase } from "@/helpers/helper";
 import NoDataFound from "@/components/common/NoDataFound";
 import Loader from "@/components/common/Loader";
+import axiosInstance from "@/helpers/axios/axiosInstance";
 
 const SubjectTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,11 +31,12 @@ const SubjectTabView = () => {
   const getAllSubjects = useCallback(async () => {
     try {
       setIsSubjectLoading(true);
-      const response = await axios.get("/api/dashboard/subject");
+      const response = await axiosInstance.get("/api/dashboard/subject");
       setSubjectList(response.data.subjects);
       setIsSubjectLoading(false);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Something went wrong");
+      setIsSubjectLoading(false);
+      toast.error(error.message);
     }
   }, []);
 

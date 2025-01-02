@@ -17,10 +17,10 @@ export async function GET(request: NextRequest) {
     
     const newsubjectList = await Promise.all(
       subjects.map(async (subject) => {
-        const url = await getImageUrl(subject.image); // Get the signed URL
+        const url = await getImageUrl(subject.image);
         return {
-          ...subject, // Spread the plain object properties
-          image: url, // Replace the image field with the signed URL
+          ...subject,
+          image: url,
         };
       })
     );
