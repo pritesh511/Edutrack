@@ -4,3 +4,10 @@ export interface Subject {
   subjectName: string;
   description: string;
 }
+
+
+export interface Standard {
+  _id: string;
+  standard: string;
+  description: string;
+}

@@ -3,10 +3,9 @@
 @tailwind utilities;
 
 body {
-  font-family: "Poppins", serif;
   font-optical-sizing: auto;
   font-style: normal;
-};
+}
 
 @layer base {
   :root {
@@ -62,4 +61,4 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-};
+}

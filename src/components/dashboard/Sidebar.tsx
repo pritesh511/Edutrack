@@ -14,7 +14,7 @@ const tabs = [
   { id: "dashboard", icon: <FaTachometerAlt />, label: "Dashboard" },
   { id: "students", icon: <IoPeople />, label: "Students" },
   { id: "teachers", icon: <BsPersonWorkspace />, label: "Teachers" },
-  { id: "classes", icon: <IoBookSharp />, label: "Classes" },
+  { id: "standards", icon: <IoBookSharp />, label: "Standards" },
   { id: "subjects", icon: <SiBookstack />, label: "Subjects" },
   { id: "attendance", icon: <FaRegCalendarCheck />, label: "Attendance" },
   { id: "reports", icon: <BsFileEarmarkTextFill />, label: "Reports" },

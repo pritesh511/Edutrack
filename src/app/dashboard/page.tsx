@@ -32,7 +32,7 @@ const App = () => {
 
           {activeTab === "teachers" && <p>Working in progress</p>}
 
-          {activeTab === "classes" && <ClassesTabView />}
+          {activeTab === "standards" && <ClassesTabView />}
 
           {activeTab === "subjects" &&
             (ADMIN_EMAIL === process.env.ADMIN_EMAIL! ? (

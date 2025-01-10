@@ -38,7 +38,7 @@ const SignPage = () => {
     if (schoolName && email && password) {
       try {
         setLoading(true);
-        const postUser = await axios.post("/api/users/signup", schoolData);
+        const postUser = await axios.post("/api/users", schoolData);
         toast.success(postUser.data.message);
         setSchoolData({
           schoolName: "",

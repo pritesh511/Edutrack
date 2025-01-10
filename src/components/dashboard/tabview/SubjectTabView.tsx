@@ -124,7 +124,6 @@ const SubjectTabView = () => {
                 )}
               </>
             )}
-            {isSubjectLoading && <CircularProgress />}
           </div>
         </CardContent>
       </Card>
