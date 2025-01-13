@@ -2,21 +2,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { IoMdMore } from "react-icons/io";
 import AddSubjectDialog from "../dialogs/AddSubjectDialog";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Subject } from "@/utils/types";
-import CircularProgress from "@/components/common/CircularProgress";
 import { renderOnConditionBase } from "@/helpers/helper";
 import NoDataFound from "@/components/common/NoDataFound";
 import Loader from "@/components/common/Loader";
 import axiosInstance from "@/helpers/axios/axiosInstance";
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 const SubjectTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -92,30 +87,23 @@ const SubjectTabView = () => {
                                 <p className="text-sm">{subject.description}</p>
                               </div>
                             </div>
-                            <Popover>
-                              <PopoverTrigger className="min-w-6 min-h-6">
-                                <IoMdMore className="size-full" />
-                              </PopoverTrigger>
-                              <PopoverContent className="max-w-32 px-0">
-                                <p
-                                  onClick={() => {
-                                    setIsEditSubject(subject);
-                                    setIsModalOpen(true);
-                                  }}
-                                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                >
-                                  Edit
-                                </p>
-                                <p
-                                  onClick={() =>
-                                    handleDeleteSubject(subject._id)
-                                  }
-                                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                >
-                                  Delete
-                                </p>
-                              </PopoverContent>
-                            </Popover>
+                            <div className="flex flex-row gap-2">
+                              <Button
+                                onClick={() => {
+                                  setIsEditSubject(subject);
+                                  setIsModalOpen(true);
+                                }}
+                                size={"icon"}
+                              >
+                                <FaEdit />
+                              </Button>
+                              <Button
+                                size={"icon"}
+                                onClick={() => handleDeleteSubject(subject._id)}
+                              >
+                                <MdDelete />
+                              </Button>
+                            </div>
                           </CardContent>
                         </Card>
                       );

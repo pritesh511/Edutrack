@@ -5,7 +5,6 @@ export interface Subject {
   description: string;
 }
 
-
 export interface Standard {
   _id: string;
   standard: string;

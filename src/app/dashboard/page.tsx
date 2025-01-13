@@ -8,6 +8,7 @@ import SubjectTabView from "@/components/dashboard/tabview/SubjectTabView";
 import { ADMIN_EMAIL } from "@/utils/constant";
 import NotAccessTab from "@/components/dashboard/NotAccessTab";
 import ClassesTabView from "@/components/dashboard/tabview/ClassesTabView";
+import TeacherTabView from "@/components/dashboard/tabview/TeacherTabView";
 
 const App = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -30,7 +31,7 @@ const App = () => {
 
           {activeTab === "students" && <StudentTabView />}
 
-          {activeTab === "teachers" && <p>Working in progress</p>}
+          {activeTab === "teachers" && <TeacherTabView />}
 
           {activeTab === "standards" && <ClassesTabView />}
 

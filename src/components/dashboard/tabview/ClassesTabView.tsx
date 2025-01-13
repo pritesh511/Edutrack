@@ -12,6 +12,7 @@ import {
 } from "@/redux/query/standard";
 import toast from "react-hot-toast";
 import { Standard } from "@/utils/types";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function ClassesTabView() {
   const [openModal, setOpenModal] = useState(false);
@@ -34,12 +35,14 @@ export default function ClassesTabView() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Standards</h1>
-        <Button onClick={() => setOpenModal(true)}>Add Standard</Button>
-      </div>
-      <div className="mx-auto bg-white shadow-md rounded-lg p-6">
+    <Card>
+      <CardContent className="p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">Standards</h1>
+          <Button onClick={() => setOpenModal(true)} size={"lg"}>
+            Add Standard
+          </Button>
+        </div>
         <div className="flex flex-col gap-4">
           {renderOnConditionBase(
             isLoading,
@@ -92,7 +95,7 @@ export default function ClassesTabView() {
           isModalOpen={openModal}
           isEditStandard={isEditStandard}
         />
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
