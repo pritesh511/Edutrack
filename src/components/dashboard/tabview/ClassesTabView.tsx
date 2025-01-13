@@ -1,58 +1,96 @@
-// pages/standards.js
 import { Button } from "@/components/ui/button";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import AddStandardDialog from "../dialogs/AddStandardDialog";
-import { Standard } from "@/utils/types";
-import axiosInstance from "@/helpers/axios/axiosInstance";
+import { renderOnConditionBase } from "@/helpers/helper";
+import Loader from "@/components/common/Loader";
+import NoDataFound from "@/components/common/NoDataFound";
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+import {
+  useDeleteStandardMutation,
+  useGetStandardQuery,
+} from "@/redux/query/standard";
 import toast from "react-hot-toast";
+import { Standard } from "@/utils/types";
 
 export default function ClassesTabView() {
   const [openModal, setOpenModal] = useState(false);
-  const [standards, setStandards] = useState<Standard[]>([]);
+  const [isEditStandard, setIsEditStandard] = useState<Standard | null>(null);
+  const { data, isLoading } = useGetStandardQuery("");
+  const [deleteStandard] = useDeleteStandardMutation();
 
-  const getAllStandards = useCallback(async () => {
+  const handleCloseModal = useCallback(() => {
+    setOpenModal(false);
+    setIsEditStandard(null);
+  }, []);
+
+  const handleClickStandard = async (id: string) => {
     try {
-      const response = await axiosInstance.get("/api/dashboard/standard");
-      setStandards(response.data.standards);
+      const { data } = await deleteStandard(id);
+      toast.success(data.message);
     } catch (error: any) {
-      console.log(error);
-      toast.error(error.message);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
-  }, []);
-
-  useEffect(() => {
-    getAllStandards();
-  }, []);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">Standards</h1>
+        <Button onClick={() => setOpenModal(true)}>Add Standard</Button>
+      </div>
       <div className="mx-auto bg-white shadow-md rounded-lg p-6">
-        {/* Header Section */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Standards</h1>
-          <Button onClick={() => setOpenModal(true)}>Add Standard</Button>
-        </div>
-
-        {/* Standards List */}
-        <div className="space-y-4">
-          {standards.map((std) => (
-            <div
-              key={std._id}
-              className="p-4 border rounded-lg shadow-sm hover:shadow-md transition duration-300"
-            >
-              <h2 className="text-lg font-semibold text-gray-800">
-                {std.standard}
-              </h2>
-              <p className="text-gray-600">{std.description}</p>
-            </div>
-          ))}
+        <div className="flex flex-col gap-4">
+          {renderOnConditionBase(
+            isLoading,
+            <Loader />,
+            <>
+              {renderOnConditionBase(
+                data?.standards.length == 0,
+                <NoDataFound />,
+                <>
+                  {data?.standards.map((std) => (
+                    <div
+                      key={std._id}
+                      className="p-4 border rounded-lg shadow-sm transition duration-300 flex flex-row items-center justify-between"
+                    >
+                      <div>
+                        <h2 className="text-lg font-semibold text-gray-800">
+                          {std.standard}
+                        </h2>
+                        <p className="text-gray-600 text-sm">
+                          {std.description}
+                        </p>
+                      </div>
+                      <div className="flex flex-row gap-2">
+                        <Button
+                          onClick={() => {
+                            setIsEditStandard(std);
+                            setOpenModal(true);
+                          }}
+                          size={"icon"}
+                        >
+                          <FaEdit />
+                        </Button>
+                        <Button
+                          size={"icon"}
+                          onClick={() => handleClickStandard(std._id)}
+                        >
+                          <MdDelete />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
+            </>
+          )}
         </div>
 
         <AddStandardDialog
-          closeModal={() => setOpenModal(false)}
+          closeModal={handleCloseModal}
           isModalOpen={openModal}
-          getAllStandards={getAllStandards}
-          isEditStandard={null}
+          isEditStandard={isEditStandard}
         />
       </div>
     </div>

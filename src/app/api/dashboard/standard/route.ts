@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 
     const { standard, description } = reqBody;
 
-    const findStd = await Standard.find({ standard });
+    const findStd = await Standard.findOne({ standard });
 
     if (findStd) {
       return NextResponse.json(
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       {
         message: error.message,
       },
-      { status: error.status }
+      { status: 500 }
     );
   }
 }
@@ -69,7 +69,68 @@ export async function GET(request: NextRequest) {
       {
         message: error.message,
       },
-      { status: error.status }
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const standardId = request?.nextUrl?.searchParams.get("standardId");
+    const findStandard = await Standard.findOne({ _id: standardId });
+    if (findStandard) {
+      await Standard.deleteOne({ _id: standardId });
+      return NextResponse.json(
+        {
+          message: "Standard deleted successfully",
+        },
+        { status: 200 }
+      );
+    }
+  } catch (error: any) {
+    console.log(error);
+    return NextResponse.json(
+      {
+        message: "Internal server error",
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const standardId = request?.nextUrl?.searchParams.get("standardId");
+    const reqBody = await request.json();
+    const { standard, description} = reqBody;
+    const findStandard = await Standard.findOne({ _id: standardId });
+
+    if (!findStandard) {
+      return NextResponse.json(
+        { message: "Standard not found" },
+        { status: 404 }
+      );
+    }
+
+    // Construct update object dynamically
+    const updateFields: Record<string, any> = {};
+    if (standard !== undefined) updateFields.standard = standard;
+    if (description !== undefined) updateFields.description = description;
+
+    // Update only the fields provided
+    await Standard.updateOne({ _id: standardId }, { $set: updateFields });
+
+    return NextResponse.json(
+      { message: "Standard updated successfully" },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.log(error.message);
+    return NextResponse.json(
+      {
+        message: "Internal server error",
+      },
+      { status: 500 }
     );
   }
 }
