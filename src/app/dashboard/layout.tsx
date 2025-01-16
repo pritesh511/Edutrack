@@ -4,15 +4,10 @@ import Sidebar from "@/components/dashboard/Sidebar";
 import React, { useState } from "react";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const [activeTab, setActiveTab] = useState("dashboard");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar
-        setActiveTab={setActiveTab}
-        isSidebarOpen={isSidebarOpen}
-        activeTab={activeTab}
-      />
+      <Sidebar isSidebarOpen={isSidebarOpen} />
       <div className="flex-1 overflow-hidden md:ml-64">
         <Header
           setIsSidebarOpen={setIsSidebarOpen}
