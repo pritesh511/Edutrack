@@ -1,4 +1,4 @@
-import { FaTachometerAlt, FaRegCalendarCheck } from "react-icons/fa";
+import { FaTachometerAlt } from "react-icons/fa";
 import { IoPeople, IoBookSharp } from "react-icons/io5";
 import { BsPersonWorkspace, BsFileEarmarkTextFill } from "react-icons/bs";
 import { SiBookstack } from "react-icons/si";
@@ -37,7 +37,7 @@ export const dashboardRoutes = [
     icon: SiBookstack,
     label: "Subjects",
     path: "/dashboard/subject",
-    isShow: true,
+    isShow: false,
   },
   {
     id: "attendance",
