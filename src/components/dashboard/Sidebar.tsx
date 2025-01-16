@@ -1,8 +1,11 @@
+"use client";
 import React from "react";
 import { FaTachometerAlt, FaRegCalendarCheck } from "react-icons/fa";
 import { IoPeople, IoBookSharp } from "react-icons/io5";
 import { BsPersonWorkspace, BsFileEarmarkTextFill } from "react-icons/bs";
 import { SiBookstack } from "react-icons/si";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface Props {
   setActiveTab: (value: string) => void;
@@ -11,17 +14,53 @@ interface Props {
 }
 
 const tabs = [
-  { id: "dashboard", icon: <FaTachometerAlt />, label: "Dashboard" },
-  { id: "students", icon: <IoPeople />, label: "Students" },
-  { id: "teachers", icon: <BsPersonWorkspace />, label: "Teachers" },
-  { id: "standards", icon: <IoBookSharp />, label: "Standards" },
-  { id: "subjects", icon: <SiBookstack />, label: "Subjects" },
-  { id: "attendance", icon: <FaRegCalendarCheck />, label: "Attendance" },
-  { id: "reports", icon: <BsFileEarmarkTextFill />, label: "Reports" },
+  {
+    id: "dashboard",
+    icon: <FaTachometerAlt />,
+    label: "Dashboard",
+    path: "/dashboard",
+  },
+  {
+    id: "students",
+    icon: <IoPeople />,
+    label: "Students",
+    path: "/dashboard/student",
+  },
+  {
+    id: "teachers",
+    icon: <BsPersonWorkspace />,
+    label: "Teachers",
+    path: "/dashboard/teacher",
+  },
+  {
+    id: "standards",
+    icon: <IoBookSharp />,
+    label: "Standards",
+    path: "/dashboard/standard",
+  },
+  {
+    id: "subjects",
+    icon: <SiBookstack />,
+    label: "Subjects",
+    path: "/dashboard/subject",
+  },
+  {
+    id: "attendance",
+    icon: <FaRegCalendarCheck />,
+    label: "Attendance",
+    path: "/dashboard/attendance",
+  },
+  {
+    id: "reports",
+    icon: <BsFileEarmarkTextFill />,
+    label: "Reports",
+    path: "/dashboard/report",
+  },
 ];
 
 const Sidebar = (props: Props) => {
-  const { setActiveTab, activeTab, isSidebarOpen } = props;
+  const { isSidebarOpen } = props;
+  const currentPath = usePathname();
   return (
     <aside
       className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform ${
@@ -35,16 +74,16 @@ const Sidebar = (props: Props) => {
       </div>
       <nav className="mt-6 px-4">
         {tabs.map((tab) => (
-          <div
+          <Link
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            href={tab.path}
             className={`flex flex-row items-center gap-3 px-6 py-3 mb-2 rounded-[8px] hover:bg-blue-600 hover:text-white cursor-pointer transition-colors ${
-              activeTab === tab.id ? "bg-blue-600 text-white" : ""
+              currentPath === tab.path ? "bg-blue-600 text-white" : ""
             }`}
           >
             {tab.icon}
             {tab.label}
-          </div>
+          </Link>
         ))}
       </nav>
     </aside>

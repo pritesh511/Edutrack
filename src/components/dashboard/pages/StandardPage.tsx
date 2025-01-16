@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import React, { useCallback, useState } from "react";
 import AddStandardDialog from "../dialogs/AddStandardDialog";

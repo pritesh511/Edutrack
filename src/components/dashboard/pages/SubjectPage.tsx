@@ -4,7 +4,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import AddSubjectDialog from "../dialogs/AddSubjectDialog";
 import toast from "react-hot-toast";
-import axios from "axios";
 import { Subject } from "@/utils/types";
 import { renderOnConditionBase } from "@/helpers/helper";
 import NoDataFound from "@/components/common/NoDataFound";

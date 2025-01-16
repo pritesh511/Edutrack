@@ -1,3 +1,4 @@
+"use client";
 import Loader from "@/components/common/Loader";
 import NoDataFound from "@/components/common/NoDataFound";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
