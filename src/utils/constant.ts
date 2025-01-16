@@ -1,6 +1,6 @@
 export const BASE_URL = "http://localhost:3000/api/";
 
-export const ADMIN_EMAIL = "gurukuledutracksystemadmincred@gmail.com";
+export const ADMIN_EMAIL = "gurukul@gmail.com";
 
 export const EDUCAtION_LIST = [
   {
