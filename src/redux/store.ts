@@ -1,11 +1,13 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import dashboardReducer from "./slices/dashboardSlice";
+import userReducer from "./slices/userSlice";
 import { standardApi } from "./query/standard";
 import { subjectApi } from "./query/subject";
 
 const rootReducer = combineReducers({
   dashboard: dashboardReducer,
+  user: userReducer,
   [standardApi.reducerPath]: standardApi.reducer,
   [subjectApi.reducerPath]: subjectApi.reducer,
 });

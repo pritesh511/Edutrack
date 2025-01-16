@@ -37,7 +37,7 @@ export const dashboardRoutes = [
     icon: SiBookstack,
     label: "Subjects",
     path: "/dashboard/subject",
-    isShow: false,
+    isShow: true,
   },
   {
     id: "attendance",
