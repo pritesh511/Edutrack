@@ -31,11 +31,10 @@ export async function POST(request: NextRequest) {
       user: userId,
     });
 
-    const savedStandard = await standardResp.save();
+    await standardResp.save();
 
     return NextResponse.json(
       {
-        savedStandard,
         message: "You have successfully add standard",
       },
       { status: 200 }
@@ -55,7 +54,9 @@ export async function GET(request: NextRequest) {
   try {
     const userId = await getDataFromToken(request);
 
-    const standards = await Standard.find({ user: userId });
+    const standards = await Standard.find({ user: userId }).select(
+      "-user -__v"
+    );
 
     const isdropdownTrue = request?.nextUrl?.searchParams.get("dropdown");
 

@@ -15,3 +15,12 @@ export interface DropdownOption {
   value: string;
   label: string;
 }
+
+export interface Teacher {
+  _id: string;
+  name: string;
+  experience: number;
+  educations: string[];
+  standards: Array<Standard>;
+  subjects: Array<Subject>;
+}

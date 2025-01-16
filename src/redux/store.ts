@@ -4,12 +4,14 @@ import dashboardReducer from "./slices/dashboardSlice";
 import userReducer from "./slices/userSlice";
 import { standardApi } from "./query/standard";
 import { subjectApi } from "./query/subject";
+import { teacherApi } from "./query/teacher";
 
 const rootReducer = combineReducers({
   dashboard: dashboardReducer,
   user: userReducer,
   [standardApi.reducerPath]: standardApi.reducer,
   [subjectApi.reducerPath]: subjectApi.reducer,
+  [teacherApi.reducerPath]: teacherApi.reducer,
 });
 
 const store = configureStore({
@@ -19,7 +21,8 @@ const store = configureStore({
       serializableCheck: false,
     })
       .concat(standardApi.middleware)
-      .concat(subjectApi.middleware),
+      .concat(subjectApi.middleware)
+      .concat(teacherApi.middleware),
 });
 
 setupListeners(store.dispatch);

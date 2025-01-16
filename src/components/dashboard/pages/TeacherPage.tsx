@@ -8,84 +8,139 @@ import { Card, CardContent } from "@/components/ui/card";
 import { renderOnConditionBase } from "@/helpers/helper";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { IoEye } from "react-icons/io5";
 import React, { useCallback, useState } from "react";
 import AddTeacherDialog from "../dialogs/AddTeacherDialog";
+import {
+  useDeleteTeacherMutation,
+  useGetTeachersQuery,
+} from "@/redux/query/teacher";
+import toast from "react-hot-toast";
 
 const TeacherTabView = () => {
   const [openModal, setOpenModal] = useState(false);
+  const { data, isLoading } = useGetTeachersQuery("");
+  const [deleteTeacher] = useDeleteTeacherMutation();
 
   const handleCloseModal = useCallback(() => {
     setOpenModal(false);
   }, []);
 
+  const handleDeleteTeacher = async (id: string) => {
+    try {
+      const { data, error } = await deleteTeacher(id);
+      if (error) {
+        toast.error((error as any)?.data.message);
+      } else {
+        toast.success(data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
   return (
     <Card>
-      <CardContent className="p-6">
-        <div className="flex justify-between items-center mb-6">
+      <CardContent className="p-6 space-y-6">
+        <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-800">Teachers</h1>
-          <Button size={"lg"} onClick={() => setOpenModal(true)}>
+          <Button size="lg" onClick={() => setOpenModal(true)}>
             Add Teacher
           </Button>
         </div>
-        <div className="flex flex-col gap-4">
+
+        <div>
           {renderOnConditionBase(
-            false,
+            isLoading,
             <Loader />,
             <>
               {renderOnConditionBase(
-                false,
+                data?.teachers.length === 0,
                 <NoDataFound />,
-                <Card>
-                  <CardContent className="p-6 flex flex-row items-center justify-between">
-                    <div className="flex flex-row items-center">
-                      <Avatar className="h-[80px] w-[80px] rounded-md">
-                        <AvatarImage
-                          src="https://github.com/shadcn.png"
-                          alt="@shadcn"
-                        />
-                        <AvatarFallback>CN</AvatarFallback>
-                      </Avatar>
-                      <div className="ml-4 flex flex-col gap-2">
-                        <h4 className="text-xl font-semibold">
-                          Pritesh Makasana
-                        </h4>
-                        <ul className="flex flex-row gap-4">
-                          <li className="flex flex-row gap-2 items-center">
-                            <h5 className="font-semibold">Graduation:</h5>
-                            <div className="flex flex-row gap-2">
-                              <Badge variant={"outline"}>M.COM</Badge>
-                              <Badge variant={"outline"}>B.ED</Badge>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {data?.teachers.map((teacher) => (
+                    <Card key={teacher._id} className="shadow-md rounded-lg">
+                      <CardContent className="p-6 space-y-4">
+                        <div className="flex flex-col items-center">
+                          <Avatar className="h-[100px] w-[100px] rounded-full">
+                            <AvatarImage
+                              src="https://github.com/shadcn.png"
+                              alt={teacher.name}
+                            />
+                            <AvatarFallback>
+                              {teacher.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")
+                                .toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <h4 className="mt-4 text-lg font-semibold text-gray-800">
+                            {teacher.name}
+                          </h4>
+                        </div>
+                        <div className="space-y-2">
+                          <div>
+                            <h5 className="font-medium text-gray-600">
+                              Total Experience:
+                            </h5>
+                            <p className="text-gray-800 mt-1">
+                              {teacher.experience} Year
+                              {teacher.experience > 1 ? "s" : ""}
+                            </p>
+                          </div>
+                          <div>
+                            <h5 className="font-medium text-gray-600">
+                              Graduation:
+                            </h5>
+                            <div className="flex flex-wrap gap-2 mt-1">
+                              {teacher.educations.map((education) => (
+                                <Badge key={education} variant="outline">
+                                  {education}
+                                </Badge>
+                              ))}
                             </div>
-                          </li>
-                          <li className="flex flex-row gap-2 items-center">
-                            <h5 className="font-semibold">Subject:</h5>
-                            <div className="flex flex-row gap-2">
-                              <Badge variant={"outline"}>Hindi</Badge>
-                              <Badge variant={"outline"}>English</Badge>
-                              <Badge variant={"outline"}>Gujarati</Badge>
+                          </div>
+                          <div>
+                            <h5 className="font-medium text-gray-600">
+                              Subjects:
+                            </h5>
+                            <div className="flex flex-wrap gap-2 mt-1">
+                              {teacher.subjects.map((subject) => (
+                                <Badge key={subject._id} variant="outline">
+                                  {subject.subjectName}
+                                </Badge>
+                              ))}
                             </div>
-                          </li>
-                          <li className="flex flex-row gap-2 items-center">
-                            <h5 className="font-semibold">Total Experience:</h5>
-                            <p className="text-gray-600">3 Year</p>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="flex flex-row gap-2">
-                      <Button size={"icon"}>
-                        <FaEdit />
-                      </Button>
-                      <Button size={"icon"}>
-                        <MdDelete />
-                      </Button>
-                      <Button size={"icon"}>
-                        <IoEye />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                          </div>
+                          <div>
+                            <h5 className="font-medium text-gray-600">
+                              Standards:
+                            </h5>
+                            <div className="flex flex-wrap gap-2 mt-1">
+                              {teacher.standards.map((std) => (
+                                <Badge key={std._id} variant="outline">
+                                  {std.standard}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex justify-center gap-3">
+                          <Button size="icon">
+                            <FaEdit />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="destructive"
+                            onClick={() => handleDeleteTeacher(teacher._id)}
+                          >
+                            <MdDelete />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               )}
             </>
           )}

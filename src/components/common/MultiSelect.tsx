@@ -24,6 +24,7 @@ interface MultiSelectProps {
   label: string;
   placeholder: string;
   customWidth?: number;
+  error?: string;
 }
 
 export function MultiSelect({
@@ -33,6 +34,7 @@ export function MultiSelect({
   label,
   placeholder,
   customWidth,
+  error,
 }: MultiSelectProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -46,18 +48,25 @@ export function MultiSelect({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <Label>{label}</Label>
+      <Label className={`${error ? "text-destructive" : ""}`}>{label}</Label>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="w-full justify-between h-12"
+          className={`w-full justify-between h-12 ${
+            error ? "border-destructive" : ""
+          }`}
           aria-haspopup="true"
           aria-expanded={open}
         >
           {value.length > 0 ? getMultiselectValue(value, options) : placeholder}
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronDown
+            className={`ml-2 h-4 w-4 shrink-0 opacity-50 ${
+              error ? "text-destructive" : ""
+            }`}
+          />
         </Button>
       </PopoverTrigger>
+      {error && <span className="text-destructive text-sm">{error}</span>}
       <PopoverContent
         className={`w-[${customWidth}px] p-2`}
         style={{ width: customWidth }}

@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     // get id from token user
     const userId = await getDataFromToken(request);
 
-    const subjects = await Subject.find({ user: userId }).lean();
+    const subjects = await Subject.find({ user: userId }).lean().select("-user -__v");
 
     const isdropdownTrue = request?.nextUrl?.searchParams.get("dropdown");
 

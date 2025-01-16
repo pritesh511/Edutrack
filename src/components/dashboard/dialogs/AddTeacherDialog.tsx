@@ -6,12 +6,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { MultiSelect } from "@/components/common/MultiSelect";
 import { EDUCAtION_LIST } from "@/utils/constant";
 import { useGetStandardDropdownQuery } from "@/redux/query/standard";
 import { useGetSubjectDropdownQuery } from "@/redux/query/subject";
+import toast from "react-hot-toast";
+import { teacherSchema } from "@/utils/schema";
+import { transformYupErrorsIntoObject } from "@/helpers/helper";
+import CustomTextField from "@/components/common/CustomTextField";
+import { usePostTeacherMutation } from "@/redux/query/teacher";
+import CircularProgress from "@/components/common/CircularProgress";
 
 interface TeacherForm {
   name: string;
@@ -30,6 +34,7 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
   const { open, onClose } = props;
   const { data: subjectDropdownData } = useGetSubjectDropdownQuery("");
   const { data: standardDrodownData } = useGetStandardDropdownQuery("");
+  const [postTeacher, { isLoading }] = usePostTeacherMutation();
   const [formData, setFormData] = useState<TeacherForm>({
     name: "",
     experience: 0,
@@ -37,6 +42,7 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
     standards: [],
     subjects: [],
   });
+  const [errors, setErrors] = useState<any>({});
 
   const handleChangeInput = (
     event: React.ChangeEvent<{ name: string; value: string }>
@@ -48,6 +54,11 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
       ...formData,
       [name]: value,
     });
+
+    setErrors((prev: any) => ({
+      ...prev,
+      [name]: "",
+    }));
   };
 
   const handleChangeSelect = (name: string, values: string[]) => {
@@ -55,10 +66,43 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
       ...formData,
       [name]: values,
     });
+
+    setErrors((prev: any) => ({
+      ...prev,
+      [name]: "",
+    }));
   };
 
   const handleCloseModal = () => {
-    onClose();
+    if (!isLoading) {
+      setErrors({});
+      setFormData({
+        name: "",
+        experience: 0,
+        educations: [],
+        standards: [],
+        subjects: [],
+      });
+      onClose();
+    }
+  };
+
+  const handleSubmitForm = async () => {
+    try {
+      await teacherSchema.validate(formData, { abortEarly: false });
+
+      const { data, error } = await postTeacher(formData);
+      if (error) {
+        toast.error((error as any)?.data.message);
+      } else {
+        toast.success(data.message);
+      }
+
+      handleCloseModal();
+    } catch (validationsErrors: any) {
+      const errors = transformYupErrorsIntoObject(validationsErrors);
+      setErrors(errors);
+    }
   };
 
   return (
@@ -68,25 +112,23 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
           <DialogTitle>Add Teacher</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <div>
-            <Label htmlFor="name">Teacher Name</Label>
-            <Input
-              placeholder="Teacher Name"
-              name="name"
-              value={formData.name}
-              onChange={(event) => handleChangeInput(event)}
-            />
-          </div>
-          <div>
-            <Label htmlFor="name">Experience</Label>
-            <Input
-              placeholder="Total Experience"
-              name="experience"
-              type="number"
-              value={formData.experience ? formData.experience : ""}
-              onChange={(event) => handleChangeInput(event)}
-            />
-          </div>
+          <CustomTextField
+            label="Teacher Name"
+            fieldName="name"
+            placeholder="Teacher Name"
+            value={formData.name}
+            onChangeInput={(event) => handleChangeInput(event)}
+            error={errors?.name}
+          />
+          <CustomTextField
+            label="Experience"
+            fieldName="experience"
+            placeholder="Teacher Name"
+            type="number"
+            value={formData.experience}
+            onChangeInput={(event) => handleChangeInput(event)}
+            error={errors?.experience}
+          />
           <div>
             <MultiSelect
               customWidth={462}
@@ -95,6 +137,7 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
               options={EDUCAtION_LIST}
               value={formData.educations}
               onChange={(values) => handleChangeSelect("educations", values)}
+              error={errors?.educations}
             />
           </div>
           <div>
@@ -105,6 +148,7 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
               options={standardDrodownData?.standards || []}
               value={formData.standards}
               onChange={(values) => handleChangeSelect("standards", values)}
+              error={errors?.standards}
             />
           </div>
           <div>
@@ -115,13 +159,16 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
               options={subjectDropdownData?.subjects || []}
               value={formData.subjects}
               onChange={(values) => handleChangeSelect("subjects", values)}
+              error={errors?.subjects}
             />
           </div>
           <div className="flex justify-end space-x-2">
             <Button variant="outline" onClick={handleCloseModal}>
               Cancel
             </Button>
-            <Button>Save</Button>
+            <Button onClick={handleSubmitForm}>
+              {isLoading ? <CircularProgress /> : "Save"}
+            </Button>
           </div>
         </div>
       </DialogContent>

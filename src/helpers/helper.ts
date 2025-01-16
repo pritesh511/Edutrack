@@ -1,6 +1,7 @@
 import { DropdownOption } from "@/utils/types";
 import crypto from "crypto";
 import { ReactNode } from "react";
+import { ValidationError } from "yup";
 
 export const randomString = (length = 5) => {
   return crypto
@@ -21,4 +22,18 @@ export const getMultiselectValue = (values: string[], options: DropdownOption[])
   const filterData = options.filter((option) => values.includes(option.value));
   const data = filterData.map((data) => data.label);
   return data.join(", ");
+};
+
+export const transformYupErrorsIntoObject = (
+  errors: ValidationError
+): Record<string, string> => {
+  const validationErrors: Record<string, string> = {};
+
+  errors.inner.forEach((error: any) => {
+    if (error.path !== undefined) {
+      validationErrors[error.path] = error.errors[0];
+    }
+  });
+
+  return validationErrors;
 };
