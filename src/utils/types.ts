@@ -10,3 +10,8 @@ export interface Standard {
   standard: string;
   description: string;
 }
+
+export interface DropdownOption {
+  value: string;
+  label: string;
+}

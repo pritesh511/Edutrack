@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import AddSubjectDialog from "../dialogs/AddSubjectDialog";
@@ -9,43 +9,33 @@ import { Subject } from "@/utils/types";
 import { renderOnConditionBase } from "@/helpers/helper";
 import NoDataFound from "@/components/common/NoDataFound";
 import Loader from "@/components/common/Loader";
-import axiosInstance from "@/helpers/axios/axiosInstance";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import {
+  useDeleteSubjectMutation,
+  useGetSubjectsQuery,
+} from "@/redux/query/subject";
 
 const SubjectTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditSubject, setIsEditSubject] = useState<null | Subject>(null);
-  const [subjectList, setSubjectList] = useState<Subject[]>([]);
-  const [isSubjectLoading, setIsSubjectLoading] = useState(false);
+  const { data: subjectData, isLoading: isSubjectLoading } =
+    useGetSubjectsQuery("");
+  const [deleteSubject] = useDeleteSubjectMutation();
+
   const closeSubjectDialog = useCallback(() => {
     setIsModalOpen(false);
     setIsEditSubject(null);
   }, []);
 
-  const getAllSubjects = useCallback(async () => {
-    try {
-      setIsSubjectLoading(true);
-      const response = await axiosInstance.get("/api/dashboard/subject");
-      setSubjectList(response.data.subjects);
-      setIsSubjectLoading(false);
-    } catch (error: any) {
-      setIsSubjectLoading(false);
-      toast.error(error.message);
-    }
-  }, []);
-
-  useEffect(() => {
-    getAllSubjects();
-  }, []);
-
   const handleDeleteSubject = async (id: string) => {
     try {
-      const response = await axios.delete(
-        `/api/dashboard/subject?subjectId=${id}`
-      );
-      toast.success(response.data.message);
-      getAllSubjects();
+      const { data, error } = await deleteSubject(id);
+      if (error) {
+        toast.error((error as any)?.data.message);
+      } else {
+        toast.success(data.message);
+      }
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Something went wrong");
     }
@@ -56,7 +46,7 @@ const SubjectTabView = () => {
       <Card>
         <CardContent className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">Subjects List</h2>
+            <h2 className="text-xl font-semibold">Subjects</h2>
             <Button onClick={() => setIsModalOpen(true)} size={"lg"}>
               Add Subject
             </Button>
@@ -67,10 +57,10 @@ const SubjectTabView = () => {
               <Loader />,
               <>
                 {renderOnConditionBase(
-                  subjectList.length === 0,
+                  subjectData?.subjects.length === 0,
                   <NoDataFound />,
                   <>
-                    {subjectList.map((subject) => {
+                    {subjectData?.subjects.map((subject) => {
                       return (
                         <Card key={subject._id}>
                           <CardContent className="p-6 flex flex-row items-center justify-between">
@@ -80,7 +70,7 @@ const SubjectTabView = () => {
                                 alt="Subject"
                                 className="rounded-lg min-w-[80px] min-h-[80px] w-[80px] h-[80px] object-cover"
                               />
-                              <div className="ml-4">
+                              <div className="mx-4">
                                 <h4 className="text-xl font-semibold">
                                   {subject.subjectName}
                                 </h4>
@@ -118,7 +108,6 @@ const SubjectTabView = () => {
       <AddSubjectDialog
         isModalOpen={isModalOpen}
         closeModal={closeSubjectDialog}
-        getAllSubjects={getAllSubjects}
         isEditSubject={isEditSubject}
       />
     </>

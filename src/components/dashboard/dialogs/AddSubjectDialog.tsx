@@ -9,14 +9,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
-import axios from "axios";
 import CircularProgress from "@/components/common/CircularProgress";
 import { Subject } from "@/utils/types";
+import {
+  useEditSubjectMutation,
+  usePostSubjectMutation,
+} from "@/redux/query/subject";
 
 interface Props {
   closeModal: () => void;
   isModalOpen: boolean;
-  getAllSubjects: Function;
   isEditSubject: Subject | null;
 }
 
@@ -27,12 +29,14 @@ interface SubjectForm {
 }
 
 const AddSubjectDialog = React.memo(function AddSubjectDialog(props: Props) {
-  const { closeModal, isModalOpen, getAllSubjects, isEditSubject } = props;
+  const { closeModal, isModalOpen, isEditSubject } = props;
   const [subjectForm, setSubjectForm] = useState<SubjectForm>({
     subjectName: "",
     description: "",
     file: null,
   });
+  const [postSubject] = usePostSubjectMutation();
+  const [editSubject] = useEditSubjectMutation();
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
@@ -84,22 +88,36 @@ const AddSubjectDialog = React.memo(function AddSubjectDialog(props: Props) {
             formData.append("file", file);
           }
 
-          const url = isEditSubject
-            ? `/api/dashboard/subject?subjectId=${isEditSubject._id}`
-            : "/api/dashboard/subject";
-
-          const method = isEditSubject ? "PUT" : "POST";
-
-          const response = await axios({
-            method,
-            url,
-            data: formData,
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-
-          closeModal();
-          toast.success(response.data.message);
-          getAllSubjects();
+          if (isEditSubject) {
+            const { data, error } = await editSubject({
+              form: formData,
+              id: isEditSubject._id,
+            });
+            if (error) {
+              toast.error((error as any)?.data.message);
+            } else {
+              toast.success(data.message);
+              setSubjectForm({
+                subjectName: "",
+                description: "",
+                file: null,
+              });
+              closeModal();
+            }
+          } else {
+            const { data, error } = await postSubject(formData);
+            if (error) {
+              toast.error((error as any)?.data.message);
+            } else {
+              toast.success(data.message);
+              setSubjectForm({
+                subjectName: "",
+                description: "",
+                file: null,
+              });
+              closeModal();
+            }
+          }
         } catch (error: any) {
           toast.error(error.response?.data?.message || "Something went wrong");
         }

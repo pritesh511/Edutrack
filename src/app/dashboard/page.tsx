@@ -36,7 +36,7 @@ const App = () => {
           {activeTab === "standards" && <ClassesTabView />}
 
           {activeTab === "subjects" &&
-            (ADMIN_EMAIL === process.env.ADMIN_EMAIL! ? (
+            (ADMIN_EMAIL === "gurukul@gmail.com" ? (
               <SubjectTabView />
             ) : (
               <NotAccessTab />

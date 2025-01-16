@@ -57,6 +57,24 @@ export async function GET(request: NextRequest) {
 
     const standards = await Standard.find({ user: userId });
 
+    const isdropdownTrue = request?.nextUrl?.searchParams.get("dropdown");
+
+    const dropdownOptions = standards.map((std) => {
+      return {
+        label: std.standard,
+        value: std._id,
+      };
+    });
+
+    if (isdropdownTrue) {
+      return NextResponse.json(
+        {
+          standards: dropdownOptions,
+        },
+        { status: 200 }
+      );
+    }
+
     return NextResponse.json(
       {
         standards,
@@ -102,7 +120,7 @@ export async function PUT(request: NextRequest) {
   try {
     const standardId = request?.nextUrl?.searchParams.get("standardId");
     const reqBody = await request.json();
-    const { standard, description} = reqBody;
+    const { standard, description } = reqBody;
     const findStandard = await Standard.findOne({ _id: standardId });
 
     if (!findStandard) {

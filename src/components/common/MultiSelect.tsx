@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "../ui/label";
+import { getMultiselectValue } from "@/helpers/helper";
 
 type Option = {
   label: string;
@@ -53,7 +54,7 @@ export function MultiSelect({
           aria-haspopup="true"
           aria-expanded={open}
         >
-          {value.length > 0 ? `Selected (${value.length})` : placeholder}
+          {value.length > 0 ? getMultiselectValue(value, options) : placeholder}
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -70,14 +71,13 @@ export function MultiSelect({
             >
               <Checkbox
                 id={option.value}
-                // checked={value.includes(option.value)}
-                checked={true}
+                checked={value.includes(option.value)}
                 onCheckedChange={() => handleToggle(option.value)}
                 className="border-border"
               />
               <label
                 htmlFor={option.value}
-                className="text-sm font-medium leading-none"
+                className="text-sm font-medium leading-none cursor-pointer"
               >
                 {option.label}
               </label>

@@ -14,7 +14,25 @@ export async function GET(request: NextRequest) {
     const userId = await getDataFromToken(request);
 
     const subjects = await Subject.find({ user: userId }).lean();
-    
+
+    const isdropdownTrue = request?.nextUrl?.searchParams.get("dropdown");
+
+    const dropdownOptions = subjects.map((sub) => {
+      return {
+        label: sub.subjectName,
+        value: sub._id,
+      };
+    });
+
+    if (isdropdownTrue) {
+      return NextResponse.json(
+        {
+          subjects: dropdownOptions,
+        },
+        { status: 200 }
+      );
+    }
+
     const newsubjectList = await Promise.all(
       subjects.map(async (subject) => {
         const url = await getImageUrl(subject.image);

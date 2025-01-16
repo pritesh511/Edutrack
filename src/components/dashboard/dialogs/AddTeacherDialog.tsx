@@ -8,12 +8,17 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import CustomSelect from "@/components/common/CustomSelect";
 import { MultiSelect } from "@/components/common/MultiSelect";
+import { EDUCAtION_LIST } from "@/utils/constant";
+import { useGetStandardDropdownQuery } from "@/redux/query/standard";
+import { useGetSubjectDropdownQuery } from "@/redux/query/subject";
 
 interface TeacherForm {
   name: string;
   experience: number;
+  educations: Array<string>;
+  standards: Array<string>;
+  subjects: Array<string>;
 }
 
 interface Props {
@@ -23,9 +28,14 @@ interface Props {
 
 const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
   const { open, onClose } = props;
+  const { data: subjectDropdownData } = useGetSubjectDropdownQuery("");
+  const { data: standardDrodownData } = useGetStandardDropdownQuery("");
   const [formData, setFormData] = useState<TeacherForm>({
     name: "",
     experience: 0,
+    educations: [],
+    standards: [],
+    subjects: [],
   });
 
   const handleChangeInput = (
@@ -40,9 +50,17 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
     });
   };
 
+  const handleChangeSelect = (name: string, values: string[]) => {
+    setFormData({
+      ...formData,
+      [name]: values,
+    });
+  };
+
   const handleCloseModal = () => {
     onClose();
   };
+
   return (
     <Dialog open={open} onOpenChange={handleCloseModal}>
       <DialogContent>
@@ -74,14 +92,9 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
               customWidth={462}
               placeholder="Select Education"
               label="Education"
-              options={[
-                { label: "Option 1", value: "option1" },
-                { label: "Option 2", value: "option2" },
-                { label: "Option 3", value: "option3" },
-                { label: "Option 4", value: "option4" },
-              ]}
-              value={[]}
-              onChange={() => {}}
+              options={EDUCAtION_LIST}
+              value={formData.educations}
+              onChange={(values) => handleChangeSelect("educations", values)}
             />
           </div>
           <div>
@@ -89,29 +102,19 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
               customWidth={462}
               label="Standard"
               placeholder="Select Standard"
-              options={[
-                { label: "Option 1", value: "option1" },
-                { label: "Option 2", value: "option2" },
-                { label: "Option 3", value: "option3" },
-                { label: "Option 4", value: "option4" },
-              ]}
-              value={[]}
-              onChange={() => {}}
+              options={standardDrodownData?.standards || []}
+              value={formData.standards}
+              onChange={(values) => handleChangeSelect("standards", values)}
             />
           </div>
           <div>
             <MultiSelect
               customWidth={462}
-              label="Standard"
-              placeholder="Select Standard"
-              options={[
-                { label: "Option 1", value: "option1" },
-                { label: "Option 2", value: "option2" },
-                { label: "Option 3", value: "option3" },
-                { label: "Option 4", value: "option4" },
-              ]}
-              value={[]}
-              onChange={() => {}}
+              label="Subject"
+              placeholder="Select Subject"
+              options={subjectDropdownData?.subjects || []}
+              value={formData.subjects}
+              onChange={(values) => handleChangeSelect("subjects", values)}
             />
           </div>
           <div className="flex justify-end space-x-2">

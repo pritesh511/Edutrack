@@ -17,6 +17,7 @@ const TeacherTabView = () => {
   const handleCloseModal = useCallback(() => {
     setOpenModal(false);
   }, []);
+
   return (
     <Card>
       <CardContent className="p-6">
