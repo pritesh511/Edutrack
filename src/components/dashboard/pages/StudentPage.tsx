@@ -11,9 +11,60 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import AddStudentModal from "../dialogs/AddStudentModal";
+import CustomTableHead from "@/components/common/CustomTableHead";
+import CustomTableRow from "@/components/common/CustomTableRow";
+import CustomTableCell from "@/components/common/CustomTableCell";
+import CustomTable from "@/components/common/CustomTable";
 
 const StudentTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const StudentTableHeader = () => {
+    const headers = ["Role No", "Name", "Class", "Attendance"];
+    return (
+      <>
+        {headers.map((head) => (
+          <CustomTableHead key={head} headeName={head} />
+        ))}
+      </>
+    );
+  };
+
+  const StudentTableBody = () => {
+    const data = [
+      {
+        role_no: 1,
+        name: "Pritesh Makasana",
+        class: "Standard 1",
+        attendance: "78%",
+      },
+    ];
+    return (
+      <>
+        {data.length == 0 ? (
+          <CustomTableRow>
+            <CustomTableCell
+              colSpan={6}
+              cellName={"No Data Found"}
+              className="text-center text-lg font-semibold"
+            />
+          </CustomTableRow>
+        ) : (
+          data.map((student, index) => {
+            return (
+              <CustomTableRow key={student.role_no}>
+                <CustomTableCell width={"5%"} cellName={index + 1} />
+                <CustomTableCell width={"15%"} cellName={student.name} />
+                <CustomTableCell width={"15%"} cellName={student.class} />
+                <CustomTableCell width={"15%"} cellName={student.attendance} />
+              </CustomTableRow>
+            );
+          })
+        )}
+      </>
+    );
+  };
+
   return (
     <>
       <Card>
@@ -24,33 +75,11 @@ const StudentTabView = () => {
               Add Student
             </Button>
           </div>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Class</TableHead>
-                <TableHead>Attendance</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>001</TableCell>
-                <TableCell>John Doe</TableCell>
-                <TableCell>Class X-A</TableCell>
-                <TableCell>95%</TableCell>
-                <TableCell>
-                  <Button variant="ghost" className="text-blue-600">
-                    Edit
-                  </Button>
-                  <Button variant="ghost" className="text-red-600">
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+          <CustomTable
+            tableHeader={<StudentTableHeader />}
+            tableTitle={""}
+            tableBody={<StudentTableBody />}
+          />
         </CardContent>
       </Card>
       <AddStudentModal
