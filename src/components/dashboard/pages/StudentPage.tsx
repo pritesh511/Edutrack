@@ -17,6 +17,7 @@ import { renderOnConditionBase } from "@/helpers/helper";
 import Loader from "@/components/common/Loader";
 import toast from "react-hot-toast";
 import { Student } from "@/utils/types";
+import { IoEye } from "react-icons/io5";
 
 const StudentTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -92,7 +93,7 @@ const StudentTabView = () => {
                         cellName={student.standard.standard}
                       />
                       <CustomTableCell
-                        width={"10%"}
+                        width={"15%"}
                         cellName={student.mobileNo}
                       />
                       <CustomTableCell
@@ -118,6 +119,9 @@ const StudentTabView = () => {
                               onClick={() => handleDeleteStudent(student._id)}
                             >
                               <MdDelete />
+                            </Button>
+                            <Button size="icon">
+                              <IoEye />
                             </Button>
                           </div>
                         }
