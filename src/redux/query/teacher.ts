@@ -26,7 +26,15 @@ export const teacherApi = createApi({
       }),
       invalidatesTags: ["Teacher"]
     }),
+    putTeacher: builder.mutation({
+      query: ({ form, id }) => ({
+        url: `dashboard/teacher?teacherId=${id}`,
+        method: "PUT",
+        body: form,
+      }),
+      invalidatesTags: ["Teacher"]
+    }),
   }),
 });
 
-export const { useGetTeachersQuery, usePostTeacherMutation, useDeleteTeacherMutation } = teacherApi;
+export const { useGetTeachersQuery, usePostTeacherMutation, useDeleteTeacherMutation, usePutTeacherMutation } = teacherApi;

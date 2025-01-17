@@ -14,7 +14,10 @@ import toast from "react-hot-toast";
 import { teacherSchema } from "@/utils/schema";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
 import CustomTextField from "@/components/common/CustomTextField";
-import { usePostTeacherMutation } from "@/redux/query/teacher";
+import {
+  usePostTeacherMutation,
+  usePutTeacherMutation,
+} from "@/redux/query/teacher";
 import CircularProgress from "@/components/common/CircularProgress";
 import { Teacher } from "@/utils/types";
 
@@ -37,6 +40,8 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
   const { data: subjectDropdownData } = useGetSubjectDropdownQuery("");
   const { data: standardDrodownData } = useGetStandardDropdownQuery("");
   const [postTeacher, { isLoading }] = usePostTeacherMutation();
+  const [putTeacher, { isLoading: putTeacherLoading }] =
+    usePutTeacherMutation();
   const [formData, setFormData] = useState<TeacherForm>({
     name: "",
     experience: 0,
@@ -97,15 +102,8 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
   }, [isEditTeacher]);
 
   const handleCloseModal = () => {
-    if (!isLoading) {
+    if (!isLoading || !putTeacherLoading) {
       setErrors({});
-      setFormData({
-        name: "",
-        experience: 0,
-        educations: [],
-        standards: [],
-        subjects: [],
-      });
       onClose();
     }
   };
@@ -114,14 +112,40 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
     try {
       await teacherSchema.validate(formData, { abortEarly: false });
 
-      const { data, error } = await postTeacher(formData);
-      if (error) {
-        toast.error((error as any)?.data.message);
+      if (isEditTeacher) {
+        const { data, error } = await putTeacher({
+          form: formData,
+          id: isEditTeacher._id,
+        });
+        if (error) {
+          toast.error((error as any)?.data.message);
+        } else {
+          toast.success(data.message);
+          setFormData({
+            name: "",
+            experience: 0,
+            educations: [],
+            standards: [],
+            subjects: [],
+          });
+          handleCloseModal();
+        }
       } else {
-        toast.success(data.message);
+        const { data, error } = await postTeacher(formData);
+        if (error) {
+          toast.error((error as any)?.data.message);
+        } else {
+          toast.success(data.message);
+          setFormData({
+            name: "",
+            experience: 0,
+            educations: [],
+            standards: [],
+            subjects: [],
+          });
+          handleCloseModal();
+        }
       }
-
-      handleCloseModal();
     } catch (validationsErrors: any) {
       const errors = transformYupErrorsIntoObject(validationsErrors);
       setErrors(errors);
@@ -190,7 +214,7 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
               Cancel
             </Button>
             <Button onClick={handleSubmitForm}>
-              {isLoading ? <CircularProgress /> : "Save"}
+              {isLoading || putTeacherLoading ? <CircularProgress /> : "Save"}
             </Button>
           </div>
         </div>
