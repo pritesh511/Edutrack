@@ -21,18 +21,34 @@ interface Props {
   error?: string;
   value: string;
   handleChangeSelect: (value: string) => void;
+  disabled?: boolean;
 }
 
 const CustomSelect = (props: Props) => {
-  const { placeholder, options, label, error, handleChangeSelect, value } =
-    props;
+  const {
+    placeholder,
+    options,
+    label,
+    error,
+    handleChangeSelect,
+    value,
+    disabled = false,
+  } = props;
   return (
     <div>
       {label && (
-        <Label className={`${error ? "text-destructive" : ""}`}>{label}</Label>
+        <Label
+          htmlFor={label}
+          className={`${error ? "text-destructive" : ""} ${
+            disabled ? "text-gray-500" : ""
+          }`}
+        >
+          {label}
+        </Label>
       )}
       <Select value={value} onValueChange={handleChangeSelect}>
         <SelectTrigger
+          disabled={disabled}
           className={`w-full h-12 ${error ? "border-destructive" : ""}`}
         >
           <SelectValue placeholder={placeholder} />

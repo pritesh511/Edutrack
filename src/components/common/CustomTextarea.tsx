@@ -11,16 +11,27 @@ interface Props {
   placeholder: string;
   error?: string;
   fieldName: string;
+  disabled?: boolean;
 }
 
 const CustomTextarea = (props: Props) => {
-  const { label, value, handleChange, placeholder, error, fieldName } = props;
+  const {
+    label,
+    value,
+    handleChange,
+    placeholder,
+    error,
+    fieldName,
+    disabled = false,
+  } = props;
   return (
     <div>
       {label && (
         <Label
           htmlFor={fieldName}
-          className={`${error ? "text-destructive" : ""}`}
+          className={`${error ? "text-destructive" : ""} ${
+            disabled ? "text-gray-500" : ""
+          }`}
         >
           {label}
         </Label>
@@ -30,6 +41,7 @@ const CustomTextarea = (props: Props) => {
         value={value}
         onChange={handleChange}
         placeholder={placeholder}
+        disabled={disabled}
         className={`${error ? "border-destructive" : ""}`}
       />
       {error && <span className="text-sm text-destructive">{error}</span>}

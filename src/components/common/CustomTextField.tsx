@@ -31,7 +31,9 @@ const CustomTextField = (props: Props) => {
       {label && (
         <Label
           htmlFor={fieldName}
-          className={`${error ? "text-destructive" : ""}`}
+          className={`${error ? "text-destructive" : ""} ${
+            disabled ? "text-gray-500" : ""
+          }`}
         >
           {label}
         </Label>

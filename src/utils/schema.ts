@@ -16,8 +16,11 @@ export const studentSchema = Yup.object().shape({
     .required("Please enter role no")
     .min(1, "Role no should more than 0"),
   standard: Yup.string().required("Please select standard"),
-  mobileNo: Yup.string().required("Please enter mobile no"),
   address: Yup.string().required("Please enter address"),
+  fatherName: Yup.string().required("Please enter father name"),
+  fatherMobileNo: Yup.string().required("Please enter father mobile number"),
+  motherName: Yup.string().required("Please enter mother name"),
+  classTeacher: Yup.string().required("Please select class teacher"),
 });
 
 export const subjectSchema = Yup.object().shape({

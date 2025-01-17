@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/utils/constant";
-import { Teacher } from "@/utils/types";
+import { DropdownOption, Teacher } from "@/utils/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const teacherApi = createApi({
@@ -7,9 +7,12 @@ export const teacherApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   tagTypes: ["Teacher"],
   endpoints: (builder) => ({
-    getTeachers: builder.query<{ teachers: Teacher[]}, string>({
+    getTeachers: builder.query<{ teachers: Teacher[] }, string>({
       query: () => `dashboard/teacher`,
-      providesTags: ["Teacher"]
+      providesTags: ["Teacher"],
+    }),
+    getTeacherDropdown: builder.query<{ teachers: DropdownOption[] }, string>({
+      query: () => `dashboard/teacher?dropdown=true`,
     }),
     deleteTeacher: builder.mutation({
       query: (id: string) => ({
@@ -24,7 +27,7 @@ export const teacherApi = createApi({
         method: "POST",
         body: form,
       }),
-      invalidatesTags: ["Teacher"]
+      invalidatesTags: ["Teacher"],
     }),
     putTeacher: builder.mutation({
       query: ({ form, id }) => ({
@@ -32,9 +35,15 @@ export const teacherApi = createApi({
         method: "PUT",
         body: form,
       }),
-      invalidatesTags: ["Teacher"]
+      invalidatesTags: ["Teacher"],
     }),
   }),
 });
 
-export const { useGetTeachersQuery, usePostTeacherMutation, useDeleteTeacherMutation, usePutTeacherMutation } = teacherApi;
+export const {
+  useGetTeachersQuery,
+  usePostTeacherMutation,
+  useDeleteTeacherMutation,
+  usePutTeacherMutation,
+  useGetTeacherDropdownQuery,
+} = teacherApi;

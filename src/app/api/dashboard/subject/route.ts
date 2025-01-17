@@ -7,13 +7,16 @@ import {
 import Subject from "@/models/subject.model";
 import { NextRequest, NextResponse } from "next/server";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
+import Teacher from "@/models/teacher.model";
 
 export async function GET(request: NextRequest) {
   try {
     // get id from token user
     const userId = await getDataFromToken(request);
 
-    const subjects = await Subject.find({ user: userId }).lean().select("-user -__v");
+    const subjects = await Subject.find({ user: userId })
+      .lean()
+      .select("-user -__v");
 
     const isdropdownTrue = request?.nextUrl?.searchParams.get("dropdown");
 
@@ -117,19 +120,50 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const subjectId = request?.nextUrl?.searchParams.get("subjectId");
-    const findSubject = await Subject.findOne({ _id: subjectId });
-    if (findSubject) {
-      await deleteImageFromS3(findSubject.image);
-      await Subject.deleteOne({ _id: subjectId });
+
+    if (!subjectId) {
       return NextResponse.json(
         {
-          message: "Subject deleted successfully",
+          message: "Subject ID is required",
         },
-        { status: 200 }
+        { status: 400 }
       );
     }
+
+    const findSubject = await Subject.findOne({ _id: subjectId });
+    if (!findSubject) {
+      return NextResponse.json(
+        {
+          message: "Subject not found",
+        },
+        { status: 404 }
+      );
+    }
+
+    const linkedTeachers = await Teacher.find({
+      subjects: { $in: [subjectId] },
+    });
+    if (linkedTeachers.length > 0) {
+      return NextResponse.json(
+        {
+          message: "Cannot delete the subject as it is linked with teachers",
+        },
+        { status: 400 }
+      );
+    }
+
+    // If not linked, proceed with deletion
+    await deleteImageFromS3(findSubject.image);
+    await Subject.deleteOne({ _id: subjectId });
+
+    return NextResponse.json(
+      {
+        message: "Subject deleted successfully",
+      },
+      { status: 200 }
+    );
   } catch (error: any) {
-    console.log(error.message);
+    console.error(error.message);
     return NextResponse.json(
       {
         message: "Internal server error",

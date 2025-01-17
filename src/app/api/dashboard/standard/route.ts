@@ -1,6 +1,7 @@
 import { databseConnect } from "@/dbConfig/dbConfig";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import Standard from "@/models/standard.model";
+import Teacher from "@/models/teacher.model";
 import { NextRequest, NextResponse } from "next/server";
 
 databseConnect();
@@ -96,16 +97,45 @@ export async function GET(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const standardId = request?.nextUrl?.searchParams.get("standardId");
-    const findStandard = await Standard.findOne({ _id: standardId });
-    if (findStandard) {
-      await Standard.deleteOne({ _id: standardId });
+
+    if (!standardId) {
       return NextResponse.json(
         {
-          message: "Standard deleted successfully",
+          message: "Standard ID is required",
         },
-        { status: 200 }
+        { status: 400 }
       );
     }
+
+    const findStandard = await Standard.findOne({ _id: standardId });
+    if (!findStandard) {
+      return NextResponse.json(
+        {
+          message: "Standard not found",
+        },
+        { status: 404 }
+      );
+    }
+
+    const linkedTeachers = await Teacher.find({
+      standards: { $in: [standardId] },
+    });
+    if (linkedTeachers.length > 0) {
+      return NextResponse.json(
+        {
+          message: "Cannot delete the standard as it is linked with teachers",
+        },
+        { status: 400 }
+      );
+    }
+
+    await Standard.deleteOne({ _id: standardId });
+    return NextResponse.json(
+      {
+        message: "Standard deleted successfully",
+      },
+      { status: 200 }
+    );
   } catch (error: any) {
     console.log(error);
     return NextResponse.json(

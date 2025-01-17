@@ -22,6 +22,7 @@ import { IoEye } from "react-icons/io5";
 const StudentTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditStudent, setIsEditStudent] = useState<null | Student>(null);
+  const [isViewStudent, setIsViewStudent] = useState<boolean>(false);
   const { data, isLoading } = useGetStudentsQuery("");
   const [deleteStudent] = useDeleteStudentMutation();
 
@@ -31,6 +32,7 @@ const StudentTabView = () => {
       "Name",
       "Class",
       "Parent's Mobile",
+      "Class Teacher",
       "Address",
       "Actions",
     ];
@@ -45,6 +47,8 @@ const StudentTabView = () => {
 
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
+    setIsViewStudent(false);
+    setIsEditStudent(null);
   }, []);
 
   const handleDeleteStudent = async (id: string) => {
@@ -93,11 +97,15 @@ const StudentTabView = () => {
                         cellName={student.standard.standard}
                       />
                       <CustomTableCell
-                        width={"15%"}
-                        cellName={student.mobileNo}
+                        width={"10%"}
+                        cellName={student.fatherMobileNo}
                       />
                       <CustomTableCell
-                        width={"15%"}
+                        width={"10%"}
+                        cellName={student.classTeacher.name}
+                      />
+                      <CustomTableCell
+                        width={"10%"}
                         cellName={student.address}
                       />
                       <CustomTableCell
@@ -120,7 +128,14 @@ const StudentTabView = () => {
                             >
                               <MdDelete />
                             </Button>
-                            <Button size="icon">
+                            <Button
+                              size="icon"
+                              onClick={() => {
+                                setIsEditStudent(student);
+                                setIsViewStudent(true);
+                                setIsModalOpen(true);
+                              }}
+                            >
                               <IoEye />
                             </Button>
                           </div>
@@ -157,6 +172,7 @@ const StudentTabView = () => {
         closeModal={() => handleCloseModal()}
         isModalOpen={isModalOpen}
         isEditStudent={isEditStudent}
+        isViewStudent={isViewStudent}
       />
     </>
   );

@@ -63,3 +63,8 @@ body {
     --chart-5: 340 75% 55%;
   }
 }
+
+.student-dialog {
+  height: calc(100vh - 40px);
+  overflow: auto;
+}

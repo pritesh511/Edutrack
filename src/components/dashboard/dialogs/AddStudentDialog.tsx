@@ -20,24 +20,34 @@ import {
 } from "@/redux/query/student";
 import CircularProgress from "@/components/common/CircularProgress";
 import { Student } from "@/utils/types";
+import { useGetTeacherDropdownQuery } from "@/redux/query/teacher";
 
 interface Props {
   closeModal: () => void;
   isModalOpen: boolean;
   isEditStudent: Student | null;
+  isViewStudent: boolean;
 }
 
 interface StudentForm {
   name: string;
   roleNo: number;
   standard: string;
-  mobileNo: string;
   address: string;
+  fatherName: string;
+  fatherOccupation: string;
+  fatherMobileNo: string;
+  fatherEmail: string;
+  motherName: string;
+  motherOccupation: string;
+  motherMobileNo: string;
+  classTeacher: string;
 }
 
 const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
-  const { closeModal, isModalOpen, isEditStudent } = props;
+  const { closeModal, isModalOpen, isEditStudent, isViewStudent } = props;
   const { data: standardDrodownData } = useGetStandardDropdownQuery("");
+  const { data: teacherDrodownData } = useGetTeacherDropdownQuery("");
   const [postStudent, { isLoading: isAddStudentLoading }] =
     usePostStudentMutation();
   const [putStudent, { isLoading: isEditStudentLoading }] =
@@ -46,8 +56,15 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
     name: "",
     roleNo: 0,
     standard: "",
-    mobileNo: "",
     address: "",
+    fatherName: "",
+    fatherOccupation: "",
+    fatherMobileNo: "",
+    fatherEmail: "",
+    motherName: "",
+    motherOccupation: "",
+    motherMobileNo: "",
+    classTeacher: "",
   });
   const [errors, setErrors] = useState<any>({});
 
@@ -96,16 +113,30 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
         name: isEditStudent.name || "",
         roleNo: isEditStudent.roleNo || 0,
         standard: isEditStudent.standard._id || "",
-        mobileNo: isEditStudent.mobileNo || "",
         address: isEditStudent.address || "",
+        fatherName: isEditStudent.fatherName || "",
+        fatherOccupation: isEditStudent.fatherOccupation || "",
+        fatherMobileNo: isEditStudent.fatherMobileNo || "",
+        fatherEmail: isEditStudent.fatherEmail || "",
+        motherName: isEditStudent.motherName || "",
+        motherOccupation: isEditStudent.motherOccupation || "",
+        motherMobileNo: isEditStudent.motherMobileNo || "",
+        classTeacher: isEditStudent.classTeacher._id || "",
       });
     } else {
       setFormData({
         name: "",
         roleNo: 0,
         standard: "",
-        mobileNo: "",
         address: "",
+        fatherName: "",
+        fatherOccupation: "",
+        fatherMobileNo: "",
+        fatherEmail: "",
+        motherName: "",
+        motherOccupation: "",
+        motherMobileNo: "",
+        classTeacher: "",
       });
     }
   }, [isEditStudent]);
@@ -127,8 +158,15 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
             name: "",
             roleNo: 0,
             standard: "",
-            mobileNo: "",
             address: "",
+            fatherName: "",
+            fatherOccupation: "",
+            fatherMobileNo: "",
+            fatherEmail: "",
+            motherName: "",
+            motherOccupation: "",
+            motherMobileNo: "",
+            classTeacher: "",
           });
           handleCloseModal();
         }
@@ -142,8 +180,15 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
             name: "",
             roleNo: 0,
             standard: "",
-            mobileNo: "",
             address: "",
+            fatherName: "",
+            fatherOccupation: "",
+            fatherMobileNo: "",
+            fatherEmail: "",
+            motherName: "",
+            motherOccupation: "",
+            motherMobileNo: "",
+            classTeacher: "",
           });
           handleCloseModal();
         }
@@ -156,66 +201,156 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
-      <DialogContent>
+      <DialogContent className="md:max-w-lg lg:max-w-4xl student-dialog">
         <DialogHeader>
-          <DialogTitle>Add Student</DialogTitle>
+          <DialogTitle>
+            {isViewStudent
+              ? "View Student"
+              : isEditStudent
+              ? "Edit Student"
+              : "Add Student"}
+          </DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          <CustomTextField
-            label="Name"
-            fieldName="name"
-            placeholder="Student Name"
-            value={formData.name}
-            onChangeInput={(event) => handleChangeInput(event)}
-            error={errors?.name}
-          />
-          <CustomTextField
-            label="Role No"
-            fieldName="roleNo"
-            placeholder="Role Number"
-            type="number"
-            value={formData.roleNo}
-            onChangeInput={(event) => handleChangeInput(event)}
-            error={errors?.roleNo}
-            disabled={Boolean(isEditStudent)}
-          />
-          <CustomSelect
-            label="Standard"
-            placeholder={"Select Standard"}
-            options={standardDrodownData?.standards || []}
-            error={errors?.standard}
-            value={formData.standard}
-            handleChangeSelect={(value) => handleSelectValue("standard", value)}
-          />
-          <CustomTextField
-            label="Mobile No"
-            fieldName="mobileNo"
-            placeholder="Mobile Number"
-            value={formData.mobileNo}
-            onChangeInput={(event) => handleChangeInput(event)}
-            error={errors?.mobileNo}
-            type="number"
-          />
-          <CustomTextarea
-            label="Address"
-            value={formData.address}
-            handleChange={(event) => handleChangeInput(event)}
-            placeholder={"Please enter address"}
-            fieldName={"address"}
-            error={errors?.address}
-          />
-          <div className="flex justify-end space-x-2">
-            <Button
-              disabled={isFormLoading}
-              variant="outline"
-              onClick={handleCloseModal}
-            >
-              Cancel
-            </Button>
+        <div>
+          <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-3">
+            <CustomTextField
+              label="Name*"
+              fieldName="name"
+              placeholder="Student Full Name"
+              value={formData.name}
+              onChangeInput={(event) => handleChangeInput(event)}
+              error={errors?.name}
+              disabled={isViewStudent}
+            />
+            <CustomTextField
+              label="Role No*"
+              fieldName="roleNo"
+              placeholder="Role Number"
+              type="number"
+              value={formData.roleNo}
+              onChangeInput={(event) => handleChangeInput(event)}
+              error={errors?.roleNo}
+              disabled={Boolean(isEditStudent) || isViewStudent}
+            />
+            <CustomSelect
+              label="Standard*"
+              placeholder={"Select Standard"}
+              options={standardDrodownData?.standards || []}
+              error={errors?.standard}
+              value={formData.standard}
+              handleChangeSelect={(value) =>
+                handleSelectValue("standard", value)
+              }
+              disabled={isViewStudent}
+            />
+            <CustomTextarea
+              label="Address*"
+              value={formData.address}
+              handleChange={(event) => handleChangeInput(event)}
+              placeholder={"Please enter address"}
+              fieldName={"address"}
+              error={errors?.address}
+              disabled={isViewStudent}
+            />
+          </div>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold my-2">Parent's Details</h3>
+          <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-3">
+            <CustomTextField
+              label="Father Name*"
+              fieldName="fatherName"
+              placeholder="Father Full Name"
+              value={formData.fatherName}
+              onChangeInput={(event) => handleChangeInput(event)}
+              error={errors?.fatherName}
+              disabled={isViewStudent}
+            />
+            <CustomTextField
+              label="Father Occupation"
+              fieldName="fatherOccupation"
+              placeholder="Father Occupation"
+              value={formData.fatherOccupation}
+              onChangeInput={(event) => handleChangeInput(event)}
+              error={errors?.fatherOccupation}
+              disabled={isViewStudent}
+            />
+            <CustomTextField
+              label="Father Mobile No*"
+              fieldName="fatherMobileNo"
+              placeholder="Father Mobile No"
+              value={formData.fatherMobileNo}
+              onChangeInput={(event) => handleChangeInput(event)}
+              error={errors?.fatherMobileNo}
+              disabled={isViewStudent}
+            />
+            <CustomTextField
+              label="Father Email"
+              fieldName="fatherEmail"
+              placeholder="Father Email"
+              value={formData.fatherEmail}
+              onChangeInput={(event) => handleChangeInput(event)}
+              error={errors?.fatherEmail}
+              disabled={isViewStudent}
+            />
+            <CustomTextField
+              label="Mother Name*"
+              fieldName="motherName"
+              placeholder="Mother Full Name"
+              value={formData.motherName}
+              onChangeInput={(event) => handleChangeInput(event)}
+              error={errors?.motherName}
+              disabled={isViewStudent}
+            />
+            <CustomTextField
+              label="Mother Occupation"
+              fieldName="motherOccupation"
+              placeholder="Mother Occupation"
+              value={formData.motherOccupation}
+              onChangeInput={(event) => handleChangeInput(event)}
+              error={errors?.motherOccupation}
+              disabled={isViewStudent}
+            />
+            <CustomTextField
+              label="Mother Mobile No"
+              fieldName="motherMobileNo"
+              placeholder="Mother Mobile No"
+              value={formData.motherMobileNo}
+              onChangeInput={(event) => handleChangeInput(event)}
+              error={errors?.motherMobileNo}
+              disabled={isViewStudent}
+            />
+          </div>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold my-2">Class Teacher Details</h3>
+          <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-3">
+            <CustomSelect
+              label="Class Teacher*"
+              placeholder={"Select Teacher"}
+              options={teacherDrodownData?.teachers || []}
+              error={errors?.classTeacher}
+              value={formData.classTeacher}
+              handleChangeSelect={(value) =>
+                handleSelectValue("classTeacher", value)
+              }
+              disabled={isViewStudent}
+            />
+          </div>
+        </div>
+        <div className="flex justify-end space-x-2">
+          <Button
+            disabled={isFormLoading}
+            variant="outline"
+            onClick={handleCloseModal}
+          >
+            Cancel
+          </Button>
+          {!isViewStudent && (
             <Button onClick={handleSubmitForm} disabled={isFormLoading}>
               {isFormLoading ? <CircularProgress /> : "Save"}
             </Button>
-          </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

@@ -34,6 +34,20 @@ export interface Student {
     standard: string;
     description: string;
   };
-  mobileNo: string;
   address: string;
+  fatherName: string;
+  fatherMobileNo: string;
+  fatherOccupation: string;
+  fatherEmail: string;
+  motherName: string;
+  motherOccupation: string;
+  motherMobileNo: string;
+  classTeacher: {
+    _id: string;
+    name: string;
+    experience: string;
+    educations: string[];
+    standards: Standard[];
+    subjects: Subject[];
+  };
 }

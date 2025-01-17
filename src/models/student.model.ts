@@ -14,13 +14,30 @@ const studentSchema = new mongoose.Schema({
     ref: "Standard",
     require: [true, "Please select standard"],
   },
-  mobileNo: {
-    type: Number,
-    require: [true, "Please enter mobile number"],
-  },
   address: {
     type: String,
     require: [true, "Please enter address"],
+  },
+  fatherName: {
+    type: String,
+    require: [true, "Please enter father name"],
+  },
+  fatherMobileNo: {
+    type: String,
+    require: [true, "Please enter mobile number"],
+  },
+  fatherOccupation: { type: String },
+  fatherEmail: { type: String },
+  motherName: {
+    type: String,
+    require: [true, "Please enter mother name"],
+  },
+  motherOccupation: { type: String },
+  motherMobileNo: { type: String },
+  classTeacher: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Teacher",
+    require: [true, "Please select class teacher"],
   },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });

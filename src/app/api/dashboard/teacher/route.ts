@@ -45,6 +45,26 @@ export async function GET(request: NextRequest) {
   try {
     const userId = await getDataFromToken(request);
 
+    const standards = await Teacher.find({ user: userId }).select("-user -__v");
+
+    const isdropdownTrue = request?.nextUrl?.searchParams.get("dropdown");
+
+    const dropdownOptions = standards.map((teacher) => {
+      return {
+        label: teacher.name,
+        value: teacher._id,
+      };
+    });
+
+    if (isdropdownTrue) {
+      return NextResponse.json(
+        {
+          teachers: dropdownOptions,
+        },
+        { status: 200 }
+      );
+    }
+
     const teachers = await Teacher.find({ user: userId })
       .select("-user -__v")
       .populate("standards")

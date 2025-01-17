@@ -28,8 +28,12 @@ export default function ClassesTabView() {
 
   const handleClickStandard = async (id: string) => {
     try {
-      const { data } = await deleteStandard(id);
-      toast.success(data.message);
+      const { data, error } = await deleteStandard(id);
+      if (error) {
+        toast.error((error as any)?.data.message);
+      } else {
+        toast.success(data.message);
+      }
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Something went wrong");
     }
