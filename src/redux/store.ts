@@ -5,6 +5,7 @@ import userReducer from "./slices/userSlice";
 import { standardApi } from "./query/standard";
 import { subjectApi } from "./query/subject";
 import { teacherApi } from "./query/teacher";
+import { studentApi } from "./query/student";
 
 const rootReducer = combineReducers({
   dashboard: dashboardReducer,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   [standardApi.reducerPath]: standardApi.reducer,
   [subjectApi.reducerPath]: subjectApi.reducer,
   [teacherApi.reducerPath]: teacherApi.reducer,
+  [studentApi.reducerPath]: studentApi.reducer,
 });
 
 const store = configureStore({
@@ -22,7 +24,8 @@ const store = configureStore({
     })
       .concat(standardApi.middleware)
       .concat(subjectApi.middleware)
-      .concat(teacherApi.middleware),
+      .concat(teacherApi.middleware)
+      .concat(studentApi.middleware),
 });
 
 setupListeners(store.dispatch);

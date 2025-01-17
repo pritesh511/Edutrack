@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,28 +13,39 @@ import CustomSelect from "@/components/common/CustomSelect";
 import CustomTextarea from "@/components/common/CustomTextarea";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
 import { studentSchema } from "@/utils/schema";
+import toast from "react-hot-toast";
+import {
+  useEditStudentMutation,
+  usePostStudentMutation,
+} from "@/redux/query/student";
+import CircularProgress from "@/components/common/CircularProgress";
+import { Student } from "@/utils/types";
 
 interface Props {
   closeModal: () => void;
   isModalOpen: boolean;
+  isEditStudent: Student | null;
 }
 
 interface StudentForm {
   name: string;
   roleNo: number;
   standard: string;
-  parents_mobile_no: string;
+  mobileNo: string;
   address: string;
 }
 
 const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
-  const { closeModal, isModalOpen } = props;
+  const { closeModal, isModalOpen, isEditStudent } = props;
   const { data: standardDrodownData } = useGetStandardDropdownQuery("");
+  const [postStudent, { isLoading }] = usePostStudentMutation();
+  const [putStudent, { isLoading: idEditStudentLoading }] =
+    useEditStudentMutation();
   const [formData, setFormData] = useState<StudentForm>({
     name: "",
     roleNo: 0,
     standard: "",
-    parents_mobile_no: "",
+    mobileNo: "",
     address: "",
   });
   const [errors, setErrors] = useState<any>({});
@@ -69,13 +80,71 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
   };
 
   const handleCloseModal = () => {
-    closeModal();
-    setErrors({});
+    if (!isLoading || !idEditStudentLoading) {
+      closeModal();
+      setErrors({});
+    }
   };
+
+  useEffect(() => {
+    if (isEditStudent) {
+      setFormData({
+        ...formData,
+        name: isEditStudent.name || "",
+        roleNo: isEditStudent.roleNo || 0,
+        standard: isEditStudent.standard._id || "",
+        mobileNo: isEditStudent.mobileNo || "",
+        address: isEditStudent.address || "",
+      });
+    } else {
+      setFormData({
+        name: "",
+        roleNo: 0,
+        standard: "",
+        mobileNo: "",
+        address: "",
+      });
+    }
+  }, [isEditStudent]);
 
   const handleSubmitForm = async () => {
     try {
       await studentSchema.validate(formData, { abortEarly: false });
+
+      if (isEditStudent) {
+        const { data, error } = await putStudent({
+          form: formData,
+          id: isEditStudent._id,
+        });
+        if (error) {
+          toast.error((error as any)?.data.message);
+        } else {
+          toast.success(data.message);
+          setFormData({
+            name: "",
+            roleNo: 0,
+            standard: "",
+            mobileNo: "",
+            address: "",
+          });
+          handleCloseModal();
+        }
+      } else {
+        const { data, error } = await postStudent(formData);
+        if (error) {
+          toast.error((error as any)?.data.message);
+        } else {
+          toast.success(data.message);
+          setFormData({
+            name: "",
+            roleNo: 0,
+            standard: "",
+            mobileNo: "",
+            address: "",
+          });
+          handleCloseModal();
+        }
+      }
     } catch (validationsErrors: any) {
       const errors = transformYupErrorsIntoObject(validationsErrors);
       setErrors(errors);
@@ -105,21 +174,23 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
             value={formData.roleNo}
             onChangeInput={(event) => handleChangeInput(event)}
             error={errors?.roleNo}
+            disabled={Boolean(isEditStudent)}
           />
           <CustomSelect
             label="Standard"
             placeholder={"Select Standard"}
             options={standardDrodownData?.standards || []}
             error={errors?.standard}
-            handleChangeSelect={(value) => handleSelectValue("name", value)}
+            value={formData.standard}
+            handleChangeSelect={(value) => handleSelectValue("standard", value)}
           />
           <CustomTextField
             label="Mobile No"
-            fieldName="parents_mobile_no"
+            fieldName="mobileNo"
             placeholder="Mobile Number"
-            value={formData.parents_mobile_no}
+            value={formData.mobileNo}
             onChangeInput={(event) => handleChangeInput(event)}
-            error={errors?.parents_mobile_no}
+            error={errors?.mobileNo}
             type="number"
           />
           <CustomTextarea
@@ -134,7 +205,13 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
             <Button variant="outline" onClick={handleCloseModal}>
               Cancel
             </Button>
-            <Button onClick={handleSubmitForm}>Save</Button>
+            <Button onClick={handleSubmitForm}>
+              {isLoading || idEditStudentLoading ? (
+                <CircularProgress />
+              ) : (
+                "Save"
+              )}
+            </Button>
           </div>
         </div>
       </DialogContent>

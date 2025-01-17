@@ -11,6 +11,7 @@ interface Props {
   fieldName: string;
   type?: string;
   handleFocusInput?: () => void;
+  disabled?: boolean;
 }
 
 const CustomTextField = (props: Props) => {
@@ -23,6 +24,7 @@ const CustomTextField = (props: Props) => {
     fieldName,
     type,
     handleFocusInput,
+    disabled = false,
   } = props;
   return (
     <div>
@@ -42,6 +44,7 @@ const CustomTextField = (props: Props) => {
         className={`${error ? "border-destructive" : ""}`}
         type={type ? type : "text"}
         onFocus={handleFocusInput}
+        disabled={disabled}
       />
       {error && <span className="text-sm text-destructive">{error}</span>}
     </div>

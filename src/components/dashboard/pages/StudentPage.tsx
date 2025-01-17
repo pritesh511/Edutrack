@@ -9,9 +9,20 @@ import CustomTableCell from "@/components/common/CustomTableCell";
 import CustomTable from "@/components/common/CustomTable";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import {
+  useDeleteStudentMutation,
+  useGetStudentsQuery,
+} from "@/redux/query/student";
+import { renderOnConditionBase } from "@/helpers/helper";
+import Loader from "@/components/common/Loader";
+import toast from "react-hot-toast";
+import { Student } from "@/utils/types";
 
 const StudentTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditStudent, setIsEditStudent] = useState<null | Student>(null);
+  const { data, isLoading } = useGetStudentsQuery("");
+  const [deleteStudent] = useDeleteStudentMutation();
 
   const StudentTableHeader = () => {
     const headers = [
@@ -35,58 +46,88 @@ const StudentTabView = () => {
     setIsModalOpen(false);
   }, []);
 
+  const handleDeleteStudent = async (id: string) => {
+    try {
+      const { data, error } = await deleteStudent(id);
+      if (error) {
+        toast.error((error as any)?.data.message);
+      } else {
+        toast.success(data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
   const StudentTableBody = () => {
-    const data = [
-      {
-        role_no: 1,
-        name: "Pritesh Makasana",
-        class: "Standard 1",
-        parent_mo: "9081004687",
-        address: "A-303, Radhika recidency, surat",
-      },
-      {
-        role_no: 2,
-        name: "Pritesh Makasana",
-        class: "Standard 1",
-        parent_mo: "9081004687",
-        address: "A-303, Radhika recidency, surat",
-      },
-    ];
     return (
       <>
-        {data.length == 0 ? (
+        {renderOnConditionBase(
+          isLoading,
           <CustomTableRow>
             <CustomTableCell
               colSpan={6}
-              cellName={"No Data Found"}
+              cellName={<Loader />}
               className="text-center text-lg font-semibold"
             />
-          </CustomTableRow>
-        ) : (
-          data.map((student, index) => {
-            return (
-              <CustomTableRow key={student.role_no}>
-                <CustomTableCell width={"5%"} cellName={student.role_no} />
-                <CustomTableCell width={"10%"} cellName={student.name} />
-                <CustomTableCell width={"10%"} cellName={student.class} />
-                <CustomTableCell width={"10%"} cellName={student.parent_mo} />
-                <CustomTableCell width={"15%"} cellName={student.address} />
+          </CustomTableRow>,
+          <>
+            {renderOnConditionBase(
+              data?.students.length == 0,
+              <CustomTableRow>
                 <CustomTableCell
-                  width={"10%"}
-                  cellName={
-                    <div className="flex gap-3">
-                      <Button size="icon">
-                        <FaEdit />
-                      </Button>
-                      <Button size="icon" variant="destructive">
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  }
+                  colSpan={6}
+                  cellName={"No Data Found"}
+                  className="text-center text-lg font-semibold"
                 />
-              </CustomTableRow>
-            );
-          })
+              </CustomTableRow>,
+              <>
+                {data?.students.map((student) => {
+                  return (
+                    <CustomTableRow key={student.roleNo}>
+                      <CustomTableCell width={"5%"} cellName={student.roleNo} />
+                      <CustomTableCell width={"10%"} cellName={student.name} />
+                      <CustomTableCell
+                        width={"10%"}
+                        cellName={student.standard.standard}
+                      />
+                      <CustomTableCell
+                        width={"10%"}
+                        cellName={student.mobileNo}
+                      />
+                      <CustomTableCell
+                        width={"15%"}
+                        cellName={student.address}
+                      />
+                      <CustomTableCell
+                        width={"10%"}
+                        cellName={
+                          <div className="flex gap-3">
+                            <Button
+                              size="icon"
+                              onClick={() => {
+                                setIsEditStudent(student);
+                                setIsModalOpen(true);
+                              }}
+                            >
+                              <FaEdit />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="destructive"
+                              onClick={() => handleDeleteStudent(student._id)}
+                            >
+                              <MdDelete />
+                            </Button>
+                          </div>
+                        }
+                      />
+                    </CustomTableRow>
+                  );
+                })}
+              </>
+            )}
+          </>
         )}
       </>
     );
@@ -111,6 +152,7 @@ const StudentTabView = () => {
       <AddStudentModal
         closeModal={() => handleCloseModal()}
         isModalOpen={isModalOpen}
+        isEditStudent={isEditStudent}
       />
     </>
   );

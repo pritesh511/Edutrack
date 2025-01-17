@@ -24,3 +24,16 @@ export interface Teacher {
   standards: Array<Standard>;
   subjects: Array<Subject>;
 }
+
+export interface Student {
+  _id: string;
+  name: string;
+  roleNo: number;
+  standard: {
+    _id: string;
+    standard: string;
+    description: string;
+  };
+  mobileNo: string;
+  address: string;
+}

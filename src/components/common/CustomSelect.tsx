@@ -4,7 +4,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -20,17 +19,19 @@ interface Props {
   options: Array<Option>;
   label?: string;
   error?: string;
+  value: string;
   handleChangeSelect: (value: string) => void;
 }
 
 const CustomSelect = (props: Props) => {
-  const { placeholder, options, label, error, handleChangeSelect } = props;
+  const { placeholder, options, label, error, handleChangeSelect, value } =
+    props;
   return (
     <div>
       {label && (
         <Label className={`${error ? "text-destructive" : ""}`}>{label}</Label>
       )}
-      <Select onValueChange={handleChangeSelect}>
+      <Select value={value} onValueChange={handleChangeSelect}>
         <SelectTrigger
           className={`w-full h-12 ${error ? "border-destructive" : ""}`}
         >
