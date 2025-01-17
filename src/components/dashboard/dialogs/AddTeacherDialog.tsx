@@ -39,7 +39,8 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
   const { open, onClose, isEditTeacher } = props;
   const { data: subjectDropdownData } = useGetSubjectDropdownQuery("");
   const { data: standardDrodownData } = useGetStandardDropdownQuery("");
-  const [postTeacher, { isLoading }] = usePostTeacherMutation();
+  const [postTeacher, { isLoading: postTeacherLoading }] =
+    usePostTeacherMutation();
   const [putTeacher, { isLoading: putTeacherLoading }] =
     usePutTeacherMutation();
   const [formData, setFormData] = useState<TeacherForm>({
@@ -50,6 +51,8 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
     subjects: [],
   });
   const [errors, setErrors] = useState<any>({});
+
+  const isFormLoading = postTeacherLoading || putTeacherLoading;
 
   const handleChangeInput = (
     event: React.ChangeEvent<{ name: string; value: string }>
@@ -102,7 +105,7 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
   }, [isEditTeacher]);
 
   const handleCloseModal = () => {
-    if (!isLoading || !putTeacherLoading) {
+    if (!isFormLoading) {
       setErrors({});
       onClose();
     }
@@ -210,11 +213,15 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
             />
           </div>
           <div className="flex justify-end space-x-2">
-            <Button variant="outline" onClick={handleCloseModal}>
+            <Button
+              disabled={isFormLoading}
+              variant="outline"
+              onClick={handleCloseModal}
+            >
               Cancel
             </Button>
-            <Button onClick={handleSubmitForm}>
-              {isLoading || putTeacherLoading ? <CircularProgress /> : "Save"}
+            <Button onClick={handleSubmitForm} disabled={isFormLoading}>
+              {isFormLoading ? <CircularProgress /> : "Save"}
             </Button>
           </div>
         </div>

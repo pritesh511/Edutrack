@@ -16,6 +16,10 @@ import {
   useEditStandardMutation,
   usePostStandardMutation,
 } from "@/redux/query/standard";
+import { standardSchema } from "@/utils/schema";
+import { transformYupErrorsIntoObject } from "@/helpers/helper";
+import CustomTextField from "@/components/common/CustomTextField";
+import CustomTextarea from "@/components/common/CustomTextarea";
 
 interface Props {
   closeModal: () => void;
@@ -38,6 +42,7 @@ const AddStandardDialog = React.memo(function AddStandardDialog(props: Props) {
     standard: "",
     description: "",
   });
+  const [errors, setErrors] = useState<any>({});
 
   const isFormLoading = isPostFormLoading || isEditFormLoading;
 
@@ -66,45 +71,50 @@ const AddStandardDialog = React.memo(function AddStandardDialog(props: Props) {
       ...formData,
       [name]: value,
     });
+
+    setErrors((prev: any) => ({
+      ...prev,
+      [name]: "",
+    }));
   };
 
   const handleSubmitStandard = async () => {
-    const { standard, description } = formData;
-    if (standard && description) {
-      try {
-        if (isEditStandard) {
-          const { data, error } = await editStandard({
-            id: isEditStandard._id,
-            form: formData,
-          });
-          if (error) {
-            toast.error((error as any)?.data.message);
-          } else {
-            toast.success(data.message);
-            closeModal();
-            setFormData({
-              standard: "",
-              description: "",
-            });
-          }
+    try {
+      const { standard, description } = formData;
+
+      await standardSchema.validate(formData, { abortEarly: false });
+
+      if (isEditStandard) {
+        const { data, error } = await editStandard({
+          id: isEditStandard._id,
+          form: formData,
+        });
+        if (error) {
+          toast.error((error as any)?.data.message);
         } else {
-          const { data, error } = await postStandard(formData);
-          if (error) {
-            toast.error((error as any)?.data.message);
-          } else {
-            toast.success(data.message);
-            closeModal();
-            setFormData({
-              standard: "",
-              description: "",
-            });
-          }
+          toast.success(data.message);
+          closeModal();
+          setFormData({
+            standard: "",
+            description: "",
+          });
         }
-      } catch (error: any) {
-        toast.error(error.response?.data?.message || "Something went wrong");
+      } else {
+        const { data, error } = await postStandard(formData);
+        if (error) {
+          toast.error((error as any)?.data.message);
+        } else {
+          toast.success(data.message);
+          closeModal();
+          setFormData({
+            standard: "",
+            description: "",
+          });
+        }
       }
-    } else {
-      toast.error("Please fill required data");
+    } catch (validationsErrors: any) {
+      const errors = transformYupErrorsIntoObject(validationsErrors);
+      setErrors(errors);
     }
   };
 
@@ -113,6 +123,7 @@ const AddStandardDialog = React.memo(function AddStandardDialog(props: Props) {
       return;
     } else {
       closeModal();
+      setErrors({});
     }
   };
 
@@ -121,27 +132,31 @@ const AddStandardDialog = React.memo(function AddStandardDialog(props: Props) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {isEditStandard ? "Edit Standard" : "Add New Standard"}
+            {isEditStandard ? "Edit Standard" : "Add Standard"}
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <Input
-            placeholder="Subject Name"
-            name="standard"
+          <CustomTextField
+            label="Standard Name"
+            placeholder="Standard Name"
+            fieldName="standard"
             value={formData.standard}
-            onChange={(event) => handleChangeInput(event)}
+            onChangeInput={(event) => handleChangeInput(event)}
+            error={errors?.standard}
           />
-          <Textarea
-            name="description"
+          <CustomTextarea
+            label="Description"
+            fieldName="description"
             value={formData.description}
-            onChange={(event) => handleChangeInput(event)}
+            handleChange={(event) => handleChangeInput(event)}
             placeholder="Write your comment for standard here..."
+            error={errors?.description}
           />
           <div className="flex justify-end space-x-2">
             <Button
               disabled={isFormLoading}
               variant="outline"
-              onClick={closeModal}
+              onClick={handleCloseModal}
             >
               Cancel
             </Button>

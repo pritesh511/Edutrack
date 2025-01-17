@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useTransition } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +15,10 @@ import {
   useEditSubjectMutation,
   usePostSubjectMutation,
 } from "@/redux/query/subject";
+import { subjectSchema } from "@/utils/schema";
+import { transformYupErrorsIntoObject } from "@/helpers/helper";
+import CustomTextField from "@/components/common/CustomTextField";
+import CustomTextarea from "@/components/common/CustomTextarea";
 
 interface Props {
   closeModal: () => void;
@@ -35,9 +39,13 @@ const AddSubjectDialog = React.memo(function AddSubjectDialog(props: Props) {
     description: "",
     file: null,
   });
-  const [postSubject] = usePostSubjectMutation();
-  const [editSubject] = useEditSubjectMutation();
-  const [isPending, startTransition] = useTransition();
+  const [errors, setErrors] = useState<any>({});
+  const [postSubject, { isLoading: isAddSubjectLoading }] =
+    usePostSubjectMutation();
+  const [editSubject, { isLoading: isEditSubjectLoading }] =
+    useEditSubjectMutation();
+
+  const isFormLoading = isAddSubjectLoading || isEditSubjectLoading;
 
   useEffect(() => {
     if (isEditSubject) {
@@ -61,6 +69,11 @@ const AddSubjectDialog = React.memo(function AddSubjectDialog(props: Props) {
         ...subjectForm,
         file: file[0],
       });
+
+      setErrors((prev: any) => ({
+        ...prev,
+        file: "",
+      }));
     }
   };
 
@@ -74,64 +87,68 @@ const AddSubjectDialog = React.memo(function AddSubjectDialog(props: Props) {
       ...subjectForm,
       [name]: value,
     });
+
+    setErrors((prev: any) => ({
+      ...prev,
+      [name]: "",
+    }));
   };
 
   const handleSubmitSubject = async () => {
-    const { subjectName, description, file } = subjectForm;
-    if (subjectName && description) {
-      startTransition(async () => {
-        try {
-          const formData = new FormData();
-          formData.append("subjectName", subjectName);
-          formData.append("description", description);
-          if (file) {
-            formData.append("file", file);
-          }
+    try {
+      const { subjectName, description, file } = subjectForm;
 
-          if (isEditSubject) {
-            const { data, error } = await editSubject({
-              form: formData,
-              id: isEditSubject._id,
-            });
-            if (error) {
-              toast.error((error as any)?.data.message);
-            } else {
-              toast.success(data.message);
-              setSubjectForm({
-                subjectName: "",
-                description: "",
-                file: null,
-              });
-              closeModal();
-            }
-          } else {
-            const { data, error } = await postSubject(formData);
-            if (error) {
-              toast.error((error as any)?.data.message);
-            } else {
-              toast.success(data.message);
-              setSubjectForm({
-                subjectName: "",
-                description: "",
-                file: null,
-              });
-              closeModal();
-            }
-          }
-        } catch (error: any) {
-          toast.error(error.response?.data?.message || "Something went wrong");
+      await subjectSchema.validate(subjectForm, { abortEarly: false });
+
+      const formData = new FormData();
+      formData.append("subjectName", subjectName);
+      formData.append("description", description);
+      if (file) {
+        formData.append("file", file);
+      }
+
+      if (isEditSubject) {
+        const { data, error } = await editSubject({
+          form: formData,
+          id: isEditSubject._id,
+        });
+        if (error) {
+          toast.error((error as any)?.data.message);
+        } else {
+          toast.success(data.message);
+          setSubjectForm({
+            subjectName: "",
+            description: "",
+            file: null,
+          });
+          closeModal();
         }
-      });
-    } else {
-      toast.error("Please fill required data");
+      } else {
+        const { data, error } = await postSubject(formData);
+        if (error) {
+          toast.error((error as any)?.data.message);
+        } else {
+          toast.success(data.message);
+          setSubjectForm({
+            subjectName: "",
+            description: "",
+            file: null,
+          });
+          closeModal();
+        }
+      }
+    } catch (validationsErrors: any) {
+      const errors = transformYupErrorsIntoObject(validationsErrors);
+      setErrors(errors);
     }
   };
 
   const handleCloseModal = () => {
-    if (isPending) {
+    if (isFormLoading) {
       return;
     } else {
       closeModal();
+      setErrors({});
     }
   };
 
@@ -140,39 +157,50 @@ const AddSubjectDialog = React.memo(function AddSubjectDialog(props: Props) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {isEditSubject ? "Edit Subject" : "Add New Subject"}
+            {isEditSubject ? "Edit Subject" : "Add Subject"}
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <Input
+          <CustomTextField
+            label="Subject Name"
             placeholder="Subject Name"
-            name="subjectName"
+            fieldName="subjectName"
             value={subjectForm.subjectName}
-            onChange={(event) => handleChangeInput(event)}
+            onChangeInput={(event) => handleChangeInput(event)}
+            error={errors?.subjectName}
           />
-          <textarea
-            id="description"
-            rows={3}
-            name="description"
+          <CustomTextarea
+            label="Description"
+            fieldName="description"
             value={subjectForm.description}
-            onChange={(event) => handleChangeInput(event)}
+            handleChange={(event) => handleChangeInput(event)}
             placeholder="Write your comment for subject here..."
-            className="w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
+            error={errors?.description}
           />
           {!isEditSubject && (
-            <Input
-              id="picture"
-              type="file"
-              accept="image/*"
-              onChange={(event) => handleChangeImage(event.target.files)}
-            />
+            <>
+              <Input
+                id="picture"
+                type="file"
+                accept="image/*"
+                onChange={(event) => handleChangeImage(event.target.files)}
+                className={`${errors?.file ? "border-destructive" : ""}`}
+              />
+              {errors?.file && (
+                <span className="text-sm text-destructive">{errors?.file}</span>
+              )}
+            </>
           )}
           <div className="flex justify-end space-x-2">
-            <Button disabled={isPending} variant="outline" onClick={closeModal}>
+            <Button
+              disabled={isFormLoading}
+              variant="outline"
+              onClick={closeModal}
+            >
               Cancel
             </Button>
-            <Button disabled={isPending} onClick={handleSubmitSubject}>
-              {isPending ? <CircularProgress /> : "Save"}
+            <Button disabled={isFormLoading} onClick={handleSubmitSubject}>
+              {isFormLoading ? <CircularProgress /> : "Save"}
             </Button>
           </div>
         </div>

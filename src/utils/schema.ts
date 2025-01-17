@@ -19,3 +19,14 @@ export const studentSchema = Yup.object().shape({
   mobileNo: Yup.string().required("Please enter mobile no"),
   address: Yup.string().required("Please enter address"),
 });
+
+export const subjectSchema = Yup.object().shape({
+  subjectName: Yup.string().required("Please enter subject"),
+  description: Yup.string().required("Please enter subject description"),
+  file: Yup.mixed().required("Image is required"),
+});
+
+export const standardSchema = Yup.object().shape({
+  standard: Yup.string().required("Please enter subject"),
+  description: Yup.string().required("Please enter standard description"),
+});

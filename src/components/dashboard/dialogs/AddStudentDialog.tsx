@@ -38,8 +38,9 @@ interface StudentForm {
 const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
   const { closeModal, isModalOpen, isEditStudent } = props;
   const { data: standardDrodownData } = useGetStandardDropdownQuery("");
-  const [postStudent, { isLoading }] = usePostStudentMutation();
-  const [putStudent, { isLoading: idEditStudentLoading }] =
+  const [postStudent, { isLoading: isAddStudentLoading }] =
+    usePostStudentMutation();
+  const [putStudent, { isLoading: isEditStudentLoading }] =
     useEditStudentMutation();
   const [formData, setFormData] = useState<StudentForm>({
     name: "",
@@ -49,6 +50,8 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
     address: "",
   });
   const [errors, setErrors] = useState<any>({});
+
+  const isFormLoading = isAddStudentLoading || isEditStudentLoading;
 
   const handleChangeInput = (
     event: React.ChangeEvent<{ name: string; value: string }>
@@ -80,7 +83,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
   };
 
   const handleCloseModal = () => {
-    if (!isLoading || !idEditStudentLoading) {
+    if (!isFormLoading) {
       closeModal();
       setErrors({});
     }
@@ -202,15 +205,15 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
             error={errors?.address}
           />
           <div className="flex justify-end space-x-2">
-            <Button variant="outline" onClick={handleCloseModal}>
+            <Button
+              disabled={isFormLoading}
+              variant="outline"
+              onClick={handleCloseModal}
+            >
               Cancel
             </Button>
-            <Button onClick={handleSubmitForm}>
-              {isLoading || idEditStudentLoading ? (
-                <CircularProgress />
-              ) : (
-                "Save"
-              )}
+            <Button onClick={handleSubmitForm} disabled={isFormLoading}>
+              {isFormLoading ? <CircularProgress /> : "Save"}
             </Button>
           </div>
         </div>
