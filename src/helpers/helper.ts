@@ -1,3 +1,4 @@
+import { EDUCAtION_LIST } from "@/utils/constant";
 import { DropdownOption } from "@/utils/types";
 import crypto from "crypto";
 import { ReactNode } from "react";
@@ -36,4 +37,13 @@ export const transformYupErrorsIntoObject = (
   });
 
   return validationErrors;
+};
+
+export const getLabelOfSubject = (value: string) => {
+  const education = EDUCAtION_LIST.find((educ) => educ.value === value);
+  if(education) {
+    return education.label;
+  } else {
+    return "";
+  }
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,6 +16,7 @@ import { transformYupErrorsIntoObject } from "@/helpers/helper";
 import CustomTextField from "@/components/common/CustomTextField";
 import { usePostTeacherMutation } from "@/redux/query/teacher";
 import CircularProgress from "@/components/common/CircularProgress";
+import { Teacher } from "@/utils/types";
 
 interface TeacherForm {
   name: string;
@@ -28,10 +29,11 @@ interface TeacherForm {
 interface Props {
   open: boolean;
   onClose: () => void;
+  isEditTeacher: Teacher | null;
 }
 
 const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
-  const { open, onClose } = props;
+  const { open, onClose, isEditTeacher } = props;
   const { data: subjectDropdownData } = useGetSubjectDropdownQuery("");
   const { data: standardDrodownData } = useGetStandardDropdownQuery("");
   const [postTeacher, { isLoading }] = usePostTeacherMutation();
@@ -72,6 +74,27 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
       [name]: "",
     }));
   };
+
+  useEffect(() => {
+    if (isEditTeacher) {
+      setFormData({
+        ...formData,
+        name: isEditTeacher.name || "",
+        experience: isEditTeacher.experience || 0,
+        educations: isEditTeacher.educations || [],
+        standards: isEditTeacher.standards.map((std) => std._id) || [],
+        subjects: isEditTeacher.subjects.map((sub) => sub._id) || [],
+      });
+    } else {
+      setFormData({
+        name: "",
+        experience: 0,
+        educations: [],
+        standards: [],
+        subjects: [],
+      });
+    }
+  }, [isEditTeacher]);
 
   const handleCloseModal = () => {
     if (!isLoading) {

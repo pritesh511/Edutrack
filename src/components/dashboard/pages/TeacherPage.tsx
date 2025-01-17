@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { renderOnConditionBase } from "@/helpers/helper";
+import { getLabelOfSubject, renderOnConditionBase } from "@/helpers/helper";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import React, { useCallback, useState } from "react";
@@ -15,9 +15,11 @@ import {
   useGetTeachersQuery,
 } from "@/redux/query/teacher";
 import toast from "react-hot-toast";
+import { Teacher } from "@/utils/types";
 
 const TeacherTabView = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [isEditTeacher, setIsEditTeacher] = useState<null | Teacher>(null);
   const { data, isLoading } = useGetTeachersQuery("");
   const [deleteTeacher] = useDeleteTeacherMutation();
 
@@ -79,29 +81,28 @@ const TeacherTabView = () => {
                           </h4>
                         </div>
                         <div className="space-y-2">
-                          <div>
-                            <h5 className="font-medium text-gray-600">
-                              Total Experience:
-                            </h5>
-                            <p className="text-gray-800 mt-1">
+                          <div className="flex flex-row gap-1 items-center">
+                            <p className="font-medium text-gray-600 text-sm">
+                              Total Year of Experience:
+                            </p>
+                            <p className="text-gray-800 text-sm font-semibold">
                               {teacher.experience} Year
-                              {teacher.experience > 1 ? "s" : ""}
                             </p>
                           </div>
                           <div>
-                            <h5 className="font-medium text-gray-600">
+                            <h5 className="font-medium text-gray-600 text-sm">
                               Graduation:
                             </h5>
                             <div className="flex flex-wrap gap-2 mt-1">
                               {teacher.educations.map((education) => (
                                 <Badge key={education} variant="outline">
-                                  {education}
+                                  {getLabelOfSubject(education)}
                                 </Badge>
                               ))}
                             </div>
                           </div>
                           <div>
-                            <h5 className="font-medium text-gray-600">
+                            <h5 className="font-medium text-gray-600 text-sm">
                               Subjects:
                             </h5>
                             <div className="flex flex-wrap gap-2 mt-1">
@@ -113,7 +114,7 @@ const TeacherTabView = () => {
                             </div>
                           </div>
                           <div>
-                            <h5 className="font-medium text-gray-600">
+                            <h5 className="font-medium text-gray-600 text-sm">
                               Standards:
                             </h5>
                             <div className="flex flex-wrap gap-2 mt-1">
@@ -126,7 +127,13 @@ const TeacherTabView = () => {
                           </div>
                         </div>
                         <div className="flex justify-center gap-3">
-                          <Button size="icon">
+                          <Button
+                            size="icon"
+                            onClick={() => {
+                              setIsEditTeacher(teacher);
+                              setOpenModal(true);
+                            }}
+                          >
                             <FaEdit />
                           </Button>
                           <Button
@@ -146,7 +153,11 @@ const TeacherTabView = () => {
           )}
         </div>
       </CardContent>
-      <AddTeacherDialog open={openModal} onClose={handleCloseModal} />
+      <AddTeacherDialog
+        open={openModal}
+        onClose={handleCloseModal}
+        isEditTeacher={isEditTeacher}
+      />
     </Card>
   );
 };
