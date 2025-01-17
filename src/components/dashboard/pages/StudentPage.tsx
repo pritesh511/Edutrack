@@ -1,8 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import AddStudentModal from "../dialogs/AddStudentModal";
+import AddStudentModal from "../dialogs/AddStudentDialog";
 import CustomTableHead from "@/components/common/CustomTableHead";
 import CustomTableRow from "@/components/common/CustomTableRow";
 import CustomTableCell from "@/components/common/CustomTableCell";
@@ -18,7 +18,6 @@ const StudentTabView = () => {
       "Role No",
       "Name",
       "Class",
-      "Attendance",
       "Parent's Mobile",
       "Address",
       "Actions",
@@ -32,13 +31,16 @@ const StudentTabView = () => {
     );
   };
 
+  const handleCloseModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
   const StudentTableBody = () => {
     const data = [
       {
         role_no: 1,
         name: "Pritesh Makasana",
         class: "Standard 1",
-        attendance: "78%",
         parent_mo: "9081004687",
         address: "A-303, Radhika recidency, surat",
       },
@@ -46,7 +48,6 @@ const StudentTabView = () => {
         role_no: 2,
         name: "Pritesh Makasana",
         class: "Standard 1",
-        attendance: "78%",
         parent_mo: "9081004687",
         address: "A-303, Radhika recidency, surat",
       },
@@ -68,9 +69,8 @@ const StudentTabView = () => {
                 <CustomTableCell width={"5%"} cellName={student.role_no} />
                 <CustomTableCell width={"10%"} cellName={student.name} />
                 <CustomTableCell width={"10%"} cellName={student.class} />
-                <CustomTableCell width={"10%"} cellName={student.attendance} />
                 <CustomTableCell width={"10%"} cellName={student.parent_mo} />
-                <CustomTableCell width={"10%"} cellName={student.address} />
+                <CustomTableCell width={"15%"} cellName={student.address} />
                 <CustomTableCell
                   width={"10%"}
                   cellName={
@@ -104,13 +104,12 @@ const StudentTabView = () => {
           </div>
           <CustomTable
             tableHeader={<StudentTableHeader />}
-            tableTitle={""}
             tableBody={<StudentTableBody />}
           />
         </CardContent>
       </Card>
       <AddStudentModal
-        setIsModalOpen={setIsModalOpen}
+        closeModal={() => handleCloseModal()}
         isModalOpen={isModalOpen}
       />
     </>

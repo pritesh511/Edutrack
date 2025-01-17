@@ -19,15 +19,21 @@ interface Props {
   placeholder: string;
   options: Array<Option>;
   label?: string;
+  error?: string;
+  handleChangeSelect: (value: string) => void;
 }
 
 const CustomSelect = (props: Props) => {
-  const { placeholder, options, label } = props;
+  const { placeholder, options, label, error, handleChangeSelect } = props;
   return (
     <div>
-      {label && <Label>{label}</Label>}
-      <Select>
-        <SelectTrigger className="w-full h-12">
+      {label && (
+        <Label className={`${error ? "text-destructive" : ""}`}>{label}</Label>
+      )}
+      <Select onValueChange={handleChangeSelect}>
+        <SelectTrigger
+          className={`w-full h-12 ${error ? "border-destructive" : ""}`}
+        >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
@@ -42,6 +48,7 @@ const CustomSelect = (props: Props) => {
           </SelectGroup>
         </SelectContent>
       </Select>
+      {error && <span className="text-sm text-destructive">{error}</span>}
     </div>
   );
 };
