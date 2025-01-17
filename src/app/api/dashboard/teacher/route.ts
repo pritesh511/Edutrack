@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { databseConnect } from "@/dbConfig/dbConfig";
 import Teacher from "@/models/teacher.model";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
+import Student from "@/models/student.model";
 
 databseConnect();
 
@@ -90,7 +91,38 @@ export async function GET(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const teacherId = request?.nextUrl?.searchParams.get("teacherId");
+
+    if (!teacherId) {
+      return NextResponse.json(
+        {
+          message: "Teacher ID is required",
+        },
+        { status: 400 }
+      );
+    }
+
     const findTeacher = await Teacher.findOne({ _id: teacherId });
+    if (!findTeacher) {
+      return NextResponse.json(
+        {
+          message: "Subject not found",
+        },
+        { status: 404 }
+      );
+    }
+
+    const linkedTeachers = await Student.find({
+      classTeacher: teacherId,
+    });
+    if (linkedTeachers.length > 0) {
+      return NextResponse.json(
+        {
+          message: "Cannot delete the teacher as it is linked with student",
+        },
+        { status: 400 }
+      );
+    }
+
     if (findTeacher) {
       await Teacher.deleteOne({ _id: teacherId });
       return NextResponse.json(

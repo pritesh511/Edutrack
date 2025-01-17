@@ -18,3 +18,5 @@
 - Axios
 - Nodemailer
 - AWS S3 - for image store
+- Redux toolkit
+- Redux toolkit query
