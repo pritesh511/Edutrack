@@ -3,7 +3,6 @@
 // Switches between different environments
 const configSwitcher = (environmentType: string) => {
   let configuration;
-  debugger;
 
   switch (environmentType) {
     case "localhost":
