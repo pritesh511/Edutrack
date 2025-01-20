@@ -33,3 +33,14 @@ export const standardSchema = Yup.object().shape({
   standard: Yup.string().required("Please enter subject"),
   description: Yup.string().required("Please enter standard description"),
 });
+
+export const loginSchema = Yup.object().shape({
+  email: Yup.string().required("Please enter email"),
+  password: Yup.string().required("Please enter password"),
+});
+
+export const signupSchema = Yup.object().shape({
+  schoolName: Yup.string().required("Please enter school name"),
+  email: Yup.string().required("Please enter email"),
+  password: Yup.string().required("Please enter password"),
+});

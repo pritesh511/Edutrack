@@ -14,6 +14,9 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import CircularProgress from "@/components/common/CircularProgress";
+import CustomTextField from "@/components/common/CustomTextField";
+import { transformYupErrorsIntoObject } from "@/helpers/helper";
+import { signupSchema } from "@/utils/schema";
 
 const SignPage = () => {
   const router = useRouter();
@@ -23,6 +26,7 @@ const SignPage = () => {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<any>({});
 
   const handleChangeData = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -31,28 +35,35 @@ const SignPage = () => {
       ...prev,
       [name]: value,
     }));
+
+    setErrors((prev: any) => ({
+      ...prev,
+      [name]: "",
+    }));
   };
 
   const handleSignup = async () => {
-    const { schoolName, email, password } = schoolData;
-    if (schoolName && email && password) {
-      try {
-        setLoading(true);
-        const postUser = await axios.post("/api/users", schoolData);
-        toast.success(postUser.data.message);
-        setSchoolData({
-          schoolName: "",
-          email: "",
-          password: "",
-        });
-        router.push("/login");
-      } catch (error: any) {
-        toast.error(error.response?.data?.message || "Something went wrong");
-      } finally {
-        setLoading(false);
+    try {
+      await signupSchema.validate(schoolData, { abortEarly: false });
+
+      setLoading(true);
+      const postUser = await axios.post("/api/users", schoolData);
+      toast.success(postUser.data.message);
+      setSchoolData({
+        schoolName: "",
+        email: "",
+        password: "",
+      });
+      router.push("/login");
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        toast.error(error.response?.data?.message);
+      } else {
+        const errors = transformYupErrorsIntoObject(error);
+        setErrors(errors);
       }
-    } else {
-      toast.error("Please fill in all required fields.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,37 +75,30 @@ const SignPage = () => {
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-4">
-            <div>
-              <Label htmlFor="schoolName">School Name</Label>
-              <Input
-                id="schoolName"
-                name="schoolName"
-                placeholder="Enter your school name"
-                value={schoolData.schoolName}
-                onChange={handleChangeData}
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                placeholder="Enter your email"
-                value={schoolData.email}
-                onChange={handleChangeData}
-              />
-            </div>
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Enter your password"
-                value={schoolData.password}
-                onChange={handleChangeData}
-              />
-            </div>
+            <CustomTextField
+              label="School Name*"
+              fieldName="schoolName"
+              placeholder="Enter your email"
+              value={schoolData.schoolName}
+              onChangeInput={(event) => handleChangeData(event)}
+              error={errors?.schoolName}
+            />
+            <CustomTextField
+              label="Email*"
+              fieldName="email"
+              placeholder="Enter your email"
+              value={schoolData.email}
+              onChangeInput={(event) => handleChangeData(event)}
+              error={errors?.email}
+            />
+            <CustomTextField
+              label="Password*"
+              fieldName="password"
+              placeholder="Enter your password"
+              value={schoolData.password}
+              onChangeInput={(event) => handleChangeData(event)}
+              error={errors?.password}
+            />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col items-center gap-4">

@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     if (existingUser) {
       return NextResponse.json(
         {
-          error: "Email is already register",
+          message: "Email is already register",
         },
         { status: 400 }
       );
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     console.log(error.message);
     return NextResponse.json(
       {
-        error: error.message,
+        message: "Internal Server Error",
       },
       { status: 500 }
     );
@@ -59,7 +59,7 @@ export async function GET() {
   } catch (error: any) {
     return NextResponse.json(
       {
-        message: error.message,
+        message: "Internal Server Error",
       },
       { status: 500 }
     );
@@ -82,7 +82,7 @@ export async function DELETE(request: NextRequest) {
   } catch (error: any) {
     return NextResponse.json(
       {
-        message: error.message,
+        message: "Internal Server Error",
       },
       { status: 500 }
     );

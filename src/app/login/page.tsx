@@ -14,6 +14,9 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import CircularProgress from "@/components/common/CircularProgress";
+import { transformYupErrorsIntoObject } from "@/helpers/helper";
+import CustomTextField from "@/components/common/CustomTextField";
+import { loginSchema } from "@/utils/schema";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -22,6 +25,7 @@ const LoginPage = () => {
     password: "",
   });
   const [isPending, setTransition] = useTransition();
+  const [errors, setErrors] = useState<any>({});
 
   const handleChangeData = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -30,49 +34,30 @@ const LoginPage = () => {
       ...prev,
       [name]: value,
     }));
+
+    setErrors((prev: any) => ({
+      ...prev,
+      [name]: "",
+    }));
   };
 
-  // Before useTransition hook
-
-  // const handleLogin = async () => {
-  //   const { email, password } = loginData;
-  //   if (email.length > 0 && password.length > 0) {
-  //     try {
-  //       setLoading(true);
-  //       const response = await axios.post("/api/users/login", loginData);
-  //       toast.success(response.data.message);
-  //       router.push("/dashboard");
-  //     } catch (error: any) {
-  //       if (error.response?.status === 400) {
-  //         toast.error(error.response.data.message);
-  //       } else {
-  //         toast.error("Something went wrong. Please try again.");
-  //       }
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   } else {
-  //     toast.error("Please fill in all required fields.");
-  //   }
-  // };
-
-  // After useTransition hook
-
   const handleLogin = async () => {
-    const { email, password } = loginData;
-    if (email.length > 0 && password.length > 0) {
-      setTransition(async () => {
-        try {
-          const response = await axios.post("/api/users/login", loginData);
-          toast.success(response.data.message);
-          router.push("/dashboard");
-        } catch (error: any) {
-          toast.error(error.response.data.message);
+    setTransition(async () => {
+      try {
+        await loginSchema.validate(loginData, { abortEarly: false });
+
+        const response = await axios.post("/api/users/login", loginData);
+        toast.success(response.data.message);
+        router.push("/dashboard");
+      } catch (validationsErrors: any) {
+        if (validationsErrors.response?.data.message) {
+          toast.error(validationsErrors.response.data.message);
+        } else {
+          const errors = transformYupErrorsIntoObject(validationsErrors);
+          setErrors(errors);
         }
-      });
-    } else {
-      toast.error("Please fill in all required fields.");
-    }
+      }
+    });
   };
 
   return (
@@ -83,27 +68,22 @@ const LoginPage = () => {
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-4">
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                placeholder="Enter your email"
-                value={loginData.email}
-                onChange={handleChangeData}
-              />
-            </div>
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Enter your password"
-                value={loginData.password}
-                onChange={handleChangeData}
-              />
-            </div>
+            <CustomTextField
+              label="Email*"
+              fieldName="email"
+              placeholder="Enter your email"
+              value={loginData.email}
+              onChangeInput={(event) => handleChangeData(event)}
+              error={errors?.email}
+            />
+            <CustomTextField
+              label="Password*"
+              fieldName="password"
+              placeholder="Enter your password"
+              value={loginData.password}
+              onChangeInput={(event) => handleChangeData(event)}
+              error={errors?.password}
+            />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col items-center gap-4">

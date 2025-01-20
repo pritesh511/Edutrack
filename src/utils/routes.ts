@@ -39,18 +39,18 @@ export const dashboardRoutes = [
     path: "/dashboard/subject",
     isShow: true,
   },
-  {
-    id: "attendance",
-    icon: SiBookstack,
-    label: "Attendance",
-    path: "/dashboard/attendance",
-    isShow: true,
-  },
-  {
-    id: "reports",
-    icon: BsFileEarmarkTextFill,
-    label: "Reports",
-    path: "/dashboard/report",
-    isShow: true,
-  },
+  // {
+  //   id: "attendance",
+  //   icon: SiBookstack,
+  //   label: "Attendance",
+  //   path: "/dashboard/attendance",
+  //   isShow: true,
+  // },
+  // {
+  //   id: "reports",
+  //   icon: BsFileEarmarkTextFill,
+  //   label: "Reports",
+  //   path: "/dashboard/report",
+  //   isShow: true,
+  // },
 ];
