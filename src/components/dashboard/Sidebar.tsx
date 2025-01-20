@@ -3,6 +3,8 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { dashboardRoutes } from "@/utils/routes";
+import { useDispatch } from "react-redux";
+import { toggleSidebar } from "@/redux/slices/dashboardSlice";
 
 interface Props {
   isSidebarOpen: boolean;
@@ -11,6 +13,7 @@ interface Props {
 const Sidebar = (props: Props) => {
   const { isSidebarOpen } = props;
   const currentPath = usePathname();
+  const dispatch = useDispatch();
   return (
     <aside
       className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform ${
@@ -28,6 +31,7 @@ const Sidebar = (props: Props) => {
           .map((tab) => (
             <Link
               key={tab.id}
+              onClick={() => dispatch(toggleSidebar())}
               href={tab.path}
               className={`flex flex-row items-center gap-3 px-6 py-3 mb-2 rounded-[8px] hover:bg-blue-600 hover:text-white cursor-pointer transition-colors ${
                 currentPath === tab.path ? "bg-blue-600 text-white" : ""

@@ -9,17 +9,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useDispatch } from "react-redux";
 import axiosInstance from "@/helpers/axios/axiosInstance";
 import { setCurrentUser, setEmptyCurrentUser } from "@/redux/slices/userSlice";
+import { toggleSidebar } from "@/redux/slices/dashboardSlice";
 
-interface Props {
-  setIsSidebarOpen: (value: boolean) => void;
-  isSidebarOpen: boolean;
-}
-
-const Header = (props: Props) => {
+const Header = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [currentUserName, setCurrentUserName] = useState<string>("");
-  const { setIsSidebarOpen, isSidebarOpen } = props;
 
   const handleLogout = async () => {
     try {
@@ -54,7 +49,7 @@ const Header = (props: Props) => {
         <Button
           variant="ghost"
           className="md:hidden"
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          onClick={() => dispatch(toggleSidebar())}
         >
           <BsList />
         </Button>

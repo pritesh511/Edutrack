@@ -64,11 +64,6 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
       ...formData,
       [name]: value,
     });
-
-    setErrors((prev: any) => ({
-      ...prev,
-      [name]: "",
-    }));
   };
 
   const handleChangeSelect = (name: string, values: string[]) => {
@@ -77,6 +72,13 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
       [name]: values,
     });
 
+    setErrors((prev: any) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  const handleClickInput = (name: string) => {
     setErrors((prev: any) => ({
       ...prev,
       [name]: "",
@@ -169,6 +171,7 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
             value={formData.name}
             onChangeInput={(event) => handleChangeInput(event)}
             error={errors?.name}
+            onClickInput={() => handleClickInput("name")}
           />
           <CustomTextField
             label="Experience"
@@ -178,6 +181,7 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
             value={formData.experience}
             onChangeInput={(event) => handleChangeInput(event)}
             error={errors?.experience}
+            onClickInput={() => handleClickInput("experience")}
           />
           <div>
             <MultiSelect

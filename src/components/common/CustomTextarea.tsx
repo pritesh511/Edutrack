@@ -12,6 +12,7 @@ interface Props {
   error?: string;
   fieldName: string;
   disabled?: boolean;
+  onClick?: () => void;
 }
 
 const CustomTextarea = (props: Props) => {
@@ -22,6 +23,7 @@ const CustomTextarea = (props: Props) => {
     placeholder,
     error,
     fieldName,
+    onClick,
     disabled = false,
   } = props;
   return (
@@ -42,6 +44,7 @@ const CustomTextarea = (props: Props) => {
         onChange={handleChange}
         placeholder={placeholder}
         disabled={disabled}
+        onClick={onClick}
         className={`${error ? "border-destructive" : ""}`}
       />
       {error && <span className="text-sm text-destructive">{error}</span>}

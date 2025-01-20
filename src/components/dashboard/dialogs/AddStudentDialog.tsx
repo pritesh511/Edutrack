@@ -80,7 +80,9 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
       ...formData,
       [name]: value,
     });
+  };
 
+  const handleClickInput = (name: string) => {
     setErrors((prev: any) => ({
       ...prev,
       [name]: "",
@@ -221,6 +223,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
               onChangeInput={(event) => handleChangeInput(event)}
               error={errors?.name}
               disabled={isViewStudent}
+              onClickInput={() => handleClickInput("name")}
             />
             <CustomTextField
               label="Role No*"
@@ -231,6 +234,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
               onChangeInput={(event) => handleChangeInput(event)}
               error={errors?.roleNo}
               disabled={Boolean(isEditStudent) || isViewStudent}
+              onClickInput={() => handleClickInput("roleNo")}
             />
             <CustomSelect
               label="Standard*"
@@ -250,6 +254,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
               placeholder={"Please enter address"}
               fieldName={"address"}
               error={errors?.address}
+              onClick={() => handleClickInput("address")}
               disabled={isViewStudent}
             />
           </div>
@@ -264,6 +269,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
               value={formData.fatherName}
               onChangeInput={(event) => handleChangeInput(event)}
               error={errors?.fatherName}
+              onClickInput={() => handleClickInput("fatherName")}
               disabled={isViewStudent}
             />
             <CustomTextField
@@ -273,6 +279,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
               value={formData.fatherOccupation}
               onChangeInput={(event) => handleChangeInput(event)}
               error={errors?.fatherOccupation}
+              onClickInput={() => handleClickInput("fatherOccupation")}
               disabled={isViewStudent}
             />
             <CustomTextField
@@ -282,6 +289,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
               value={formData.fatherMobileNo}
               onChangeInput={(event) => handleChangeInput(event)}
               error={errors?.fatherMobileNo}
+              onClickInput={() => handleClickInput("fatherMobileNo")}
               disabled={isViewStudent}
             />
             <CustomTextField
@@ -291,6 +299,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
               value={formData.fatherEmail}
               onChangeInput={(event) => handleChangeInput(event)}
               error={errors?.fatherEmail}
+              onClickInput={() => handleClickInput("fatherEmail")}
               disabled={isViewStudent}
             />
             <CustomTextField
@@ -300,6 +309,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
               value={formData.motherName}
               onChangeInput={(event) => handleChangeInput(event)}
               error={errors?.motherName}
+              onClickInput={() => handleClickInput("motherName")}
               disabled={isViewStudent}
             />
             <CustomTextField
@@ -309,6 +319,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
               value={formData.motherOccupation}
               onChangeInput={(event) => handleChangeInput(event)}
               error={errors?.motherOccupation}
+              onClickInput={() => handleClickInput("motherOccupation")}
               disabled={isViewStudent}
             />
             <CustomTextField
@@ -318,6 +329,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
               value={formData.motherMobileNo}
               onChangeInput={(event) => handleChangeInput(event)}
               error={errors?.motherMobileNo}
+              onClickInput={() => handleClickInput("motherMobileNo")}
               disabled={isViewStudent}
             />
           </div>

@@ -71,7 +71,9 @@ const AddStandardDialog = React.memo(function AddStandardDialog(props: Props) {
       ...formData,
       [name]: value,
     });
+  };
 
+  const handleClickInput = (name: string) => {
     setErrors((prev: any) => ({
       ...prev,
       [name]: "",
@@ -143,6 +145,7 @@ const AddStandardDialog = React.memo(function AddStandardDialog(props: Props) {
             value={formData.standard}
             onChangeInput={(event) => handleChangeInput(event)}
             error={errors?.standard}
+            onClickInput={() => handleClickInput("standard")}
           />
           <CustomTextarea
             label="Description"
@@ -151,6 +154,7 @@ const AddStandardDialog = React.memo(function AddStandardDialog(props: Props) {
             handleChange={(event) => handleChangeInput(event)}
             placeholder="Write your comment for standard here..."
             error={errors?.description}
+            onClick={() => handleClickInput("description")}
           />
           <div className="flex justify-end space-x-2">
             <Button

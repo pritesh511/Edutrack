@@ -77,6 +77,13 @@ const AddSubjectDialog = React.memo(function AddSubjectDialog(props: Props) {
     }
   };
 
+  const handleClickInput = (name: string) => {
+    setErrors((prev: any) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
   const handleChangeInput = (
     event: React.ChangeEvent<{ name: string; value: string }>
   ) => {
@@ -87,11 +94,6 @@ const AddSubjectDialog = React.memo(function AddSubjectDialog(props: Props) {
       ...subjectForm,
       [name]: value,
     });
-
-    setErrors((prev: any) => ({
-      ...prev,
-      [name]: "",
-    }));
   };
 
   const handleSubmitSubject = async () => {
@@ -168,6 +170,7 @@ const AddSubjectDialog = React.memo(function AddSubjectDialog(props: Props) {
             value={subjectForm.subjectName}
             onChangeInput={(event) => handleChangeInput(event)}
             error={errors?.subjectName}
+            onClickInput={() => handleClickInput("subjectName")}
           />
           <CustomTextarea
             label="Description"
@@ -176,6 +179,7 @@ const AddSubjectDialog = React.memo(function AddSubjectDialog(props: Props) {
             handleChange={(event) => handleChangeInput(event)}
             placeholder="Write your comment for subject here..."
             error={errors?.description}
+            onClick={() => handleClickInput("description")}
           />
           {!isEditSubject && (
             <>

@@ -2,12 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface DashboardState {
   isAppLoader: boolean;
+  isSidebarOpen: boolean;
 }
 
 const dashboardSlice = createSlice({
   name: "dashboard",
   initialState: {
     isAppLoader: false,
+    isSidebarOpen: false,
   },
   reducers: {
     setAppLoaderTrue: (state: DashboardState) => {
@@ -16,10 +18,13 @@ const dashboardSlice = createSlice({
     setAppLoaderFalse: (state: DashboardState) => {
       state.isAppLoader = false;
     },
+    toggleSidebar: (state: DashboardState) => {
+      state.isSidebarOpen = !state.isSidebarOpen;
+    },
   },
 });
 
-export const { setAppLoaderTrue, setAppLoaderFalse } = dashboardSlice.actions;
+export const { setAppLoaderTrue, setAppLoaderFalse, toggleSidebar } = dashboardSlice.actions;
 
 export const getDashboardData = (state: { dashboard: DashboardState }) =>
   state.dashboard;
