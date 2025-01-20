@@ -11,9 +11,9 @@ const configSwitcher = (environmentType: string) => {
         ImageUrl: `http://localhost:3000`,
       };
       break;
-    case "tailor05.vercel.app":
+    case "edutrack-pritesh511s-projects.vercel.app":
       configuration = {
-        API_URL: `https://vercel.com/pritesh511s-projects`,
+        API_URL: `https://vercel.com/pritesh511s-projects/`,
         ImageUrl: `https://vercel.com/pritesh511s-projects`,
       };
       break;
