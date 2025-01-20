@@ -1,5 +1,7 @@
 import * as Yup from "yup";
 
+const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
+
 export const teacherSchema = Yup.object().shape({
   name: Yup.string().required("Please enter teacher name"),
   experience: Yup.number()
@@ -35,12 +37,19 @@ export const standardSchema = Yup.object().shape({
 });
 
 export const loginSchema = Yup.object().shape({
-  email: Yup.string().required("Please enter email"),
+  email: Yup.string().required("Please enter email").email("Please enter valid email"),
   password: Yup.string().required("Please enter password"),
 });
 
 export const signupSchema = Yup.object().shape({
   schoolName: Yup.string().required("Please enter school name"),
-  email: Yup.string().required("Please enter email"),
-  password: Yup.string().required("Please enter password"),
+  email: Yup.string()
+    .required("Please enter email")
+    .email("Please enter valid email"),
+  password: Yup.string()
+    .matches(passwordRules, { message: "Please create a stronger password" })
+    .required("Please enter password"),
+  confirm_password: Yup.string()
+    .required("Please enter confirm password")
+    .oneOf([Yup.ref("password")], "Passwords must match"),
 });

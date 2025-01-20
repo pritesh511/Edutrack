@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,7 +11,6 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import CircularProgress from "@/components/common/CircularProgress";
 import CustomTextField from "@/components/common/CustomTextField";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
@@ -24,6 +22,7 @@ const SignPage = () => {
     schoolName: "",
     email: "",
     password: "",
+    confirm_password: "",
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<any>({});
@@ -35,7 +34,9 @@ const SignPage = () => {
       ...prev,
       [name]: value,
     }));
+  };
 
+  const handleClickInput = (name: string) => {
     setErrors((prev: any) => ({
       ...prev,
       [name]: "",
@@ -53,6 +54,7 @@ const SignPage = () => {
         schoolName: "",
         email: "",
         password: "",
+        confirm_password: "",
       });
       router.push("/login");
     } catch (error: any) {
@@ -69,11 +71,11 @@ const SignPage = () => {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md p-6 shadow-lg">
+      <Card className="w-full max-w-md p-4 shadow-lg">
         <CardHeader>
           <h1 className="text-2xl font-bold text-center">Sign Up</h1>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4">
           <div className="flex flex-col gap-4">
             <CustomTextField
               label="School Name*"
@@ -82,6 +84,7 @@ const SignPage = () => {
               value={schoolData.schoolName}
               onChangeInput={(event) => handleChangeData(event)}
               error={errors?.schoolName}
+              onClickInput={() => handleClickInput("schoolName")}
             />
             <CustomTextField
               label="Email*"
@@ -90,18 +93,31 @@ const SignPage = () => {
               value={schoolData.email}
               onChangeInput={(event) => handleChangeData(event)}
               error={errors?.email}
+              onClickInput={() => handleClickInput("email")}
             />
             <CustomTextField
               label="Password*"
               fieldName="password"
               placeholder="Enter your password"
               value={schoolData.password}
+              type="password"
               onChangeInput={(event) => handleChangeData(event)}
               error={errors?.password}
+              onClickInput={() => handleClickInput("password")}
+            />
+            <CustomTextField
+              label="Confirm Password*"
+              fieldName="confirm_password"
+              placeholder="Enter Confirm password"
+              value={schoolData.confirm_password}
+              type="password"
+              onChangeInput={(event) => handleChangeData(event)}
+              error={errors?.confirm_password}
+              onClickInput={() => handleClickInput("confirm_password")}
             />
           </div>
         </CardContent>
-        <CardFooter className="flex flex-col items-center gap-4">
+        <CardFooter className="flex flex-col items-center gap-4 p-4">
           <Button
             size="lg"
             className="w-full"

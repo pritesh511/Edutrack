@@ -12,6 +12,7 @@ interface Props {
   type?: string;
   handleFocusInput?: () => void;
   disabled?: boolean;
+  onClickInput?: () => void;
 }
 
 const CustomTextField = (props: Props) => {
@@ -24,6 +25,7 @@ const CustomTextField = (props: Props) => {
     fieldName,
     type,
     handleFocusInput,
+    onClickInput,
     disabled = false,
   } = props;
   return (
@@ -39,6 +41,7 @@ const CustomTextField = (props: Props) => {
         </Label>
       )}
       <Input
+        onClick={onClickInput}
         placeholder={placeholder}
         name={fieldName}
         value={value}

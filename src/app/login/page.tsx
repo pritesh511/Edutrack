@@ -34,7 +34,9 @@ const LoginPage = () => {
       ...prev,
       [name]: value,
     }));
+  };
 
+  const handleClickInput = (name: string) => {
     setErrors((prev: any) => ({
       ...prev,
       [name]: "",
@@ -62,11 +64,11 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md p-6 shadow-lg">
+      <Card className="w-full max-w-md p-4 shadow-lg">
         <CardHeader>
           <h1 className="text-2xl font-bold text-center">Login</h1>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4">
           <div className="flex flex-col gap-4">
             <CustomTextField
               label="Email*"
@@ -75,6 +77,7 @@ const LoginPage = () => {
               value={loginData.email}
               onChangeInput={(event) => handleChangeData(event)}
               error={errors?.email}
+              onClickInput={() => handleClickInput("email")}
             />
             <CustomTextField
               label="Password*"
@@ -83,10 +86,12 @@ const LoginPage = () => {
               value={loginData.password}
               onChangeInput={(event) => handleChangeData(event)}
               error={errors?.password}
+              type="password"
+              onClickInput={() => handleClickInput("password")}
             />
           </div>
         </CardContent>
-        <CardFooter className="flex flex-col items-center gap-4">
+        <CardFooter className="flex flex-col items-center gap-4 p-4">
           <Button
             size="lg"
             className="w-full"
