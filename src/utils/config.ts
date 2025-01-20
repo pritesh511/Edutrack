@@ -13,8 +13,8 @@ const configSwitcher = (environmentType: string) => {
       break;
     case "edutrack-pritesh511s-projects.vercel.app":
       configuration = {
-        API_URL: `https://vercel.com/pritesh511s-projects/`,
-        ImageUrl: `https://vercel.com/pritesh511s-projects`,
+        API_URL: `https://edutrack-pritesh511s-projects.vercel.app/`,
+        ImageUrl: `https://edutrack-pritesh511s-projects.vercel.app`,
       };
       break;
     default:
