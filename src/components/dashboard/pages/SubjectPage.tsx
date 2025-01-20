@@ -14,6 +14,7 @@ import {
   useDeleteSubjectMutation,
   useGetSubjectsQuery,
 } from "@/redux/query/subject";
+import { ADMIN_EMAIL } from "@/utils/constant";
 
 const SubjectTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,68 +43,83 @@ const SubjectTabView = () => {
 
   return (
     <>
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold">Subjects</h2>
-            <Button onClick={() => setIsModalOpen(true)} size={"lg"}>
-              Add Subject
-            </Button>
-          </div>
-          <div className="flex flex-col gap-4">
-            {renderOnConditionBase(
-              isSubjectLoading,
-              <Loader />,
-              <>
-                {renderOnConditionBase(
-                  subjectData?.subjects.length === 0,
-                  <NoDataFound />,
-                  <>
-                    {subjectData?.subjects.map((subject) => {
-                      return (
-                        <Card key={subject._id}>
-                          <CardContent className="p-6 flex flex-row items-center justify-between">
-                            <div className="flex flex-row items-center">
-                              <img
-                                src={subject.image}
-                                alt="Subject"
-                                className="rounded-lg min-w-[80px] min-h-[80px] w-[80px] h-[80px] object-cover"
-                              />
-                              <div className="mx-4">
-                                <h4 className="text-xl font-semibold">
-                                  {subject.subjectName}
-                                </h4>
-                                <p className="text-sm">{subject.description}</p>
+      {renderOnConditionBase(
+        ADMIN_EMAIL === process.env.ADMIN_EMAIL,
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold">Subjects</h2>
+              <Button onClick={() => setIsModalOpen(true)} size={"lg"}>
+                Add Subject
+              </Button>
+            </div>
+            <div className="flex flex-col gap-4">
+              {renderOnConditionBase(
+                isSubjectLoading,
+                <Loader />,
+                <>
+                  {renderOnConditionBase(
+                    subjectData?.subjects.length === 0,
+                    <NoDataFound />,
+                    <>
+                      {subjectData?.subjects.map((subject) => {
+                        return (
+                          <Card key={subject._id}>
+                            <CardContent className="p-6 flex flex-row items-center justify-between">
+                              <div className="flex flex-row items-center">
+                                <img
+                                  src={subject.image}
+                                  alt="Subject"
+                                  className="rounded-lg min-w-[80px] min-h-[80px] w-[80px] h-[80px] object-cover"
+                                />
+                                <div className="mx-4">
+                                  <h4 className="text-xl font-semibold">
+                                    {subject.subjectName}
+                                  </h4>
+                                  <p className="text-sm">
+                                    {subject.description}
+                                  </p>
+                                </div>
                               </div>
-                            </div>
-                            <div className="flex flex-row gap-2">
-                              <Button
-                                onClick={() => {
-                                  setIsEditSubject(subject);
-                                  setIsModalOpen(true);
-                                }}
-                                size={"icon"}
-                              >
-                                <FaEdit />
-                              </Button>
-                              <Button
-                                size={"icon"}
-                                onClick={() => handleDeleteSubject(subject._id)}
-                              >
-                                <MdDelete />
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
-                  </>
-                )}
-              </>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+                              <div className="flex flex-row gap-2">
+                                <Button
+                                  onClick={() => {
+                                    setIsEditSubject(subject);
+                                    setIsModalOpen(true);
+                                  }}
+                                  size={"icon"}
+                                >
+                                  <FaEdit />
+                                </Button>
+                                <Button
+                                  size={"icon"}
+                                  onClick={() =>
+                                    handleDeleteSubject(subject._id)
+                                  }
+                                >
+                                  <MdDelete />
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          </CardContent>
+        </Card>,
+        <Card>
+          <CardContent className="p-6">
+            <h1 className="text-center text-destructive">
+              You don't have authorization to access this page. Please speak
+              with the administrator.
+            </h1>
+          </CardContent>
+        </Card>
+      )}
       <AddSubjectDialog
         isModalOpen={isModalOpen}
         closeModal={closeSubjectDialog}

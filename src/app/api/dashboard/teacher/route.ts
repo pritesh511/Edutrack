@@ -46,11 +46,13 @@ export async function GET(request: NextRequest) {
   try {
     const userId = await getDataFromToken(request);
 
-    const standards = await Teacher.find({ user: userId }).select("-user -__v");
+    const teachersData = await Teacher.find({ user: userId }).select(
+      "-user -__v"
+    );
 
     const isdropdownTrue = request?.nextUrl?.searchParams.get("dropdown");
 
-    const dropdownOptions = standards.map((teacher) => {
+    const dropdownOptions = teachersData.map((teacher) => {
       return {
         label: teacher.name,
         value: teacher._id,

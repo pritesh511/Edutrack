@@ -16,6 +16,7 @@ import {
 import { GoUnverified } from "react-icons/go";
 import { IoBookSharp, IoPeople } from "react-icons/io5";
 import { BsPersonWorkspace } from "react-icons/bs";
+import { useGetDashboardDataQuery } from "@/redux/query/dashboard";
 
 ChartJS.register(
   CategoryScale,
@@ -52,6 +53,7 @@ const performanceData = {
 };
 
 const DashboardTabView = () => {
+  const { data } = useGetDashboardDataQuery("");
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -61,20 +63,20 @@ const DashboardTabView = () => {
               <h3 className="text-gray-500">Total Students</h3>
               <IoPeople style={{ width: 24, height: 24 }} color="#2563eb" />
             </div>
-            <p className="text-2xl font-bold mt-2">1,234</p>
+            <p className="text-2xl font-bold mt-2">{data?.students.length}</p>
             <p className="text-green-500 text-sm mt-2">+5% from last month</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-gray-500">Present Today</h3>
+              <h3 className="text-gray-500">Subjects</h3>
               <GoUnverified
                 style={{ width: 24, height: 24 }}
                 color="rgb(34 197 94)"
               />
             </div>
-            <p className="text-2xl font-bold mt-2">1,180</p>
+            <p className="text-2xl font-bold mt-2">{data?.subjects.length}</p>
             <p className="text-green-500 text-sm mt-2">95.6% attendance</p>
           </CardContent>
         </Card>
@@ -87,7 +89,7 @@ const DashboardTabView = () => {
                 color="rgb(168 85 247)"
               />
             </div>
-            <p className="text-2xl font-bold mt-2">85</p>
+            <p className="text-2xl font-bold mt-2">{data?.teachers.length}</p>
             <p className="text-purple-500 text-sm mt-2">Full staff</p>
           </CardContent>
         </Card>
@@ -100,7 +102,7 @@ const DashboardTabView = () => {
                 color="rgb(239 68 68)"
               />
             </div>
-            <p className="text-2xl font-bold mt-2">32</p>
+            <p className="text-2xl font-bold mt-2">{data?.standards.length}</p>
             <p className="text-red-500 text-sm mt-2">Active classes</p>
           </CardContent>
         </Card>

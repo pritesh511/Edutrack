@@ -10,9 +10,12 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
 
+    // get id from token
+    const userId = await getDataFromToken(request);
+
     const { standard, description } = reqBody;
 
-    const findStd = await Standard.findOne({ standard });
+    const findStd = await Standard.findOne({ standard, user: userId });
 
     if (findStd) {
       return NextResponse.json(
@@ -22,9 +25,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    // get id from token
-    const userId = await getDataFromToken(request);
 
     const standardResp = await new Standard({
       standard,

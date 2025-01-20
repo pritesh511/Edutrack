@@ -25,6 +25,12 @@ export interface Teacher {
   subjects: Array<Subject>;
 }
 
+export interface Dashboard {
+  standards: Array<Standard>;
+  students: Array<Standard>;
+  subjects: Array<Subject>;
+}
+
 export interface Student {
   _id: string;
   name: string;

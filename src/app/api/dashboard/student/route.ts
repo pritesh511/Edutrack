@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       classTeacher,
     } = reqBody;
 
-    const isRoleNumberTaken = await Student.findOne({ roleNo });
+    const isRoleNumberTaken = await Student.findOne({ roleNo, user: userId });
 
     if (isRoleNumberTaken) {
       return NextResponse.json(

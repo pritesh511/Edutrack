@@ -26,7 +26,7 @@ export const studentSchema = Yup.object().shape({
 export const subjectSchema = Yup.object().shape({
   subjectName: Yup.string().required("Please enter subject"),
   description: Yup.string().required("Please enter subject description"),
-  file: Yup.mixed().required("Image is required"),
+  file: Yup.mixed().required("Image is required").nullable(),
 });
 
 export const standardSchema = Yup.object().shape({
