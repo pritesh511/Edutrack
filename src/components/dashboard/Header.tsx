@@ -44,8 +44,8 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="bg-white shadow-sm">
-      <div className="flex items-center justify-between px-6 py-4">
+    <header className="bg-white shadow-md">
+      <div className="flex items-center justify-between p-6">
         <Button
           variant="ghost"
           className="md:hidden"

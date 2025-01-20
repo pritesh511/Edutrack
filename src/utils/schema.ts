@@ -37,7 +37,9 @@ export const standardSchema = Yup.object().shape({
 });
 
 export const loginSchema = Yup.object().shape({
-  email: Yup.string().required("Please enter email").email("Please enter valid email"),
+  email: Yup.string()
+    .required("Please enter email")
+    .email("Please enter valid email"),
   password: Yup.string().required("Please enter password"),
 });
 
@@ -52,4 +54,12 @@ export const signupSchema = Yup.object().shape({
   confirm_password: Yup.string()
     .required("Please enter confirm password")
     .oneOf([Yup.ref("password")], "Passwords must match"),
+});
+
+export const contactUsSchema = Yup.object().shape({
+  name: Yup.string().required("Please enter name"),
+  email: Yup.string()
+    .required("Please enter email")
+    .email("Please enter valid email"),
+  message: Yup.string().required("Please enter message"),
 });

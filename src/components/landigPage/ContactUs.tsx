@@ -7,6 +7,10 @@ import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
 import axios from "axios";
 import CircularProgress from "../common/CircularProgress";
+import CustomTextField from "../common/CustomTextField";
+import CustomTextarea from "../common/CustomTextarea";
+import { contactUsSchema } from "@/utils/schema";
+import { transformYupErrorsIntoObject } from "@/helpers/helper";
 
 const ContactUs = () => {
   const [isThankYouShow, setIsThankYouShow] = useState(false);
@@ -15,6 +19,7 @@ const ContactUs = () => {
     email: "",
     message: "",
   });
+  const [errors, setErrors] = useState<any>({});
 
   const handleSetContactUsForm = (
     event: React.ChangeEvent<{ name: string; value: string }>
@@ -28,23 +33,32 @@ const ContactUs = () => {
     });
   };
 
+  const handleClickInput = (name: string) => {
+    setErrors((prev: any) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
   const [error, submitAction, isPending] = useActionState(
     async (_previousState: any, _formData: any) => {
       try {
-        const { email, message, name } = contactusForm;
-        if (email && message && name) {
-          const response = await axios.post(
-            "/api/users/contactUs",
-            contactusForm
-          );
-          if (response.data.message.accepted) {
-            setIsThankYouShow(true);
-          }
-        } else {
-          toast.error("Please fill required data");
+        await contactUsSchema.validate(contactusForm, { abortEarly: false });
+
+        const response = await axios.post(
+          "/api/users/contactUs",
+          contactusForm
+        );
+        if (response.data.message.accepted) {
+          setIsThankYouShow(true);
         }
-      } catch (error: any) {
-        toast.error(error.message);
+      } catch (validationsErrors: any) {
+        if (validationsErrors.response?.data.message) {
+          toast.error(validationsErrors.response.data.message);
+        } else {
+          const errors = transformYupErrorsIntoObject(validationsErrors);
+          setErrors(errors);
+        }
       }
     },
     null
@@ -67,36 +81,33 @@ const ContactUs = () => {
             </CardHeader>
             <CardContent>
               <form action={submitAction} className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    placeholder="Enter your name"
-                    name="name"
-                    onChange={handleSetContactUsForm}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    name="email"
-                    onChange={handleSetContactUsForm}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="message">Message</Label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    name="message"
-                    onChange={handleSetContactUsForm}
-                    placeholder="Write your message here..."
-                    className="w-full border border-gray-300 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  />
-                </div>
+                <CustomTextField
+                  label="Name*"
+                  fieldName="name"
+                  placeholder="Enter your name"
+                  value={contactusForm.name}
+                  onChangeInput={(event) => handleSetContactUsForm(event)}
+                  error={errors?.name}
+                  onClickInput={() => handleClickInput("name")}
+                />
+                <CustomTextField
+                  label="Email*"
+                  fieldName="email"
+                  placeholder="Enter your email"
+                  value={contactusForm.email}
+                  onChangeInput={(event) => handleSetContactUsForm(event)}
+                  error={errors?.email}
+                  onClickInput={() => handleClickInput("email")}
+                />
+                <CustomTextarea
+                  label="Message*"
+                  value={contactusForm.message}
+                  handleChange={(event) => handleSetContactUsForm(event)}
+                  placeholder={"Please enter message"}
+                  fieldName={"message"}
+                  error={errors?.message}
+                  onClick={() => handleClickInput("message")}
+                />
                 <Button
                   type="submit"
                   disabled={isPending}
