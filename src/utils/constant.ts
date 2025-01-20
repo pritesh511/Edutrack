@@ -1,4 +1,6 @@
-export const BASE_URL = "http://localhost:3000/api/";
+import { config } from "./config";
+
+export const BASE_URL = config.API_URL;
 
 export const ADMIN_EMAIL = "gurukul@gmail.com";
 
