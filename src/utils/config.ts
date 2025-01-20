@@ -3,6 +3,7 @@
 // Switches between different environments
 const configSwitcher = (environmentType: string) => {
   let configuration;
+  debugger;
 
   switch (environmentType) {
     case "localhost":
@@ -13,7 +14,7 @@ const configSwitcher = (environmentType: string) => {
       break;
     case "edutrack-pritesh511s-projects.vercel.app":
       configuration = {
-        API_URL: `https://edutrack-pritesh511s-projects.vercel.app/`,
+        API_URL: `https://edutrack-pritesh511s-projects.vercel.app/api/`,
         ImageUrl: `https://edutrack-pritesh511s-projects.vercel.app`,
       };
       break;
