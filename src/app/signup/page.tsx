@@ -15,6 +15,8 @@ import CircularProgress from "@/components/common/CircularProgress";
 import CustomTextField from "@/components/common/CustomTextField";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
 import { signupSchema } from "@/utils/schema";
+import CustomSelect from "@/components/common/CustomSelect";
+import { USER_TYPES } from "@/utils/constant";
 
 const SignPage = () => {
   const router = useRouter();
@@ -23,6 +25,7 @@ const SignPage = () => {
     email: "",
     password: "",
     confirm_password: "",
+    userType: "admin",
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<any>({});
@@ -30,6 +33,13 @@ const SignPage = () => {
   const handleChangeData = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
+    setSchoolData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleChangeUserType = (name: string, value: string) => {
     setSchoolData((prev) => ({
       ...prev,
       [name]: value,
@@ -55,6 +65,7 @@ const SignPage = () => {
         email: "",
         password: "",
         confirm_password: "",
+        userType: "admin",
       });
       router.push("/login");
     } catch (error: any) {
@@ -70,13 +81,13 @@ const SignPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md p-4 shadow-lg">
-        <CardHeader>
+    <div className="min-h-screen w-full py-8 flex items-center justify-center bg-gray-50">
+      <Card className="w-full max-w-lg p-4 shadow-lg">
+        <CardHeader className="p-4">
           <h1 className="text-2xl font-bold text-center">Sign Up</h1>
         </CardHeader>
         <CardContent className="p-4">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
             <CustomTextField
               label="School Name*"
               fieldName="schoolName"
@@ -114,6 +125,15 @@ const SignPage = () => {
               onChangeInput={(event) => handleChangeData(event)}
               error={errors?.confirm_password}
               onClickInput={() => handleClickInput("confirm_password")}
+            />
+            <CustomSelect
+              label="User Type*"
+              placeholder={"Select Teacher"}
+              options={USER_TYPES}
+              value={schoolData.userType}
+              handleChangeSelect={(value) =>
+                handleChangeUserType("userType", value)
+              }
             />
           </div>
         </CardContent>

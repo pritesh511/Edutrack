@@ -17,9 +17,12 @@ import CircularProgress from "@/components/common/CircularProgress";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
 import CustomTextField from "@/components/common/CustomTextField";
 import { loginSchema } from "@/utils/schema";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "@/redux/slices/userSlice";
 
 const LoginPage = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -50,6 +53,7 @@ const LoginPage = () => {
 
         const response = await axios.post("/api/users/login", loginData);
         toast.success(response.data.message);
+        dispatch(setCurrentUser(response.data.user));
         router.push("/dashboard");
       } catch (validationsErrors: any) {
         if (validationsErrors.response?.data.message) {

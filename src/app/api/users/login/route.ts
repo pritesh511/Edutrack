@@ -39,15 +39,18 @@ export async function POST(request: NextRequest) {
       email: findUser.email,
       schoolName: findUser.schoolName,
     };
+
     const token = jwt.sign(tokenUser, process.env.TOKEN_SECRET!, {
       expiresIn: "1d",
     });
+
+    const user = await User.findOne({ email }).select("-password");
 
     const response = NextResponse.json(
       {
         message: "You have successfully login",
         success: true,
-        user: findUser,
+        user: user,
         token: token,
       },
       { status: 200 }

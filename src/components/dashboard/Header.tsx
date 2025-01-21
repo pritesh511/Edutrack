@@ -6,15 +6,20 @@ import { IoMdLogOut } from "react-icons/io";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "@/helpers/axios/axiosInstance";
-import { setCurrentUser, setEmptyCurrentUser } from "@/redux/slices/userSlice";
+import {
+  getUserData,
+  setCurrentUser,
+  setEmptyCurrentUser,
+} from "@/redux/slices/userSlice";
 import { toggleSidebar } from "@/redux/slices/dashboardSlice";
 
 const Header = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [currentUserName, setCurrentUserName] = useState<string>("");
+  const { currentUser } = useSelector(getUserData);
+  // const [currentUserName, setCurrentUserName] = useState<string>("");
 
   const handleLogout = async () => {
     try {
@@ -27,21 +32,21 @@ const Header = () => {
     }
   };
 
-  const getCurrentUser = async () => {
-    try {
-      const response = await axiosInstance.get("/api/users/currentUser");
-      setCurrentUserName(response.data.user.schoolName);
-      dispatch(setCurrentUser(response.data.user));
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
+  // const getCurrentUser = async () => {
+  //   try {
+  //     const response = await axiosInstance.get("/api/users/currentUser");
+  //     setCurrentUserName(response.data.user.schoolName);
+  //     dispatch(setCurrentUser(response.data.user));
+  //   } catch (error: any) {
+  //     console.log(error);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (!currentUserName) {
-      getCurrentUser();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!currentUserName) {
+  //     getCurrentUser();
+  //   }
+  // }, []);
 
   return (
     <header className="bg-white shadow-md">
@@ -56,15 +61,17 @@ const Header = () => {
         <div className="flex flex-row items-center justify-between w-full">
           <div className="flex items-center space-x-4">
             <div className="relative">
-              {currentUserName && (
+              {currentUser && (
                 <div className="flex items-center space-x-2">
                   <Avatar>
                     <AvatarImage src="" />
                     <AvatarFallback className="uppercase bg-blue-500 text-white">
-                      {currentUserName[0]}
+                      {currentUser.schoolName[0]}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-gray-700">{currentUserName}</span>
+                  <span className="text-gray-700">
+                    {currentUser.schoolName}
+                  </span>
                 </div>
               )}
             </div>

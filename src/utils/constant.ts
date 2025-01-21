@@ -26,3 +26,14 @@ export const EDUCAtION_LIST = [
     value: "other",
   },
 ];
+
+export const USER_TYPES = [
+  {
+    label: "Admin",
+    value: "admin",
+  },
+  {
+    label: "Teacher",
+    value: "teacher",
+  },
+];
