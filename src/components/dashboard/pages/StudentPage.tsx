@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import AddStudentModal from "../dialogs/AddStudentDialog";
@@ -9,21 +9,26 @@ import CustomTableCell from "@/components/common/CustomTableCell";
 import CustomTable from "@/components/common/CustomTable";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { format } from "date-fns";
 import {
   useDeleteStudentMutation,
-  useGetStudentsQuery,
+  useLazyGetStudentsQuery,
 } from "@/redux/query/student";
 import { renderOnConditionBase } from "@/helpers/helper";
 import Loader from "@/components/common/Loader";
 import toast from "react-hot-toast";
 import { Student } from "@/utils/types";
 import { IoEye } from "react-icons/io5";
+import CustomSelect from "@/components/common/CustomSelect";
+import { useGetStandardDropdownQuery } from "@/redux/query/standard";
 
 const StudentTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditStudent, setIsEditStudent] = useState<null | Student>(null);
   const [isViewStudent, setIsViewStudent] = useState<boolean>(false);
-  const { data, isLoading } = useGetStudentsQuery("");
+  const [trigger, { data, isLoading, isFetching }] = useLazyGetStudentsQuery();
+  const [selectedStd, setSelectedStd] = useState("");
+  const { data: standardDrodownData } = useGetStandardDropdownQuery("");
   const [deleteStudent] = useDeleteStudentMutation();
 
   const StudentTableHeader = () => {
@@ -31,6 +36,7 @@ const StudentTabView = () => {
       "Role No",
       "Name",
       "Class",
+      "DOB",
       "Parent's Mobile",
       "Class Teacher",
       "Address",
@@ -44,6 +50,15 @@ const StudentTabView = () => {
       </>
     );
   };
+
+  useEffect(() => {
+    if (standardDrodownData?.standards) {
+      trigger({
+        standard: standardDrodownData?.standards[0].value,
+      });
+      setSelectedStd(standardDrodownData?.standards[0].value);
+    }
+  }, [standardDrodownData]);
 
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
@@ -68,10 +83,10 @@ const StudentTabView = () => {
     return (
       <>
         {renderOnConditionBase(
-          isLoading,
+          isLoading || isFetching,
           <CustomTableRow>
             <CustomTableCell
-              colSpan={6}
+              colSpan={7}
               cellName={<Loader />}
               className="text-center text-lg font-semibold"
             />
@@ -81,7 +96,7 @@ const StudentTabView = () => {
               data?.students.length == 0,
               <CustomTableRow>
                 <CustomTableCell
-                  colSpan={6}
+                  colSpan={7}
                   cellName={"No Data Found"}
                   className="text-center text-lg font-semibold"
                 />
@@ -93,8 +108,16 @@ const StudentTabView = () => {
                       <CustomTableCell width={"5%"} cellName={student.roleNo} />
                       <CustomTableCell width={"10%"} cellName={student.name} />
                       <CustomTableCell
-                        width={"10%"}
+                        width={"8%"}
                         cellName={student.standard.standard}
+                      />
+                      <CustomTableCell
+                        width={"8%"}
+                        cellName={
+                          student.dob
+                            ? format(student.dob as Date, "dd/MM/yyyy")
+                            : "---"
+                        }
                       />
                       <CustomTableCell
                         width={"10%"}
@@ -158,9 +181,23 @@ const StudentTabView = () => {
         <CardContent className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold">Students</h2>
-            <Button onClick={() => setIsModalOpen(true)} size={"lg"}>
-              Add Student
-            </Button>
+            <div className="flex gap-2">
+              <CustomSelect
+                placeholder={"Select Teacher"}
+                options={standardDrodownData?.standards || []}
+                value={selectedStd}
+                className="h-10 w-[120px]"
+                handleChangeSelect={(value) => {
+                  setSelectedStd(value);
+                  trigger({
+                    standard: value,
+                  });
+                }}
+              />
+              <Button onClick={() => setIsModalOpen(true)} size={"lg"}>
+                Add Student
+              </Button>
+            </div>
           </div>
           <CustomTable
             tableHeader={<StudentTableHeader />}

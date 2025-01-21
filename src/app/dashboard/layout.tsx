@@ -13,7 +13,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <Sidebar isSidebarOpen={isSidebarOpen} />
       <div className="flex-1 overflow-hidden md:ml-64">
         <Header />
-        <main className="p-6 overflow-auto h-[calc(100vh-4rem)]">
+        <main className="p-6 overflow-auto h-[calc(100vh-90px)]">
           {children}
         </main>
       </div>

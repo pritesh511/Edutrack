@@ -76,9 +76,19 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    const queryParams = request?.nextUrl?.searchParams;
+    const filters: any = {};
     const userId = await getDataFromToken(request);
 
-    const students = await Student.find({ user: userId })
+    filters.user = userId;
+
+    queryParams.forEach((value, key) => {
+      if (key !== "user") {
+        filters[key] = value;
+      }
+    });
+
+    const students = await Student.find(filters)
       .select("-user -__v")
       .populate("standard")
       .populate("classTeacher");
@@ -90,7 +100,7 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       {
         message: "Internal Server Error",

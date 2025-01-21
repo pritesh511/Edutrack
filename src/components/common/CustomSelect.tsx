@@ -22,6 +22,7 @@ interface Props {
   value: string;
   handleChangeSelect: (value: string) => void;
   disabled?: boolean;
+  className?: string;
 }
 
 const CustomSelect = (props: Props) => {
@@ -33,6 +34,7 @@ const CustomSelect = (props: Props) => {
     handleChangeSelect,
     value,
     disabled = false,
+    className,
   } = props;
   return (
     <div>
@@ -49,9 +51,11 @@ const CustomSelect = (props: Props) => {
       <Select value={value} onValueChange={handleChangeSelect}>
         <SelectTrigger
           disabled={disabled}
-          className={`w-full h-12 ${error ? "border-destructive" : ""} ${
-            disabled ? "bg-border" : ""
-          }`}
+          className={
+            `w-full h-12 ${error ? "border-destructive" : ""} ${
+              disabled ? "bg-border" : ""
+            } ` + className
+          }
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>

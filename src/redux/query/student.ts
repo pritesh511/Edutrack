@@ -7,8 +7,16 @@ export const studentApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   tagTypes: ["Student"],
   endpoints: (builder) => ({
-    getStudents: builder.query<{ students: Array<Student> }, string>({
-      query: () => `dashboard/student`,
+    getStudents: builder.query<
+      { students: Array<Student> },
+      Record<string, string | number | undefined>
+    >({
+      query: (params: any) => {
+        const queryString = new URLSearchParams(
+          params as Record<string, string>
+        ).toString();
+        return `dashboard/student${queryString ? `?${queryString}` : ""}`;
+      },
       providesTags: ["Student"],
     }),
     postStudent: builder.mutation({
@@ -39,6 +47,7 @@ export const studentApi = createApi({
 
 export const {
   useGetStudentsQuery,
+  useLazyGetStudentsQuery,
   usePostStudentMutation,
   useDeleteStudentMutation,
   useEditStudentMutation,
