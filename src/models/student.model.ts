@@ -9,6 +9,10 @@ const studentSchema = new mongoose.Schema({
     type: Number,
     require: [true, "Pleae enter role number"],
   },
+  dob: {
+    type: String,
+    require: [true, "Pleae select date"],
+  },
   standard: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Standard",

@@ -40,6 +40,7 @@ export interface Student {
     standard: string;
     description: string;
   };
+  dob: Date | null;
   address: string;
   fatherName: string;
   fatherMobileNo: string;

@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
       name,
       roleNo,
       standard,
+      dob,
       address,
       fatherName,
       fatherMobileNo,
@@ -41,6 +42,7 @@ export async function POST(request: NextRequest) {
       name,
       roleNo,
       standard,
+      dob,
       address,
       fatherName,
       fatherMobileNo,
@@ -132,6 +134,7 @@ export async function PUT(request: NextRequest) {
       name,
       roleNo,
       standard,
+      dob,
       address,
       fatherName,
       fatherMobileNo,
@@ -147,6 +150,7 @@ export async function PUT(request: NextRequest) {
 
     if (name) updateFields.name = name;
     if (standard) updateFields.standard = standard;
+    if (dob) updateFields.dob = dob;
     if (address) updateFields.address = address;
     if (roleNo) updateFields.roleNo = roleNo;
     if (fatherName) updateFields.fatherName = fatherName;

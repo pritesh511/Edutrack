@@ -68,3 +68,17 @@ body {
   height: calc(100vh - 40px);
   overflow: auto;
 }
+
+.react-datepicker__input-container {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.react-datepicker__view-calendar-icon input {
+  padding: 6px 10px 5px 35px !important;
+}
+
+.react-datepicker__view-calendar-icon input::placeholder {
+  font-size: 0.875rem;
+  color: black;
+}

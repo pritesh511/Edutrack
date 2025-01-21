@@ -21,6 +21,7 @@ import {
 import CircularProgress from "@/components/common/CircularProgress";
 import { Student } from "@/utils/types";
 import { useGetTeacherDropdownQuery } from "@/redux/query/teacher";
+import CustomDatepicker from "@/components/common/CustomDatepicker";
 
 interface Props {
   closeModal: () => void;
@@ -42,7 +43,23 @@ interface StudentForm {
   motherOccupation: string;
   motherMobileNo: string;
   classTeacher: string;
+  dob: Date | null;
 }
+
+// Get current date
+const today = new Date();
+
+// Calculate the minimum and maximum allowed dates
+const minDate = new Date(
+  today.getFullYear() - 18,
+  today.getMonth(),
+  today.getDate()
+);
+const maxDate = new Date(
+  today.getFullYear() - 7,
+  today.getMonth(),
+  today.getDate()
+);
 
 const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
   const { closeModal, isModalOpen, isEditStudent, isViewStudent } = props;
@@ -65,6 +82,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
     motherOccupation: "",
     motherMobileNo: "",
     classTeacher: "",
+    dob: null,
   });
   const [errors, setErrors] = useState<any>({});
 
@@ -83,6 +101,18 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
   };
 
   const handleClickInput = (name: string) => {
+    setErrors((prev: any) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  const handleChangeDob = (name: string, value: Date | null) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
     setErrors((prev: any) => ({
       ...prev,
       [name]: "",
@@ -113,6 +143,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
       setFormData({
         ...formData,
         name: isEditStudent.name || "",
+        dob: isEditStudent.dob || null,
         roleNo: isEditStudent.roleNo || 0,
         standard: isEditStudent.standard._id || "",
         address: isEditStudent.address || "",
@@ -139,6 +170,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
         motherOccupation: "",
         motherMobileNo: "",
         classTeacher: "",
+        dob: null,
       });
     }
   }, [isEditStudent]);
@@ -169,6 +201,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
             motherOccupation: "",
             motherMobileNo: "",
             classTeacher: "",
+            dob: null,
           });
           handleCloseModal();
         }
@@ -191,13 +224,18 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
             motherOccupation: "",
             motherMobileNo: "",
             classTeacher: "",
+            dob: null,
           });
           handleCloseModal();
         }
       }
     } catch (validationsErrors: any) {
-      const errors = transformYupErrorsIntoObject(validationsErrors);
-      setErrors(errors);
+      if (validationsErrors.response?.data?.message) {
+        toast.error(validationsErrors.response?.data?.message);
+      } else {
+        const errors = transformYupErrorsIntoObject(validationsErrors);
+        setErrors(errors);
+      }
     }
   };
 
@@ -246,6 +284,17 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
                 handleSelectValue("standard", value)
               }
               disabled={isViewStudent}
+            />
+            <CustomDatepicker
+              label="Date of birth"
+              fieldName={"dob"}
+              onChangeDate={(date) => handleChangeDob("dob", date)}
+              value={formData.dob}
+              error={errors?.dob}
+              disabled={isViewStudent}
+              placeholder={"Date of birth"}
+              minDate={minDate}
+              maxDate={maxDate}
             />
             <CustomTextarea
               label="Address*"

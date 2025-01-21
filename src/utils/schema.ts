@@ -18,6 +18,7 @@ export const studentSchema = Yup.object().shape({
     .required("Please enter role no")
     .min(1, "Role no should more than 0"),
   standard: Yup.string().required("Please select standard"),
+  dob: Yup.date().required("Please select date of birth"),
   address: Yup.string().required("Please enter address"),
   fatherName: Yup.string().required("Please enter father name"),
   fatherMobileNo: Yup.string().required("Please enter father mobile number"),

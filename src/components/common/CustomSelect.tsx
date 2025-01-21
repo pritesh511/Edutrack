@@ -49,7 +49,9 @@ const CustomSelect = (props: Props) => {
       <Select value={value} onValueChange={handleChangeSelect}>
         <SelectTrigger
           disabled={disabled}
-          className={`w-full h-12 ${error ? "border-destructive" : ""}`}
+          className={`w-full h-12 ${error ? "border-destructive" : ""} ${
+            disabled ? "bg-border" : ""
+          }`}
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>

@@ -45,7 +45,9 @@ const CustomTextarea = (props: Props) => {
         placeholder={placeholder}
         disabled={disabled}
         onClick={onClick}
-        className={`${error ? "border-destructive" : ""}`}
+        className={`${error ? "border-destructive" : ""} ${
+          disabled ? "bg-border" : ""
+        }`}
       />
       {error && <span className="text-sm text-destructive">{error}</span>}
     </div>

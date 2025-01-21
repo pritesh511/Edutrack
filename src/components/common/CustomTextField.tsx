@@ -46,7 +46,9 @@ const CustomTextField = (props: Props) => {
         name={fieldName}
         value={value}
         onChange={onChangeInput}
-        className={`${error ? "border-destructive" : ""}`}
+        className={`${error ? "border-destructive" : ""} ${
+          disabled ? "bg-border" : ""
+        }`}
         type={type ? type : "text"}
         onFocus={handleFocusInput}
         disabled={disabled}
