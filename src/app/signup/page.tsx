@@ -25,7 +25,6 @@ const SignPage = () => {
     email: "",
     password: "",
     confirm_password: "",
-    userType: "admin",
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<any>({});
@@ -33,13 +32,6 @@ const SignPage = () => {
   const handleChangeData = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
-    setSchoolData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleChangeUserType = (name: string, value: string) => {
     setSchoolData((prev) => ({
       ...prev,
       [name]: value,
@@ -65,7 +57,6 @@ const SignPage = () => {
         email: "",
         password: "",
         confirm_password: "",
-        userType: "admin",
       });
       router.push("/login");
     } catch (error: any) {
@@ -125,15 +116,6 @@ const SignPage = () => {
               onChangeInput={(event) => handleChangeData(event)}
               error={errors?.confirm_password}
               onClickInput={() => handleClickInput("confirm_password")}
-            />
-            <CustomSelect
-              label="User Type*"
-              placeholder={"Select Teacher"}
-              options={USER_TYPES}
-              value={schoolData.userType}
-              handleChangeSelect={(value) =>
-                handleChangeUserType("userType", value)
-              }
             />
           </div>
         </CardContent>

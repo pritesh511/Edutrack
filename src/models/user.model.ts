@@ -15,10 +15,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     require: [true, "Please enter password"],
   },
-  userType: {
-    type: String,
-    require: [true, "User type is requried"],
-  },
   verifyToken: String,
   verifyTokenExpiry: Date,
   forgotPasswordToken: String,

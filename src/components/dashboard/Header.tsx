@@ -19,7 +19,7 @@ const Header = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { currentUser } = useSelector(getUserData);
-  // const [currentUserName, setCurrentUserName] = useState<string>("");
+  const [currentUserName, setCurrentUserName] = useState<string>("");
 
   const handleLogout = async () => {
     try {
@@ -32,21 +32,21 @@ const Header = () => {
     }
   };
 
-  // const getCurrentUser = async () => {
-  //   try {
-  //     const response = await axiosInstance.get("/api/users/currentUser");
-  //     setCurrentUserName(response.data.user.schoolName);
-  //     dispatch(setCurrentUser(response.data.user));
-  //   } catch (error: any) {
-  //     console.log(error);
-  //   }
-  // };
+  const getCurrentUser = async () => {
+    try {
+      const response = await axiosInstance.get("/api/users/currentUser");
+      setCurrentUserName(response.data.user.schoolName);
+      dispatch(setCurrentUser(response.data.user));
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
 
-  // useEffect(() => {
-  //   if (!currentUserName) {
-  //     getCurrentUser();
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!currentUserName) {
+      getCurrentUser();
+    }
+  }, []);
 
   return (
     <header className="bg-white shadow-md">

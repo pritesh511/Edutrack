@@ -8,7 +8,7 @@ databseConnect();
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
-    const { schoolName, email, password, userType } = reqBody;
+    const { schoolName, email, password } = reqBody;
 
     // first find the user in data base if it exist
     const existingUser = await User.findOne({ email });
@@ -30,7 +30,6 @@ export async function POST(request: NextRequest) {
       schoolName,
       email,
       password: hashPassword,
-      userType,
     });
 
     const savedUser = await newUser.save();
