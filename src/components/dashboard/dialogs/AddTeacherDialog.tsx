@@ -23,6 +23,7 @@ import { Teacher } from "@/utils/types";
 
 interface TeacherForm {
   name: string;
+  email: string;
   experience: number;
   educations: Array<string>;
   standards: Array<string>;
@@ -45,6 +46,7 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
     usePutTeacherMutation();
   const [formData, setFormData] = useState<TeacherForm>({
     name: "",
+    email: "",
     experience: 0,
     educations: [],
     standards: [],
@@ -90,6 +92,7 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
       setFormData({
         ...formData,
         name: isEditTeacher.name || "",
+        email: isEditTeacher.email || "",
         experience: isEditTeacher.experience || 0,
         educations: isEditTeacher.educations || [],
         standards: isEditTeacher.standards.map((std) => std._id) || [],
@@ -98,6 +101,7 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
     } else {
       setFormData({
         name: "",
+        email: "",
         experience: 0,
         educations: [],
         standards: [],
@@ -128,6 +132,7 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
           toast.success(data.message);
           setFormData({
             name: "",
+            email: "",
             experience: 0,
             educations: [],
             standards: [],
@@ -143,6 +148,7 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
           toast.success(data.message);
           setFormData({
             name: "",
+            email: "",
             experience: 0,
             educations: [],
             standards: [],
@@ -159,13 +165,13 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
 
   return (
     <Dialog open={open} onOpenChange={handleCloseModal}>
-      <DialogContent>
+      <DialogContent className="md:h-[calc(100vh-47px)] lg:h-auto overflow-auto md:max-w-lg lg:max-w-4xl">
         <DialogHeader>
           <DialogTitle>Add Teacher</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-3">
           <CustomTextField
-            label="Teacher Name"
+            label="Teacher Name*"
             fieldName="name"
             placeholder="Teacher Name"
             value={formData.name}
@@ -174,7 +180,16 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
             onClickInput={() => handleClickInput("name")}
           />
           <CustomTextField
-            label="Experience"
+            label="Email*"
+            fieldName="email"
+            placeholder="Email"
+            value={formData.email}
+            onChangeInput={(event) => handleChangeInput(event)}
+            error={errors?.email}
+            onClickInput={() => handleClickInput("email")}
+          />
+          <CustomTextField
+            label="Experience*"
             fieldName="experience"
             placeholder="Teacher Name"
             type="number"
@@ -185,9 +200,9 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
           />
           <div>
             <MultiSelect
-              customWidth={462}
+              customWidth={420}
               placeholder="Select Education"
-              label="Education"
+              label="Education*"
               options={EDUCAtION_LIST}
               value={formData.educations}
               onChange={(values) => handleChangeSelect("educations", values)}
@@ -196,8 +211,8 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
           </div>
           <div>
             <MultiSelect
-              customWidth={462}
-              label="Standard"
+              customWidth={420}
+              label="Standard*"
               placeholder="Select Standard"
               options={standardDrodownData?.standards || []}
               value={formData.standards}
@@ -207,8 +222,8 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
           </div>
           <div>
             <MultiSelect
-              customWidth={462}
-              label="Subject"
+              customWidth={420}
+              label="Subject*"
               placeholder="Select Subject"
               options={subjectDropdownData?.subjects || []}
               value={formData.subjects}
@@ -216,18 +231,18 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
               error={errors?.subjects}
             />
           </div>
-          <div className="flex justify-end space-x-2">
-            <Button
-              disabled={isFormLoading}
-              variant="outline"
-              onClick={handleCloseModal}
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleSubmitForm} disabled={isFormLoading}>
-              {isFormLoading ? <CircularProgress /> : "Save"}
-            </Button>
-          </div>
+        </div>
+        <div className="flex justify-end space-x-2">
+          <Button
+            disabled={isFormLoading}
+            variant="outline"
+            onClick={handleCloseModal}
+          >
+            Cancel
+          </Button>
+          <Button onClick={handleSubmitForm} disabled={isFormLoading}>
+            {isFormLoading ? <CircularProgress /> : "Save"}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

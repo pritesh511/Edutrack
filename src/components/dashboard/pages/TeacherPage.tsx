@@ -89,6 +89,14 @@ const TeacherTabView = () => {
                               {teacher.experience} Year
                             </p>
                           </div>
+                          <div className="flex flex-row gap-1 items-center">
+                            <p className="font-medium text-gray-600 text-sm">
+                              Email:
+                            </p>
+                            <p className="text-gray-800 text-sm font-semibold">
+                              {teacher.email}
+                            </p>
+                          </div>
                           <div>
                             <h5 className="font-medium text-gray-600 text-sm">
                               Graduation:

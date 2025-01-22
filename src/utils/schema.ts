@@ -4,6 +4,9 @@ const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
 
 export const teacherSchema = Yup.object().shape({
   name: Yup.string().required("Please enter teacher name"),
+  email: Yup.string()
+    .required("Please enter email")
+    .email("Please enter valid email"),
   experience: Yup.number()
     .required("Please enter year of experience")
     .min(1, "Experience should more than 0"),
@@ -38,9 +41,18 @@ export const standardSchema = Yup.object().shape({
 });
 
 export const loginSchema = Yup.object().shape({
+  role: Yup.string().required("Role is required"),
   email: Yup.string()
     .required("Please enter email")
     .email("Please enter valid email"),
+  schoolEmail: Yup.string().when("role", (role: string | string[], schema) => {
+    const roleVal = Array.isArray(role) ? role[0] : role;
+    return roleVal === "teacher"
+      ? schema
+          .required("Please enter school email")
+          .email("Please enter a valid school email")
+      : schema;
+  }),
   password: Yup.string().required("Please enter password"),
 });
 

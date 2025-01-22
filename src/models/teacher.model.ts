@@ -5,6 +5,15 @@ const teacherSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter teacher name"],
   },
+  email: {
+    type: String,
+    require: [true, "Please enter email"],
+    unique: true,
+  },
+  password: {
+    type: String,
+    require: [true, "Please enter password"],
+  },
   experience: {
     type: String,
     required: [true, "Please enter experience"],

@@ -19,6 +19,7 @@ export interface DropdownOption {
 export interface Teacher {
   _id: string;
   name: string;
+  email: string;
   experience: number;
   educations: string[];
   standards: Array<Standard>;

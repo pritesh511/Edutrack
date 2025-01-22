@@ -3,6 +3,7 @@ import { databseConnect } from "@/dbConfig/dbConfig";
 import Teacher from "@/models/teacher.model";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import Student from "@/models/student.model";
+import bcryptjs from "bcryptjs";
 
 databseConnect();
 
@@ -10,16 +11,22 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
 
-    const { name, experience, educations, standards, subjects } = reqBody;
+    const { name, email, experience, educations, standards, subjects } = reqBody;
 
     const userId = await getDataFromToken(request);
 
+    // hash password to store in database
+    const salt = await bcryptjs.genSalt(10);
+    const hashPassword = await bcryptjs.hash("Teacher@123", salt);
+
     const teachersResp = new Teacher({
       name,
+      email,
       experience,
       educations,
       standards,
       subjects,
+      password: hashPassword,
       user: userId,
     });
 
@@ -69,7 +76,7 @@ export async function GET(request: NextRequest) {
     }
 
     const teachers = await Teacher.find({ user: userId })
-      .select("-user -__v")
+      .select("-user -password -__v")
       .populate("standards")
       .populate("subjects");
 
@@ -148,8 +155,9 @@ export async function DELETE(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const teacherId = request?.nextUrl?.searchParams.get("teacherId");
+
     const reqBody = await request.json();
-    const { name, experience, educations, standards, subjects } = reqBody;
+    const { name, email, experience, educations, standards, subjects } = reqBody;
 
     const findTeacher = await Teacher.findOne({ _id: teacherId });
     if (!findTeacher) {
@@ -164,6 +172,7 @@ export async function PUT(request: NextRequest) {
     const updateFields: Record<string, any> = {};
 
     if (name) updateFields.name = name;
+    if (email) updateFields.email = email;
     if (experience) updateFields.experience = experience;
     if (educations.length > 0) updateFields.educations = educations;
     if (standards.length > 0) updateFields.standards = standards;

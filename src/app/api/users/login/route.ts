@@ -9,56 +9,61 @@ databseConnect();
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
-    const { email, password } = reqBody;
+    const { email, password, schoolEmail, role } = reqBody;
 
-    // find user if exists
-    const findUser = await User.findOne({ email });
-    if (!findUser) {
-      return NextResponse.json(
-        {
-          message: "Account does not exists",
-        },
-        { status: 400 }
+    if (role === "admin") {
+      // find user if exists
+      const findUser = await User.findOne({ email });
+      if (!findUser) {
+        return NextResponse.json(
+          {
+            message: "Account does not exists",
+          },
+          { status: 400 }
+        );
+      }
+
+      // check is password correct
+      const isValidPassword = await bcryptjs.compare(
+        password,
+        findUser.password
       );
-    }
+      if (!isValidPassword) {
+        return NextResponse.json(
+          {
+            message: "Invalid Password",
+          },
+          { status: 400 }
+        );
+      }
 
-    // check is password correct
-    const isValidPassword = await bcryptjs.compare(password, findUser.password);
-    if (!isValidPassword) {
-      return NextResponse.json(
+      // create jst token and set to cookies
+      const tokenUser = {
+        id: findUser._id,
+        email: findUser.email,
+        schoolName: findUser.schoolName,
+      };
+
+      const token = jwt.sign(tokenUser, process.env.TOKEN_SECRET!, {
+        expiresIn: "1d",
+      });
+
+      const user = await User.findOne({ email }).select("-password");
+
+      const response = NextResponse.json(
         {
-          message: "Invalid Password",
+          message: "You have successfully login",
+          success: true,
+          user: user,
+          token: token,
         },
-        { status: 400 }
+        { status: 200 }
       );
-    }
 
-    // create jst token and set to cookies
-    const tokenUser = {
-      id: findUser._id,
-      email: findUser.email,
-      schoolName: findUser.schoolName,
-    };
+      response.cookies.set("token", token, { httpOnly: true });
 
-    const token = jwt.sign(tokenUser, process.env.TOKEN_SECRET!, {
-      expiresIn: "1d",
-    });
-
-    const user = await User.findOne({ email }).select("-password");
-
-    const response = NextResponse.json(
-      {
-        message: "You have successfully login",
-        success: true,
-        user: user,
-        token: token,
-      },
-      { status: 200 }
-    );
-
-    response.cookies.set("token", token, { httpOnly: true });
-
-    return response;
+      return response;
+    } else {}
   } catch (error: any) {
     console.log(error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
