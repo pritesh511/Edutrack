@@ -16,3 +16,19 @@ export async function getDataFromToken(request: NextRequest) {
     throw new Error(`JWT Verification failed: ${error.message}`);
   }
 }
+
+export async function getUserDataFromToken(request: NextRequest) {
+  try {
+    const token = request.cookies.get("token")?.value;
+
+    if (!token) {
+      throw new Error("Token is missing in the request");
+    }
+
+    const currentUser: any = jwt.verify(token, process.env.TOKEN_SECRET!);
+
+    return currentUser;
+  } catch (error: any) {
+    throw new Error(`JWT Verification failed: ${error.message}`);
+  }
+}

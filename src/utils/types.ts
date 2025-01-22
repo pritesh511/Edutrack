@@ -59,3 +59,10 @@ export interface Student {
     subjects: Subject[];
   };
 }
+
+export interface CurrentUser {
+  _id: string;
+  schoolName: string;
+  email: string;
+  role: string;
+}

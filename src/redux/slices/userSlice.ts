@@ -1,4 +1,5 @@
 import axiosInstance from "@/helpers/axios/axiosInstance";
+import { CurrentUser } from "@/utils/types";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
 // export const getCurrentUser = createAsyncThunk(
@@ -15,7 +16,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 // });
 
 interface InitialState {
-  currentUser: any;
+  currentUser: CurrentUser | null;
 }
 
 const user = createSlice({
@@ -28,8 +29,8 @@ const user = createSlice({
       state.currentUser = action.payload;
     },
     setEmptyCurrentUser: (state) => {
-      state.currentUser = null
-    }
+      state.currentUser = null;
+    },
   },
   // extraReducers: (builder) => {
   //   builder.addCase(getCurrentUser.pending, (state) => {

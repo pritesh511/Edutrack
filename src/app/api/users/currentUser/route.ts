@@ -1,17 +1,21 @@
 import { NextResponse, NextRequest } from "next/server";
 import User from "@/models/user.model";
-import { getDataFromToken } from "@/helpers/getDataFromToken";
+import { getDataFromToken, getUserDataFromToken } from "@/helpers/getDataFromToken";
 import { databseConnect } from "@/dbConfig/dbConfig";
 
 databseConnect();
 
 export async function GET(request: NextRequest) {
   try {
-    const userId = await getDataFromToken(request);
-    const user = await User.findOne({ _id: userId }).select("-password");
+    const user = await getUserDataFromToken(request);
     return NextResponse.json(
       {
-        user,
+        user: {
+          _id: user.id,
+          schoolName: user.schoolName,
+          email: user.email,
+          role: user.role,
+        },
       },
       { status: 200 }
     );
