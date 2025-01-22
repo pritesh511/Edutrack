@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
           schoolName: user.schoolName,
           email: user.email,
           role: user.role,
+          teacherId: user.teacherId
         },
       },
       { status: 200 }

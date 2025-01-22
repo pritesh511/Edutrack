@@ -1,6 +1,6 @@
 import axios from "axios";
 import { config } from "../apiconfig/config";
-import store from "@/redux/store";
+import { store } from "@/redux/store";
 import {
   setAppLoaderFalse,
   setAppLoaderTrue,

@@ -13,9 +13,11 @@ interface Props {
 
 const Sidebar = (props: Props) => {
   const { isSidebarOpen } = props;
+
   const currentPath = usePathname();
   const dispatch = useDispatch();
   const { currentUser } = useSelector(getUserData);
+
   return (
     <aside
       className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform ${

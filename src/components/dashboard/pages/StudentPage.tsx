@@ -20,7 +20,10 @@ import toast from "react-hot-toast";
 import { Student } from "@/utils/types";
 import { IoEye } from "react-icons/io5";
 import CustomSelect from "@/components/common/CustomSelect";
-import { useGetStandardDropdownQuery } from "@/redux/query/standard";
+import {
+  useGetStandardDropdownQuery,
+  useLazyGetStandardDropdownQuery,
+} from "@/redux/query/standard";
 
 const StudentTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,7 +31,8 @@ const StudentTabView = () => {
   const [isViewStudent, setIsViewStudent] = useState<boolean>(false);
   const [trigger, { data, isLoading, isFetching }] = useLazyGetStudentsQuery();
   const [selectedStd, setSelectedStd] = useState("");
-  const { data: standardDrodownData } = useGetStandardDropdownQuery("");
+  const [fetchStandardDropdownData, { data: standardDrodownData }] =
+    useLazyGetStandardDropdownQuery();
   const [deleteStudent] = useDeleteStudentMutation();
 
   const StudentTableHeader = () => {
@@ -59,6 +63,10 @@ const StudentTabView = () => {
       setSelectedStd(standardDrodownData?.standards[0].value);
     }
   }, [standardDrodownData]);
+
+  useEffect(() => {
+    fetchStandardDropdownData("");
+  }, []);
 
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);

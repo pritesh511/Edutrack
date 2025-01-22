@@ -22,6 +22,8 @@ import CircularProgress from "@/components/common/CircularProgress";
 import { Student } from "@/utils/types";
 import { useGetTeacherDropdownQuery } from "@/redux/query/teacher";
 import CustomDatepicker from "@/components/common/CustomDatepicker";
+import { useSelector } from "react-redux";
+import { getUserData } from "@/redux/slices/userSlice";
 
 interface Props {
   closeModal: () => void;
@@ -63,6 +65,7 @@ const maxDate = new Date(
 
 const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
   const { closeModal, isModalOpen, isEditStudent, isViewStudent } = props;
+  const { currentUser } = useSelector(getUserData);
   const { data: standardDrodownData } = useGetStandardDropdownQuery("");
   const { data: teacherDrodownData } = useGetTeacherDropdownQuery("");
   const [postStudent, { isLoading: isAddStudentLoading }] =
@@ -391,11 +394,15 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
               placeholder={"Select Teacher"}
               options={teacherDrodownData?.teachers || []}
               error={errors?.classTeacher}
-              value={formData.classTeacher}
+              value={
+                formData.classTeacher
+                  ? formData.classTeacher
+                  : teacherDrodownData?.teachers[0].value || ""
+              }
               handleChangeSelect={(value) =>
                 handleSelectValue("classTeacher", value)
               }
-              disabled={isViewStudent}
+              disabled={isViewStudent || currentUser?.role === "teacher"}
             />
           </div>
         </div>

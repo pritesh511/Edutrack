@@ -1,5 +1,8 @@
 import { databseConnect } from "@/dbConfig/dbConfig";
-import { getDataFromToken } from "@/helpers/getDataFromToken";
+import {
+  getDataFromToken,
+  getUserDataFromToken,
+} from "@/helpers/getDataFromToken";
 import Standard from "@/models/standard.model";
 import Teacher from "@/models/teacher.model";
 import { NextRequest, NextResponse } from "next/server";
@@ -55,26 +58,49 @@ export async function GET(request: NextRequest) {
   try {
     const userId = await getDataFromToken(request);
 
+    const loginUser = await getUserDataFromToken(request);
+
     const standards = await Standard.find({ user: userId }).select(
       "-user -__v"
     );
 
     const isdropdownTrue = request?.nextUrl?.searchParams.get("dropdown");
 
-    const dropdownOptions = standards.map((std) => {
-      return {
-        label: std.standard,
-        value: std._id,
-      };
-    });
-
     if (isdropdownTrue) {
-      return NextResponse.json(
-        {
-          standards: dropdownOptions,
-        },
-        { status: 200 }
-      );
+      if (loginUser.role === "admin") {
+        const dropdownOptions = standards.map((std) => {
+          return {
+            label: std.standard,
+            value: std._id,
+          };
+        });
+
+        return NextResponse.json(
+          {
+            standards: dropdownOptions,
+          },
+          { status: 200 }
+        );
+      } else {
+        const teacher = await Teacher.findOne({ _id: loginUser.teacherId });
+
+        const dropdownOptions = teacher.standards.flatMap(
+          (teacherStd: string) =>
+            standards
+              .filter((std) => teacherStd.toString() === std._id.toString())
+              .map((std) => ({
+                label: std.standard,
+                value: std._id,
+              }))
+        );
+
+        return NextResponse.json(
+          {
+            standards: dropdownOptions,
+          },
+          { status: 200 }
+        );
+      }
     }
 
     return NextResponse.json(

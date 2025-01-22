@@ -7,6 +7,14 @@ import { subjectApi } from "./query/subject";
 import { teacherApi } from "./query/teacher";
 import { studentApi } from "./query/student";
 import { dashboardApi } from "./query/dashboard";
+import storage from "redux-persist/lib/storage";
+import { persistStore, persistReducer } from "redux-persist";
+
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["user"],
+};
 
 const rootReducer = combineReducers({
   dashboard: dashboardReducer,
@@ -18,8 +26,10 @@ const rootReducer = combineReducers({
   [dashboardApi.reducerPath]: dashboardApi.reducer,
 });
 
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 const store = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
@@ -31,6 +41,8 @@ const store = configureStore({
       .concat(dashboardApi.middleware),
 });
 
+const persistor = persistStore(store);
+
 setupListeners(store.dispatch);
 
-export default store;
+export { persistor, store };

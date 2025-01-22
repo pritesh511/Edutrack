@@ -43,7 +43,8 @@ export async function POST(request: NextRequest) {
         id: findUser._id,
         email: findUser.email,
         schoolName: findUser.schoolName,
-        role: role
+        role: role,
+        teacherId: null
       };
 
       const token = jwt.sign(tokenUser, process.env.TOKEN_SECRET!, {
@@ -61,6 +62,7 @@ export async function POST(request: NextRequest) {
             schoolName: user.schoolName,
             email: user.email,
             role: role,
+            teacherId: null
           },
           token: token,
         },
@@ -112,7 +114,8 @@ export async function POST(request: NextRequest) {
         id: findSchool._id,
         schoolName: findTeacher.name,
         email: findTeacher.email,
-        role: role
+        role: role,
+        teacherId: findTeacher._id
       };
 
       const token = jwt.sign(tokenUser, process.env.TOKEN_SECRET!, {
@@ -128,6 +131,7 @@ export async function POST(request: NextRequest) {
             schoolName: findTeacher.name,
             email: findTeacher.email,
             role: role,
+            teacherId: findTeacher._id
           },
           token: token,
         },

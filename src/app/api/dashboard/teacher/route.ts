@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { databseConnect } from "@/dbConfig/dbConfig";
 import Teacher from "@/models/teacher.model";
-import { getDataFromToken } from "@/helpers/getDataFromToken";
+import {
+  getDataFromToken,
+  getUserDataFromToken,
+} from "@/helpers/getDataFromToken";
 import Student from "@/models/student.model";
 import bcryptjs from "bcryptjs";
 
@@ -11,7 +14,8 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
 
-    const { name, email, experience, educations, standards, subjects } = reqBody;
+    const { name, email, experience, educations, standards, subjects } =
+      reqBody;
 
     const userId = await getDataFromToken(request);
 
@@ -53,26 +57,48 @@ export async function GET(request: NextRequest) {
   try {
     const userId = await getDataFromToken(request);
 
+    const loginUser = await getUserDataFromToken(request);
+
     const teachersData = await Teacher.find({ user: userId }).select(
       "-user -__v"
     );
 
     const isdropdownTrue = request?.nextUrl?.searchParams.get("dropdown");
 
-    const dropdownOptions = teachersData.map((teacher) => {
-      return {
-        label: teacher.name,
-        value: teacher._id,
-      };
-    });
-
     if (isdropdownTrue) {
-      return NextResponse.json(
-        {
-          teachers: dropdownOptions,
-        },
-        { status: 200 }
-      );
+      if (loginUser.role === "admin") {
+        const dropdownOptions = teachersData.map((teacher) => {
+          return {
+            label: teacher.name,
+            value: teacher._id,
+          };
+        });
+
+        return NextResponse.json(
+          {
+            standards: dropdownOptions,
+          },
+          { status: 200 }
+        );
+      } else {
+        const findTeacher = await Teacher.findOne({ _id: loginUser.teacherId });
+
+        const dropdownOptions = teachersData
+          .filter((teacher) => teacher._id.toString() == findTeacher._id.toString())
+          .map((teacher) => {
+            return {
+              label: teacher.name,
+              value: teacher._id,
+            };
+          });
+
+        return NextResponse.json(
+          {
+            teachers: dropdownOptions,
+          },
+          { status: 200 }
+        );
+      }
     }
 
     const teachers = await Teacher.find({ user: userId })
@@ -157,7 +183,8 @@ export async function PUT(request: NextRequest) {
     const teacherId = request?.nextUrl?.searchParams.get("teacherId");
 
     const reqBody = await request.json();
-    const { name, email, experience, educations, standards, subjects } = reqBody;
+    const { name, email, experience, educations, standards, subjects } =
+      reqBody;
 
     const findTeacher = await Teacher.findOne({ _id: teacherId });
     if (!findTeacher) {

@@ -48,5 +48,6 @@ export const {
   useDeleteStandardMutation,
   usePostStandardMutation,
   useEditStandardMutation,
-  useGetStandardDropdownQuery
+  useGetStandardDropdownQuery,
+  useLazyGetStandardDropdownQuery
 } = standardApi;

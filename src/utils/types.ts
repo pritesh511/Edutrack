@@ -65,4 +65,5 @@ export interface CurrentUser {
   schoolName: string;
   email: string;
   role: string;
+  teacherId: string | null;
 }
