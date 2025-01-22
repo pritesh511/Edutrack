@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
+import { jwtVerify } from "jose";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const currentPath = request.nextUrl.pathname;
 
   if (currentPath === "/") return;
@@ -9,11 +10,53 @@ export function middleware(request: NextRequest) {
 
   const token = request.cookies.get("token")?.value || "";
 
-  if (isPublicUrl && token) {
-    return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
-  }
+  if (token) {
+    const secretKey = new TextEncoder().encode(process.env.TOKEN_SECRET);
+    const { payload } = await jwtVerify(token, secretKey);
 
-  if (!isPublicUrl && !token) {
+    const userRole = payload.role;
+
+    try {
+      const defaultRoutes: Record<string, string> = {
+        admin: "/dashboard",
+        teacher: "/dashboard/student",
+      };
+
+      const defaultRedirect = defaultRoutes[userRole as string] || "/dashboard";
+
+      if (isPublicUrl) {
+        return NextResponse.redirect(new URL(defaultRedirect, request.nextUrl));
+      }
+
+      const rolesPermissions: Record<string, string[]> = {
+        admin: [
+          "/dashboard",
+          "/dashboard/subject",
+          "/dashboard/teacher",
+          "/dashboard/standard",
+          "/dashboard/subject",
+          "/dashboard/student",
+          "/dashboard/attendance",
+          "/dashboard/report"
+        ],
+        teacher: [
+          "/dashboard/student",
+          "/dashboard/attendance",
+          "/dashboard/report"
+        ],
+      };
+
+      const allowedPaths = rolesPermissions[userRole as string] || [];
+
+      if (!allowedPaths.includes(currentPath)) {
+        return NextResponse.redirect(new URL(defaultRedirect, request.nextUrl));
+      };
+
+    } catch (error: any) {
+      console.error("Error verifying token:", error);
+      return NextResponse.redirect(new URL("/login", request.nextUrl));
+    }
+  } else if (!isPublicUrl) {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
 }
@@ -28,5 +71,8 @@ export const config = {
     "/dashboard/teacher",
     "/dashboard/standard",
     "/dashboard/subject",
+    "/dashboard/student",
+    "/dashboard/attendance",
+    "/dashboard/report"
   ],
 };

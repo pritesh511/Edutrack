@@ -28,21 +28,26 @@ const Sidebar = (props: Props) => {
         </h2>
       </div>
       <nav className="mt-6 px-4">
-        {dashboardRoutes
-          .filter((page) => page.isShow)
-          .map((tab) => (
+        {dashboardRoutes.map((tab) => {
+          const currentPathClass =
+            currentPath === tab.path ? "bg-blue-600 text-white" : "";
+          const filterTabClass = !tab.access.includes(
+            currentUser?.role as string
+          )
+            ? "hidden"
+            : "";
+          return (
             <Link
               key={tab.id}
               onClick={() => dispatch(toggleSidebar())}
               href={tab.path}
-              className={`flex flex-row items-center gap-3 px-6 py-3 mb-2 rounded-[8px] hover:bg-blue-600 hover:text-white cursor-pointer transition-colors ${
-                currentPath === tab.path ? "bg-blue-600 text-white" : ""
-              }`}
+              className={`flex flex-row items-center gap-3 px-6 py-3 mb-2 rounded-[8px] hover:bg-blue-600 hover:text-white cursor-pointer transition-colors ${currentPathClass} ${filterTabClass}`}
             >
               {<tab.icon />}
               {tab.label}
             </Link>
-          ))}
+          );
+        })}
       </nav>
     </aside>
   );

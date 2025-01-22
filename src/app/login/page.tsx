@@ -68,7 +68,11 @@ const LoginPage = () => {
         const response = await axios.post("/api/users/login", loginData);
         toast.success(response.data.message);
         dispatch(setCurrentUser(response.data.user));
-        router.push("/dashboard");
+        if (response.data.user.role === "admin") {
+          router.push("/dashboard");
+        } else {
+          router.push("/dashboard/student");
+        }
       } catch (validationsErrors: any) {
         if (validationsErrors.response?.data.message) {
           toast.error(validationsErrors.response.data.message);

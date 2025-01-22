@@ -9,48 +9,48 @@ export const dashboardRoutes = [
     icon: FaTachometerAlt,
     label: "Dashboard",
     path: "/dashboard",
-    isShow: true,
+    access: ["admin"]
   },
   {
     id: "students",
     icon: IoPeople,
     label: "Students",
     path: "/dashboard/student",
-    isShow: true,
+    access: ["admin", "teacher"]
   },
   {
     id: "teachers",
     icon: BsPersonWorkspace,
     label: "Teachers",
     path: "/dashboard/teacher",
-    isShow: true,
+    access: ["admin"]
   },
   {
     id: "standards",
     icon: IoBookSharp,
     label: "Standards",
     path: "/dashboard/standard",
-    isShow: true,
+    access: ["admin"]
   },
   {
     id: "subjects",
     icon: SiBookstack,
     label: "Subjects",
     path: "/dashboard/subject",
-    isShow: true,
+    access: ["admin"]
   },
-  // {
-  //   id: "attendance",
-  //   icon: SiBookstack,
-  //   label: "Attendance",
-  //   path: "/dashboard/attendance",
-  //   isShow: true,
-  // },
-  // {
-  //   id: "reports",
-  //   icon: BsFileEarmarkTextFill,
-  //   label: "Reports",
-  //   path: "/dashboard/report",
-  //   isShow: true,
-  // },
+  {
+    id: "attendance",
+    icon: SiBookstack,
+    label: "Attendance",
+    path: "/dashboard/attendance",
+    access: ["admin", "teacher"]
+  },
+  {
+    id: "reports",
+    icon: BsFileEarmarkTextFill,
+    label: "Reports",
+    path: "/dashboard/report",
+    access: ["admin", "teacher"]
+  },
 ];
