@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json(
           {
-            standards: dropdownOptions,
+            teachers: dropdownOptions,
           },
           { status: 200 }
         );
