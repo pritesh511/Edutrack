@@ -4,19 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { dashboardRoutes } from "@/utils/routes";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar } from "@/redux/slices/dashboardSlice";
+import { getDashboardData, toggleSidebar } from "@/redux/slices/dashboardSlice";
 import { getUserData } from "@/redux/slices/userSlice";
 
-interface Props {
-  isSidebarOpen: boolean;
-}
-
-const Sidebar = (props: Props) => {
-  const { isSidebarOpen } = props;
-
+const Sidebar = () => {
   const currentPath = usePathname();
   const dispatch = useDispatch();
   const { currentUser } = useSelector(getUserData);
+  const { isSidebarOpen } = useSelector(getDashboardData);
 
   return (
     <aside

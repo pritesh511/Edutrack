@@ -1,58 +1,21 @@
 "use client";
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Line, Bar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import { Card, CardContent } from "@/components/ui/card";
 import { GoUnverified } from "react-icons/go";
 import { IoBookSharp, IoPeople } from "react-icons/io5";
 import { BsPersonWorkspace } from "react-icons/bs";
 import { useGetDashboardDataQuery } from "@/redux/query/dashboard";
+import DashboardChart from "../DashboardChart";
+import { config } from "@/utils/config";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-const attendanceData = {
-  labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
-  datasets: [
-    {
-      label: "Attendance Rate",
-      data: [95, 93, 96, 94, 95],
-      borderColor: "#2563eb",
-      tension: 0.3,
-    },
-  ],
-};
-
-const performanceData = {
-  labels: ["Science", "Math", "English", "History", "Arts"],
-  datasets: [
-    {
-      label: "Average Score",
-      data: [85, 78, 82, 88, 90],
-      backgroundColor: "#2563eb",
-    },
-  ],
-};
+// const fetchDashboardData = async () => {
+//   const response = await fetch(config.API_URL + "/api/dashboard");
+//   const data = response.json();
+//   return data;
+// };
 
 const DashboardTabView = () => {
+  // const data = await fetchDashboardData();
   const { data } = useGetDashboardDataQuery("");
   return (
     <div className="space-y-6">
@@ -108,24 +71,7 @@ const DashboardTabView = () => {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Attendance Overview</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Line data={attendanceData} />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Academic Performance</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Bar data={performanceData} />
-          </CardContent>
-        </Card>
-      </div>
+      <DashboardChart />
     </div>
   );
 };

@@ -2,7 +2,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import AddStudentModal from "../dialogs/AddStudentDialog";
+const AddStudentDialog = React.lazy(
+  () => import("../dialogs/AddStudentDialog")
+);
 import CustomTableHead from "@/components/common/CustomTableHead";
 import CustomTableRow from "@/components/common/CustomTableRow";
 import CustomTableCell from "@/components/common/CustomTableCell";
@@ -20,10 +22,7 @@ import toast from "react-hot-toast";
 import { Student } from "@/utils/types";
 import { IoEye } from "react-icons/io5";
 import CustomSelect from "@/components/common/CustomSelect";
-import {
-  useGetStandardDropdownQuery,
-  useLazyGetStandardDropdownQuery,
-} from "@/redux/query/standard";
+import { useLazyGetStandardDropdownQuery } from "@/redux/query/standard";
 
 const StudentTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -213,7 +212,7 @@ const StudentTabView = () => {
           />
         </CardContent>
       </Card>
-      <AddStudentModal
+      <AddStudentDialog
         closeModal={() => handleCloseModal()}
         isModalOpen={isModalOpen}
         isEditStudent={isEditStudent}
