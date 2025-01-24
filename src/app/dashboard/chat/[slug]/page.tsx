@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { io, Socket } from "socket.io-client";
 
 const ChatDetailPage = () => {
   const router = useRouter();
@@ -22,6 +23,20 @@ const ChatDetailPage = () => {
     if (typeof slug === "string") {
       fetchGroupDetails(slug);
     }
+
+    const socket = io("/", { path: "/api/socket" });
+
+    socket.on("join-group", () => {
+      console.log("join group", socket.id);
+    });
+
+    socket.on("receive-message", (message: any) => {
+      console.log("Message received:", message);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   return (

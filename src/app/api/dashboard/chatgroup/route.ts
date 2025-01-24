@@ -60,10 +60,7 @@ export async function GET(request: NextRequest) {
     if (!groupId) {
       const groups = await ChatGroup.find({ user: userId })
         .select("-user -__v")
-        .populate({
-          path: "members",
-          select: "-user -password -__v",
-        });
+        .populate("members", "-user -password -__v");
 
       for (const group of groups) {
         for (const member of group.members) {
@@ -85,10 +82,7 @@ export async function GET(request: NextRequest) {
     } else {
       const group = await ChatGroup.findOne({ user: userId, _id: groupId })
         .select("-user -__v")
-        .populate({
-          path: "members",
-          select: "-user -password -__v",
-        });
+        .populate("members", "-user -password -__v");
 
       for (const member of group.members) {
         member.standards = await Standard.find({
