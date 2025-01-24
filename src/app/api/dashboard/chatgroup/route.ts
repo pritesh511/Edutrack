@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
         { status: 200 }
       );
     } else {
-      const group = await ChatGroup.findOne({ user: userId })
+      const group = await ChatGroup.findOne({ user: userId, _id: groupId })
         .select("-user -__v")
         .populate({
           path: "members",
