@@ -2,6 +2,7 @@ import { databseConnect } from "@/dbConfig/dbConfig";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import ChatGroup from "@/models/chatgroup.model";
 import Standard from "@/models/standard.model";
+import Subject from "@/models/subject.model";
 import { NextRequest, NextResponse } from "next/server";
 
 databseConnect();
@@ -14,7 +15,7 @@ export async function POST(request: NextRequest) {
 
     const { groupName, members } = reqBody;
 
-    const findGroupName = await Standard.findOne({ groupName, user: userId });
+    const findGroupName = await ChatGroup.findOne({ groupName, user: userId });
 
     if (findGroupName) {
       return NextResponse.json(
@@ -62,17 +63,18 @@ export async function GET(request: NextRequest) {
         .populate({
           path: "members",
           select: "-user -password -__v",
-          populate: [
-            {
-              path: "standards",
-              select: "-user -__v",
-            },
-            {
-              path: "subjects",
-              select: "-user -__v",
-            },
-          ],
         });
+
+      for (const group of groups) {
+        for (const member of group.members) {
+          member.standards = await Standard.find({
+            _id: { $in: member.standards },
+          }).select("-user -__v");
+          member.subjects = await Subject.find({
+            _id: { $in: member.subjects },
+          }).select("-user -__v");
+        }
+      }
 
       return NextResponse.json(
         {
@@ -81,22 +83,21 @@ export async function GET(request: NextRequest) {
         { status: 200 }
       );
     } else {
-      const group = await ChatGroup.findOne({ user: userId, _id: groupId })
+      const group = await ChatGroup.findOne({ user: userId })
         .select("-user -__v")
         .populate({
           path: "members",
           select: "-user -password -__v",
-          populate: [
-            {
-              path: "standards",
-              select: "-user -__v",
-            },
-            {
-              path: "subjects",
-              select: "-user -__v",
-            },
-          ],
         });
+
+      for (const member of group.members) {
+        member.standards = await Standard.find({
+          _id: { $in: member.standards },
+        }).select("-user -__v");
+        member.subjects = await Subject.find({
+          _id: { $in: member.subjects },
+        }).select("-user -__v");
+      }
 
       return NextResponse.json(
         {

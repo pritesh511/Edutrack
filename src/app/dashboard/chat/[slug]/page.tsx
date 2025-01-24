@@ -26,12 +26,12 @@ const ChatDetailPage = () => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex flex-row items-center justify-between py-4 px-4 bg-input">
+      <div className="flex flex-row items-center justify-between py-4 px-4 bg-primary">
         <div className="flex flex-row items-center gap-3">
           <Button variant={"secondary"} size={"icon"} onClick={router.back}>
             <IoMdArrowBack />
           </Button>
-          <p>{data?.group.groupName}</p>
+          <p className="text-white">{data?.group.groupName}</p>
         </div>
         <Popover>
           <PopoverTrigger asChild>
@@ -41,11 +41,11 @@ const ChatDetailPage = () => {
             <div>
               {data?.group.members.map((member) => {
                 return (
-                  <div className="flex items-center gap-2 hover:bg-secondary px-2 py-1 rounded-md cursor-pointer">
-                    <Avatar
-                      key={member._id}
-                      className="w-10 h-10 border-2 border-white"
-                    >
+                  <div
+                    key={member._id}
+                    className="flex items-center gap-2 hover:bg-secondary px-2 py-1 rounded-md cursor-pointer"
+                  >
+                    <Avatar className="w-10 h-10 border-2 border-white">
                       <AvatarImage src={"abcd"} alt={member.name} />
                       <AvatarFallback className="text-sm">
                         {member.name
