@@ -46,6 +46,16 @@ export function MultiSelect({
     }
   };
 
+  const selectedData = () => {
+    const data = getMultiselectValue(value, options).split(", ");
+    if (data.length > 3) {
+      const value = data.splice(0, 3);
+      return `${value.join(", ")}...`;
+    } else {
+      return data.join(", ");
+    }
+  };
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <Label className={`${error ? "text-destructive" : ""}`}>{label}</Label>
@@ -58,7 +68,7 @@ export function MultiSelect({
           aria-haspopup="true"
           aria-expanded={open}
         >
-          {value.length > 0 ? getMultiselectValue(value, options) : placeholder}
+          {value.length > 0 ? selectedData() : placeholder}
           <ChevronDown
             className={`ml-2 h-4 w-4 shrink-0 opacity-50 ${
               error ? "text-destructive" : ""

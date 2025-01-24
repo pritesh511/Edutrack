@@ -7,6 +7,7 @@ import {
 } from "@/helpers/getDataFromToken";
 import Student from "@/models/student.model";
 import bcryptjs from "bcryptjs";
+import ChatGroup from "@/models/chatgroup.model";
 
 databseConnect();
 
@@ -156,6 +157,18 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         {
           message: "Cannot delete the teacher as it is linked with student",
+        },
+        { status: 400 }
+      );
+    }
+
+    const isLinkedWithChatGroup = await ChatGroup.find({
+      members: { $in: [teacherId] },
+    });
+    if (isLinkedWithChatGroup.length > 0) {
+      return NextResponse.json(
+        {
+          message: "Cannot delete the teacher as it is linked with chat group",
         },
         { status: 400 }
       );

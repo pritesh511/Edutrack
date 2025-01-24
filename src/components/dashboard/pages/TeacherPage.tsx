@@ -65,7 +65,7 @@ const TeacherTabView = () => {
                         <div className="flex flex-col items-center">
                           <Avatar className="h-[100px] w-[100px] rounded-full">
                             <AvatarImage
-                              src="https://github.com/shadcn.png"
+                              src="https://github.com/shassdcn.png"
                               alt={teacher.name}
                             />
                             <AvatarFallback>

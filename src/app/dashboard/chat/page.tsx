@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import AvatarGroup from "@/components/common/AvatarGroup";
+import Link from "next/link";
 
 const ChatPage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -78,9 +79,10 @@ const ChatPage = () => {
                 <NoDataFound />,
                 <>
                   {data?.groups.map((group) => (
-                    <div
+                    <Link
+                      href={`/dashboard/chat/${group._id}`}
                       key={group._id}
-                      className="p-4 border rounded-lg shadow-sm transition duration-300 flex flex-row items-center justify-between"
+                      className="p-4 border rounded-lg shadow-sm transition duration-300 flex flex-row items-center justify-between hover:shadow-md"
                     >
                       <div>
                         <h2 className="font-semibold text-gray-800">
@@ -108,7 +110,7 @@ const ChatPage = () => {
                           <MdDelete />
                         </Button>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </>
               )}
