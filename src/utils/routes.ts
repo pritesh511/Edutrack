@@ -2,6 +2,8 @@ import { FaTachometerAlt } from "react-icons/fa";
 import { IoPeople, IoBookSharp } from "react-icons/io5";
 import { BsPersonWorkspace, BsFileEarmarkTextFill } from "react-icons/bs";
 import { SiBookstack } from "react-icons/si";
+import { IoIosChatboxes } from "react-icons/io";
+
 
 export const dashboardRoutes = [
   {
@@ -10,6 +12,13 @@ export const dashboardRoutes = [
     label: "Dashboard",
     path: "/dashboard",
     access: ["admin"]
+  },
+  {
+    id: "chatBox",
+    icon: IoIosChatboxes,
+    label: "Chat",
+    path: "/dashboard/chat",
+    access: ["admin", "teacher"]
   },
   {
     id: "students",

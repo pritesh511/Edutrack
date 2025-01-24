@@ -1,4 +1,3 @@
-import e from "cors";
 import mongoose from "mongoose";
 
 const standardSchema = new mongoose.Schema({

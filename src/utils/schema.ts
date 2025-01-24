@@ -76,3 +76,8 @@ export const contactUsSchema = Yup.object().shape({
     .email("Please enter valid email"),
   message: Yup.string().required("Please enter message"),
 });
+
+export const chatGroupSchema = Yup.object().shape({
+  groupName: Yup.string().required("Please enter group name"),
+  members: Yup.array().min(1, "Please select teacher"),
+});

@@ -84,7 +84,9 @@ export async function GET(request: NextRequest) {
         const findTeacher = await Teacher.findOne({ _id: loginUser.teacherId });
 
         const dropdownOptions = teachersData
-          .filter((teacher) => teacher._id.toString() == findTeacher._id.toString())
+          .filter(
+            (teacher) => teacher._id.toString() == findTeacher._id.toString()
+          )
           .map((teacher) => {
             return {
               label: teacher.name,
@@ -104,7 +106,8 @@ export async function GET(request: NextRequest) {
     const teachers = await Teacher.find({ user: userId })
       .select("-user -password -__v")
       .populate("standards")
-      .populate("subjects");
+      .populate("subjects")
+      .lean();
 
     return NextResponse.json(
       {

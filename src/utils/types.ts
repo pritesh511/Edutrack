@@ -67,3 +67,10 @@ export interface CurrentUser {
   role: string;
   teacherId: string | null;
 }
+
+export interface ChatGroup {
+  _id: string;
+  groupName: string;
+  createdAt: Date;
+  members: Array<Teacher>;
+}
