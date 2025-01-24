@@ -1,7 +1,5 @@
 import { databseConnect } from "@/dbConfig/dbConfig";
-import {
-  getDataFromToken,
-} from "@/helpers/getDataFromToken";
+import { getDataFromToken } from "@/helpers/getDataFromToken";
 import ChatGroup from "@/models/chatgroup.model";
 import Standard from "@/models/standard.model";
 import { NextRequest, NextResponse } from "next/server";
@@ -55,31 +53,58 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    const groupId = request.nextUrl.searchParams.get("groupId");
     const userId = await getDataFromToken(request);
 
-    const groups = await ChatGroup.find({ user: userId })
-      .select("-user -__v")
-      .populate({
-        path: "members",
-        select: "-user -password -__v",
-        populate: [
-          {
-            path: "standards",
-            select: "-user -__v",
-          },
-          {
-            path: "subjects",
-            select: "-user -__v",
-          },
-        ],
-      });
+    if (!groupId) {
+      const groups = await ChatGroup.find({ user: userId })
+        .select("-user -__v")
+        .populate({
+          path: "members",
+          select: "-user -password -__v",
+          populate: [
+            {
+              path: "standards",
+              select: "-user -__v",
+            },
+            {
+              path: "subjects",
+              select: "-user -__v",
+            },
+          ],
+        });
 
-    return NextResponse.json(
-      {
-        groups,
-      },
-      { status: 200 }
-    );
+      return NextResponse.json(
+        {
+          groups,
+        },
+        { status: 200 }
+      );
+    } else {
+      const group = await ChatGroup.findOne({ user: userId, _id: groupId })
+        .select("-user -__v")
+        .populate({
+          path: "members",
+          select: "-user -password -__v",
+          populate: [
+            {
+              path: "standards",
+              select: "-user -__v",
+            },
+            {
+              path: "subjects",
+              select: "-user -__v",
+            },
+          ],
+        });
+
+      return NextResponse.json(
+        {
+          group,
+        },
+        { status: 200 }
+      );
+    }
   } catch (error: any) {
     console.log(error.message);
     return NextResponse.json(
@@ -144,8 +169,7 @@ export async function PUT(request: NextRequest) {
 
     const reqBody = await request.json();
 
-    const { groupName, members } =
-      reqBody;
+    const { groupName, members } = reqBody;
 
     const findGroup = await ChatGroup.findOne({ _id: groupId, user: userId });
     if (!findGroup) {

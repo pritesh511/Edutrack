@@ -12,13 +12,8 @@ import Loader from "@/components/common/Loader";
 import NoDataFound from "@/components/common/NoDataFound";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import {
-  useDeleteStandardMutation,
-  useGetStandardQuery,
-} from "@/redux/query/standard";
 import toast from "react-hot-toast";
-import { ChatGroup, Standard, Teacher } from "@/utils/types";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ChatGroup, Teacher } from "@/utils/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import AvatarGroup from "@/components/common/AvatarGroup";
@@ -95,7 +90,9 @@ const ChatPage = () => {
                       <div className="flex flex-row gap-2">
                         <Button
                           size={"icon"}
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
                             setIsEditGroup(group);
                             setIsOpen(true);
                           }}
@@ -105,7 +102,11 @@ const ChatPage = () => {
                         <Button
                           size={"icon"}
                           variant="destructive"
-                          onClick={() => handleDeleteGroup(group._id)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleDeleteGroup(group._id);
+                          }}
                         >
                           <MdDelete />
                         </Button>

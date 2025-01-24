@@ -11,6 +11,10 @@ export const chatgroupApi = createApi({
       query: () => `dashboard/chatgroup`,
       providesTags: ["ChatGroup"],
     }),
+    getGroupsDetails: builder.query<{ group: ChatGroup }, string>({
+      query: (id: string) => `dashboard/chatgroup?groupId=${id}`,
+      providesTags: ["ChatGroup"],
+    }),
     postGroup: builder.mutation({
       query: (form) => ({
         url: `dashboard/chatgroup`,
@@ -37,4 +41,11 @@ export const chatgroupApi = createApi({
   }),
 });
 
-export const { useGetGroupsQuery, usePostGroupMutation, useDeleteGroupMutation, usePutChatGroupMutation } = chatgroupApi;
+export const {
+  useGetGroupsQuery,
+  usePostGroupMutation,
+  useDeleteGroupMutation,
+  usePutChatGroupMutation,
+  useGetGroupsDetailsQuery,
+  useLazyGetGroupsDetailsQuery,
+} = chatgroupApi;
