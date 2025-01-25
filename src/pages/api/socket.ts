@@ -51,20 +51,17 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         socket.join(groupId);
       });
 
-      socket.on(
-        "send-message",
-        (data: { groupId: string; message: string; senderId: string }) => {
-          const { groupId, message, senderId } = data;
-          console.log(
-            `Message from ${senderId} to group ${groupId}: ${message}`
-          );
-          io.to(groupId).emit("receive-message", {
-            message,
-            senderId,
-            groupId,
-          });
-        }
-      );
+      socket.on("send-message", (data) => {
+        const { groupId, message, name, time, avatar } = data;
+        console.log(`Message from ${name} to group ${groupId}: ${message}`);
+        io.to(groupId).emit("receive-message", {
+          message,
+          name,
+          groupId,
+          time,
+          avatar,
+        });
+      });
 
       socket.on("disconnect", () => {
         console.log("A user disconnected:", socket.id);

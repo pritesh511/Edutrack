@@ -13,6 +13,7 @@ interface Props {
   handleFocusInput?: () => void;
   disabled?: boolean;
   onClickInput?: () => void;
+  className?: string;
 }
 
 const CustomTextField = (props: Props) => {
@@ -27,9 +28,10 @@ const CustomTextField = (props: Props) => {
     handleFocusInput,
     onClickInput,
     disabled = false,
+    className,
   } = props;
   return (
-    <div>
+    <div className="w-full">
       {label && (
         <Label
           htmlFor={fieldName}
@@ -46,9 +48,11 @@ const CustomTextField = (props: Props) => {
         name={fieldName}
         value={value}
         onChange={onChangeInput}
-        className={`${error ? "border-destructive" : ""} ${
-          disabled ? "bg-border" : ""
-        }`}
+        className={
+          `${error ? "border-destructive" : ""} ${
+            disabled ? "bg-border" : ""
+          } ` + className
+        }
         type={type ? type : "text"}
         onFocus={handleFocusInput}
         disabled={disabled}
