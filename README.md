@@ -1,6 +1,9 @@
 ## About Project
 
 - This is simple web app, in that smaller level educational data can manage like teacher, students and more.
+- Admin (school) can have all module and crud functionality access and they can manage all data by dashboard.
+- Admin (school) can add, edit and view data of teacher, student, standards and subjects. and can also create group of teacher for messaging and update.
+- Teacher can login by giving id and password by admin using them and can have some minimal access of module a like student and chat group and more.
 
 ## Used Technologies
 
