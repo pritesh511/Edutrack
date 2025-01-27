@@ -48,6 +48,13 @@ export const dashboardRoutes = [
     access: ["admin", "teacher"],
   },
   {
+    id: "calender",
+    icon: IoIosChatboxes,
+    label: "Calender",
+    path: "/dashboard/calender",
+    access: ["admin", "teacher"],
+  },
+  {
     id: "attendance",
     icon: SiBookstack,
     label: "Attendance",

@@ -74,3 +74,10 @@ export interface ChatGroup {
   createdAt: Date;
   members: Array<Teacher>;
 }
+
+export interface CalenderEvent {
+  _id: string;
+  title: string;
+  start: Date;
+  end: Date;
+}

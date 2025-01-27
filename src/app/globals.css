@@ -82,3 +82,7 @@ body {
   font-size: 0.875rem;
   color: black;
 }
+.rbc-calendar .rbc-event {
+  font-size: 12px;
+  background-color: hsl(221 82.4% 53.1%);
+}

@@ -81,3 +81,7 @@ export const chatGroupSchema = Yup.object().shape({
   groupName: Yup.string().required("Please enter group name"),
   members: Yup.array().min(1, "Please select teacher"),
 });
+
+export const eventSchema = Yup.object().shape({
+  title: Yup.string().required("Please enter event title"),
+});

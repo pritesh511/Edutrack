@@ -8,6 +8,7 @@ import { teacherApi } from "./query/teacher";
 import { studentApi } from "./query/student";
 import { dashboardApi } from "./query/dashboard";
 import { chatgroupApi } from "./query/chatgroup";
+import { calenderApi } from "./query/calender";
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
 
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   [studentApi.reducerPath]: studentApi.reducer,
   [dashboardApi.reducerPath]: dashboardApi.reducer,
   [chatgroupApi.reducerPath]: chatgroupApi.reducer,
+  [calenderApi.reducerPath]: calenderApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -41,7 +43,8 @@ const store = configureStore({
       .concat(teacherApi.middleware)
       .concat(studentApi.middleware)
       .concat(dashboardApi.middleware)
-      .concat(chatgroupApi.middleware),
+      .concat(chatgroupApi.middleware)
+      .concat(calenderApi.middleware),
 });
 
 const persistor = persistStore(store);
