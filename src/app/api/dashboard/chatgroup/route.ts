@@ -1,8 +1,12 @@
 import { databseConnect } from "@/dbConfig/dbConfig";
-import { getDataFromToken } from "@/helpers/getDataFromToken";
+import {
+  getDataFromToken,
+  getUserDataFromToken,
+} from "@/helpers/getDataFromToken";
 import ChatGroup from "@/models/chatgroup.model";
 import Standard from "@/models/standard.model";
 import Subject from "@/models/subject.model";
+import Teacher from "@/models/teacher.model";
 import { NextRequest, NextResponse } from "next/server";
 
 databseConnect();
@@ -56,29 +60,64 @@ export async function GET(request: NextRequest) {
   try {
     const groupId = request.nextUrl.searchParams.get("groupId");
     const userId = await getDataFromToken(request);
+    const loginUser = await getUserDataFromToken(request);
 
     if (!groupId) {
-      const groups = await ChatGroup.find({ user: userId })
-        .select("-user -__v")
-        .populate("members", "-user -password -__v");
+      if (loginUser.role === "admin") {
+        const groups = await ChatGroup.find({ user: userId })
+          .select("-user -__v")
+          .populate("members", "-user -password -__v");
 
-      for (const group of groups) {
-        for (const member of group.members) {
-          member.standards = await Standard.find({
-            _id: { $in: member.standards },
-          }).select("-user -__v");
-          member.subjects = await Subject.find({
-            _id: { $in: member.subjects },
-          }).select("-user -__v");
+        for (const group of groups) {
+          for (const member of group.members) {
+            member.standards = await Standard.find({
+              _id: { $in: member.standards },
+            }).select("-user -__v");
+            member.subjects = await Subject.find({
+              _id: { $in: member.subjects },
+            }).select("-user -__v");
+          }
         }
-      }
 
-      return NextResponse.json(
-        {
-          groups,
-        },
-        { status: 200 }
-      );
+        return NextResponse.json(
+          {
+            groups,
+          },
+          { status: 200 }
+        );
+      } else {
+        const groups = await ChatGroup.find({ user: userId })
+          .select("-user -__v")
+          .populate("members", "-user -password -__v");
+
+        const filterGroups = groups.filter((group) => {
+          let value = false;
+          group.members.forEach((member: any) => {
+            if (member._id.toString() === loginUser.teacherId.toString()) {
+              value = true;
+            }
+          });
+          return value;
+        });
+
+        for (const group of filterGroups) {
+          for (const member of group.members) {
+            member.standards = await Standard.find({
+              _id: { $in: member.standards },
+            }).select("-user -__v");
+            member.subjects = await Subject.find({
+              _id: { $in: member.subjects },
+            }).select("-user -__v");
+          }
+        }
+
+        return NextResponse.json(
+          {
+            groups: filterGroups,
+          },
+          { status: 200 }
+        );
+      }
     } else {
       const group = await ChatGroup.findOne({ user: userId, _id: groupId })
         .select("-user -__v")

@@ -15,6 +15,7 @@ import CustomTextField from "@/components/common/CustomTextField";
 import { useSelector } from "react-redux";
 import { getUserData } from "@/redux/slices/userSlice";
 import { IoSend } from "react-icons/io5";
+import moment from "moment";
 
 let socket: Socket;
 
@@ -126,35 +127,46 @@ const ChatDetailPage = () => {
           className="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-100"
         >
           {messageList.map((message, index) => (
-            <div
-              key={index}
-              className={`flex items-start ${
-                message.name === currentUser?.schoolName
-                  ? "justify-end"
-                  : "justify-start"
-              }`}
-            >
-              <div className="mr-3">
-                <Avatar className="w-10 h-10 border-2 border-white">
-                  <AvatarImage src={"abcd"} alt={"avtar"} />
-                  <AvatarFallback className="text-sm bg-white">
-                    {message.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              <div
-                className={`flex flex-col max-w-[70%] p-3 rounded-lg text-sm ${
+            <div className="flex flex-col" key={index}>
+              <p
+                className={`text-[10px] ml-[53px] mb-1 mr-2 text-gray-600 ${
                   message.name === currentUser?.schoolName
-                    ? "bg-green-200 text-right self-end"
-                    : "bg-blue-200 text-left self-start"
+                    ? "text-end"
+                    : "text-start"
                 }`}
               >
-                {/* <div className="font-semibold">{message.name}</div> */}
-                <div>{message.message}</div>
+                {message.name === currentUser?.schoolName ? "" : message.name}{" "}
+                {moment(message.time).format("LT")}
+              </p>
+              <div
+                key={index}
+                className={`flex items-start ${
+                  message.name === currentUser?.schoolName
+                    ? "justify-end"
+                    : "justify-start"
+                }`}
+              >
+                <div className="mr-3">
+                  <Avatar className="w-10 h-10 border-2 border-white">
+                    <AvatarImage src={"abcd"} alt={"avtar"} />
+                    <AvatarFallback className="text-sm bg-white">
+                      {message.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+                <div
+                  className={`flex flex-col max-w-[70%] p-3 rounded-lg text-sm ${
+                    message.name === currentUser?.schoolName
+                      ? "bg-green-200 text-right self-end"
+                      : "bg-blue-200 text-left self-start"
+                  }`}
+                >
+                  <div>{message.message}</div>
+                </div>
               </div>
             </div>
           ))}

@@ -18,10 +18,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import AvatarGroup from "@/components/common/AvatarGroup";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import { getUserData } from "@/redux/slices/userSlice";
 
 const ChatPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEditGroup, setIsEditGroup] = useState<ChatGroup | null>(null);
+  const { currentUser } = useSelector(getUserData);
 
   const handleCloseModal = useCallback(() => {
     setIsOpen(false);
@@ -60,9 +63,13 @@ const ChatPage = () => {
       <CardContent className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Groups</h1>
-          <Button onClick={() => setIsOpen(true)} size={"lg"}>
-            Add Group
-          </Button>
+          {renderOnConditionBase(
+            currentUser?.role === "admin",
+            <Button onClick={() => setIsOpen(true)} size={"lg"}>
+              Add Group
+            </Button>,
+            <></>
+          )}
         </div>
         <div className="flex flex-col gap-4">
           {renderOnConditionBase(
@@ -87,30 +94,34 @@ const ChatPage = () => {
                           <AvatarGroup users={getAvtarprops(group.members)} />
                         </div>
                       </div>
-                      <div className="flex flex-row gap-2">
-                        <Button
-                          size={"icon"}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setIsEditGroup(group);
-                            setIsOpen(true);
-                          }}
-                        >
-                          <FaEdit />
-                        </Button>
-                        <Button
-                          size={"icon"}
-                          variant="destructive"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleDeleteGroup(group._id);
-                          }}
-                        >
-                          <MdDelete />
-                        </Button>
-                      </div>
+                      {renderOnConditionBase(
+                        currentUser?.role === "admin",
+                        <div className="flex flex-row gap-2">
+                          <Button
+                            size={"icon"}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setIsEditGroup(group);
+                              setIsOpen(true);
+                            }}
+                          >
+                            <FaEdit />
+                          </Button>
+                          <Button
+                            size={"icon"}
+                            variant="destructive"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleDeleteGroup(group._id);
+                            }}
+                          >
+                            <MdDelete />
+                          </Button>
+                        </div>,
+                        <></>
+                      )}
                     </Link>
                   ))}
                 </>
