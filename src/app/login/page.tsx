@@ -1,10 +1,9 @@
 "use client";
-import React, { useState, useTransition } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,7 +11,6 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import CircularProgress from "@/components/common/CircularProgress";
 import {
   renderOnConditionBase,
@@ -24,6 +22,9 @@ import { useDispatch } from "react-redux";
 import { setCurrentUser } from "@/redux/slices/userSlice";
 import CustomSelect from "@/components/common/CustomSelect";
 import { USER_TYPES } from "@/utils/constant";
+import { io, Socket } from "socket.io-client";
+
+let socket: Socket;
 
 const LoginPage = () => {
   const router = useRouter();
@@ -60,6 +61,14 @@ const LoginPage = () => {
     }));
   };
 
+  useEffect(() => {
+    socket = io("/", { path: "/api/socket" });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   const handleLogin = async () => {
     setTransition(async () => {
       try {
@@ -73,6 +82,9 @@ const LoginPage = () => {
         } else {
           router.push("/dashboard/student");
         }
+        socket.emit("send-notification", {
+          message: `${response.data.user.schoolName} is login now.`,
+        });
       } catch (validationsErrors: any) {
         if (validationsErrors.response?.data.message) {
           toast.error(validationsErrors.response.data.message);

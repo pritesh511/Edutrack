@@ -6,6 +6,7 @@ import React, { Suspense } from "react";
 import DashboardLoading from "./loading";
 import { useSelector } from "react-redux";
 import { getDashboardData } from "@/redux/slices/dashboardSlice";
+import { Toaster } from "react-hot-toast";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { miniSidebar } = useSelector(getDashboardData);
@@ -25,6 +26,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </Suspense>
       </div>
       <MobileSidebarOverlay />
+      <Toaster />
     </div>
   );
 };

@@ -14,6 +14,10 @@ import {
   setEmptyCurrentUser,
 } from "@/redux/slices/userSlice";
 import { toggleSidebar } from "@/redux/slices/dashboardSlice";
+import { IoNotifications } from "react-icons/io5";
+import { io, Socket } from "socket.io-client";
+
+let socket: Socket;
 
 const Header = () => {
   const router = useRouter();
@@ -46,6 +50,18 @@ const Header = () => {
     if (!currentUserName) {
       getCurrentUser();
     }
+
+    socket = io("/", { path: "/api/socket" });
+
+    socket.on("get-notification", (data: string) => {
+      toast.success(data, { position: "top-right" });
+    });
+
+    return () => {
+      socket.off("get-notification");
+      socket.off("send-notification");
+      socket.disconnect();
+    };
   }, []);
 
   return (
@@ -76,11 +92,17 @@ const Header = () => {
               )}
             </div>
           </div>
-          <IoMdLogOut
-            onClick={() => handleLogout()}
-            style={{ width: 32, height: 32, cursor: "pointer" }}
-            color="rgb(37, 99, 235)"
-          />
+          <div className="flex gap-3">
+            <IoNotifications
+              style={{ width: 32, height: 32, cursor: "pointer" }}
+              color="rgb(37, 99, 235)"
+            />
+            <IoMdLogOut
+              onClick={() => handleLogout()}
+              style={{ width: 32, height: 32, cursor: "pointer" }}
+              color="rgb(37, 99, 235)"
+            />
+          </div>
         </div>
       </div>
     </header>

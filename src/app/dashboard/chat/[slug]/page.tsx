@@ -63,6 +63,9 @@ const ChatDetailPage = () => {
     }
 
     return () => {
+      socket.off("joined-group");
+      socket.off("join-group");
+      socket.off("receive-message");
       socket.disconnect();
     };
   }, []);

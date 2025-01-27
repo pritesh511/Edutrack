@@ -65,6 +65,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         });
       });
 
+      socket.on("send-notification", (data) => {
+        const { message } = data;
+        io.emit("get-notification", message);
+      });
+
       socket.on("disconnect", () => {
         console.log("A user disconnected:", socket.id);
       });
