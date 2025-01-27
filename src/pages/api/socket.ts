@@ -46,9 +46,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     io.on("connection", (socket) => {
       console.log("A user connected:", socket.id);
 
-      socket.on("join-group", (groupId: string) => {
+      socket.on("join-group", (group) => {
+        const { groupId, joinUserId } = group;
         console.log(`User ${socket.id} joined group: ${groupId}`);
         socket.join(groupId);
+        io.to(groupId).emit("joined-group", joinUserId);
       });
 
       socket.on("send-message", (data) => {

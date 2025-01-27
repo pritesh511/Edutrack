@@ -35,6 +35,7 @@ const ChatDetailPage = () => {
     useLazyGetGroupsDetailsQuery();
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState<Message[]>([]);
+  const [joinedGroupList, setJoinedGroupList] = useState<string[]>([]);
   const messageBoxRef = useRef<HTMLDivElement | null>(null);
   const { currentUser } = useSelector(getUserData);
 
@@ -44,7 +45,16 @@ const ChatDetailPage = () => {
     if (typeof slug === "string") {
       fetchGroupDetails(slug);
 
-      socket.emit("join-group", slug);
+      const joinGroup = {
+        groupId: slug,
+        joinUserId: currentUser?.teacherId,
+      };
+
+      socket.emit("join-group", joinGroup);
+
+      socket.on("joined-group", (id: string) => {
+        setJoinedGroupList((prevState) => [...prevState, id]);
+      });
 
       socket.on("receive-message", (data: Message) => {
         setMessageList((pastmsgs) => [...pastmsgs, data]);
@@ -113,7 +123,20 @@ const ChatDetailPage = () => {
                           .toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                    <p className="text-sm">{member.name}</p>
+                    <div>
+                      <p className="text-sm">{member.name}</p>
+                      <p
+                        className={`text-[12px] ${
+                          joinedGroupList.includes(member._id)
+                            ? "text-green-600"
+                            : "text-gray-600"
+                        }`}
+                      >
+                        {joinedGroupList.includes(member._id)
+                          ? "online"
+                          : "offline"}
+                      </p>
+                    </div>
                   </div>
                 );
               })}
