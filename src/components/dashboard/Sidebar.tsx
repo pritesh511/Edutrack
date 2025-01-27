@@ -13,6 +13,7 @@ import { getUserData } from "@/redux/slices/userSlice";
 import { Button } from "../ui/button";
 import { GoSidebarExpand } from "react-icons/go";
 import { GoSidebarCollapse } from "react-icons/go";
+import { getDetailPageHighlight } from "@/helpers/helper";
 
 const Sidebar = () => {
   const currentPath = usePathname();
@@ -39,7 +40,10 @@ const Sidebar = () => {
       <nav className="flex-1 mt-6 px-4">
         {dashboardRoutes.map((tab) => {
           const currentPathClass =
-            currentPath === tab.path ? "bg-blue-600 text-white" : "";
+            currentPath?.includes(tab.path) &&
+            getDetailPageHighlight(currentPath, tab.path)
+              ? "bg-blue-600 text-white"
+              : "";
           const filterTabClass = !tab.access.includes(
             currentUser?.role as string
           )

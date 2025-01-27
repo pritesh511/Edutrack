@@ -50,3 +50,14 @@ export const getLabelOfSubject = (value: string) => {
     return "";
   }
 };
+
+export const getDetailPageHighlight = (
+  currentPath: string | null,
+  tabPath: string
+) => {
+  if (tabPath === "/dashboard" && currentPath !== "/dashboard") {
+    return false;
+  } else {
+    return true;
+  }
+};
