@@ -37,6 +37,7 @@ const ChatDetailPage = () => {
   const [messageList, setMessageList] = useState<Message[]>([]);
   const [joinedGroupList, setJoinedGroupList] = useState<string[]>([]);
   const messageBoxRef = useRef<HTMLDivElement | null>(null);
+  const submitBtnRef = useRef<HTMLButtonElement | null>(null);
   const { currentUser } = useSelector(getUserData);
 
   useEffect(() => {
@@ -70,9 +71,22 @@ const ChatDetailPage = () => {
     if (messageBoxRef.current) {
       messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
     }
+
+    document.addEventListener("keydown", handleSubmitForm);
+
+    return () => {
+      document.removeEventListener("keydown", handleSubmitForm);
+    };
   }, [messageList]);
 
-  const handleSendMessage = () => {
+  const handleSubmitForm = (event: any) => {
+    if (event.key == "Enter") {
+      submitBtnRef.current?.click();
+    }
+  };
+
+  const handleSendMessage = (event: any) => {
+    event.preventDefault();
     const user = {
       username: currentUser?.schoolName,
       avatar: "/path/to/john-avatar.png",
@@ -195,7 +209,10 @@ const ChatDetailPage = () => {
           ))}
         </div>
 
-        <div className="py-2 px-3 flex items-center space-x-3">
+        <form
+          onSubmit={handleSendMessage}
+          className="py-2 px-3 flex items-center space-x-3"
+        >
           <CustomTextField
             className="w-full bg-white"
             fieldName="message"
@@ -203,10 +220,10 @@ const ChatDetailPage = () => {
             value={message}
             onChangeInput={(event) => setMessage(event.target.value)}
           />
-          <Button className="h-12" onClick={handleSendMessage}>
+          <Button className="h-12" type="submit" ref={submitBtnRef}>
             <IoSend />
           </Button>
-        </div>
+        </form>
       </div>
     </div>
   );
