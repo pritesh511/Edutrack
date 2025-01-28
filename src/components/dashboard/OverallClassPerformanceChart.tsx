@@ -1,5 +1,7 @@
 "use client";
-import { Bar, BarChart, XAxis, YAxis } from "recharts";
+import React from "react";
+// import { Bar, BarChart, XAxis, YAxis } from "recharts";
+import { Label, Pie, PieChart } from "recharts";
 
 import {
   Card,
@@ -47,6 +49,10 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function OverallClassPerformanceChart() {
+  const totalVisitors = React.useMemo(() => {
+    return chartData.reduce((acc, curr) => acc + curr.performance, 0);
+  }, []);
+
   return (
     <Card>
       <CardHeader>
@@ -54,33 +60,53 @@ export default function OverallClassPerformanceChart() {
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <div className="px-6 pb-6">
-        <ChartContainer config={chartConfig}>
-          <BarChart
-            accessibilityLayer
-            data={chartData}
-            layout="vertical"
-            margin={{
-              left: 0,
-            }}
-          >
-            <YAxis
-              dataKey="standard"
-              type="category"
-              tickLine={false}
-              tickMargin={10}
-              className="h-3"
-              axisLine={false}
-              tickFormatter={(value) =>
-                chartConfig[value as keyof typeof chartConfig]?.label
-              }
-            />
-            <XAxis dataKey="performance" type="number" hide />
+        <ChartContainer
+          config={chartConfig}
+          className="mx-auto aspect-square max-h-[250px]"
+        >
+          <PieChart>
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="performance" layout="vertical" radius={5} />
-          </BarChart>
+            <Pie
+              data={chartData}
+              dataKey="performance"
+              nameKey="standard"
+              innerRadius={60}
+              strokeWidth={5}
+            >
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                    return (
+                      <text
+                        x={viewBox.cx}
+                        y={viewBox.cy}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                      >
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          className="fill-foreground text-3xl font-bold"
+                        >
+                          {totalVisitors.toLocaleString()}
+                        </tspan>
+                        <tspan
+                          x={viewBox.cx}
+                          y={(viewBox.cy || 0) + 24}
+                          className="fill-muted-foreground"
+                        >
+                          Performance
+                        </tspan>
+                      </text>
+                    );
+                  }
+                }}
+              />
+            </Pie>
+          </PieChart>
         </ChartContainer>
       </div>
     </Card>
