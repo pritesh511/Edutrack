@@ -37,3 +37,18 @@ export const USER_TYPES = [
     value: "teacher",
   },
 ];
+
+export const ATTENDANCE_LIST = [
+  {
+    label: "Present",
+    value: "present",
+  },
+  {
+    label: "Absent",
+    value: "absent",
+  },
+  {
+    label: "Late",
+    value: "late",
+  },
+];

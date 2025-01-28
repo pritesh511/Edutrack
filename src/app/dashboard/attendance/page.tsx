@@ -1,7 +1,8 @@
+import AttendancePage from "@/components/dashboard/pages/AttendancePage";
 import React from "react";
 
 const Attendance = () => {
-  return <p>Attendance Page in working progress</p>;
+  return <AttendancePage />;
 };
 
 export default Attendance;

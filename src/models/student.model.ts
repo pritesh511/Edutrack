@@ -43,6 +43,15 @@ const studentSchema = new mongoose.Schema({
     ref: "Teacher",
     require: [true, "Please select class teacher"],
   },
+  attendance: {
+    type: [
+      {
+        date: { type: Date, required: true },
+        status: { type: String, required: true },
+      },
+    ],
+    default: [],
+  },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 

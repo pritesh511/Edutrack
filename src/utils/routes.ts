@@ -3,6 +3,7 @@ import { IoPeople, IoBookSharp } from "react-icons/io5";
 import { BsPersonWorkspace, BsFileEarmarkTextFill } from "react-icons/bs";
 import { SiBookstack } from "react-icons/si";
 import { IoIosChatboxes } from "react-icons/io";
+import { SlCalender } from "react-icons/sl";
 
 export const dashboardRoutes = [
   {
@@ -49,7 +50,7 @@ export const dashboardRoutes = [
   },
   {
     id: "calender",
-    icon: IoIosChatboxes,
+    icon: SlCalender,
     label: "Calender",
     path: "/dashboard/calender",
     access: ["admin", "teacher"],

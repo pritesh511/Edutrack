@@ -58,6 +58,10 @@ export interface Student {
     standards: Standard[];
     subjects: Subject[];
   };
+  attendance: {
+    date: Date;
+    status: string;
+  }[];
 }
 
 export interface CurrentUser {
