@@ -56,7 +56,7 @@ const Sidebar = () => {
               href={tab.path}
               className={`flex flex-row items-center gap-3 px-6 py-3 mb-2 rounded-[8px] hover:bg-blue-600 hover:text-white cursor-pointer transition-colors ${currentPathClass} ${filterTabClass}`}
             >
-              {<tab.icon />}
+              {<tab.icon width={18} />}
               {miniSidebar ? "" : tab.label}
             </Link>
           );

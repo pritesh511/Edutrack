@@ -7,6 +7,15 @@ import { BsPersonWorkspace } from "react-icons/bs";
 import { useGetDashboardDataQuery } from "@/redux/query/dashboard";
 import DashboardChart from "../DashboardChart";
 import { config } from "@/utils/config";
+import { useGetEventsQuery } from "@/redux/query/calender";
+import CustomTableHead from "@/components/common/CustomTableHead";
+import { renderOnConditionBase } from "@/helpers/helper";
+import CustomTableRow from "@/components/common/CustomTableRow";
+import CustomTableCell from "@/components/common/CustomTableCell";
+import { Loader } from "lucide-react";
+import moment from "moment";
+import CustomTable from "@/components/common/CustomTable";
+import OverallClassPerformanceChart from "../OverallClassPerformanceChart";
 
 // const fetchDashboardData = async () => {
 //   const response = await fetch(config.API_URL + "/api/dashboard");
@@ -17,6 +26,63 @@ import { config } from "@/utils/config";
 const DashboardTabView = () => {
   // const data = await fetchDashboardData();
   const { data } = useGetDashboardDataQuery("");
+  const { data: eventData, isLoading } = useGetEventsQuery("");
+
+  const EventTableHeader = () => {
+    const headers = ["Name", "Start", "End"];
+    return (
+      <>
+        {headers.map((head) => (
+          <CustomTableHead key={head} headeName={head} size="sm" />
+        ))}
+      </>
+    );
+  };
+
+  const EventTableBody = () => {
+    return (
+      <>
+        {renderOnConditionBase(
+          isLoading,
+          <CustomTableRow>
+            <CustomTableCell
+              colSpan={7}
+              cellName={<Loader />}
+              className="text-center text-lg font-semibold"
+            />
+          </CustomTableRow>,
+          <>
+            {renderOnConditionBase(
+              eventData?.events?.length == 0,
+              <CustomTableRow>
+                <CustomTableCell
+                  colSpan={7}
+                  cellName={"No Data Found"}
+                  className="text-center text-lg font-semibold"
+                />
+              </CustomTableRow>,
+              <>
+                {eventData?.events?.map((event) => {
+                  return (
+                    <CustomTableRow key={event.title}>
+                      <CustomTableCell cellName={event.title} size="sm" />
+                      <CustomTableCell
+                        cellName={moment(event.start).format("DD/MM/YYYY")}
+                      />
+                      <CustomTableCell
+                        cellName={moment(event.end).format("DD/MM/YYYY")}
+                      />
+                    </CustomTableRow>
+                  );
+                })}
+              </>
+            )}
+          </>
+        )}
+      </>
+    );
+  };
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -27,7 +93,9 @@ const DashboardTabView = () => {
               <IoPeople style={{ width: 24, height: 24 }} color="#2563eb" />
             </div>
             <p className="text-2xl font-bold mt-2">{data?.students.length}</p>
-            <p className="text-green-500 text-sm mt-2">+5% from last month</p>
+            <p className="text-green-500 text-sm mt-2">
+              Total number of students
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -40,7 +108,9 @@ const DashboardTabView = () => {
               />
             </div>
             <p className="text-2xl font-bold mt-2">{data?.subjects.length}</p>
-            <p className="text-green-500 text-sm mt-2">95.6% attendance</p>
+            <p className="text-green-500 text-sm mt-2">
+              Total number of subjects
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -71,6 +141,18 @@ const DashboardTabView = () => {
         </Card>
       </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardContent className="p-6">
+            <h3 className="text-lg font-semibold mb-3">Event Schedule</h3>
+            <CustomTable
+              tableHeader={<EventTableHeader />}
+              tableBody={<EventTableBody />}
+            />
+          </CardContent>
+        </Card>
+        <OverallClassPerformanceChart />
+      </div>
       <DashboardChart />
     </div>
   );
