@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { BsList } from "react-icons/bs";
-import { IoMdLogOut } from "react-icons/io";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -16,6 +15,15 @@ import {
 import { toggleSidebar } from "@/redux/slices/dashboardSlice";
 import { IoNotifications } from "react-icons/io5";
 import { io, Socket } from "socket.io-client";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 let socket: Socket;
 
@@ -64,6 +72,45 @@ const Header = () => {
     };
   }, []);
 
+  const handleChangeRoute = (route: string) => {
+    router.push(route);
+  };
+
+  const DropdownMenuDemo = () => {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          {currentUser && (
+            <div className="flex items-center space-x-2 cursor-pointer">
+              <Avatar className="w-10 h-10">
+                <AvatarImage src="" />
+                <AvatarFallback className="uppercase bg-blue-500 text-white">
+                  {currentUser.schoolName[0]}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+          )}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="end">
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              onClick={() => handleChangeRoute("/dashboard/profile")}
+            >
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => handleLogout()}>
+            Log out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
+
   return (
     <header className="bg-white shadow-md">
       <div className="flex items-center justify-between p-6">
@@ -76,32 +123,16 @@ const Header = () => {
         </Button>
         <div className="flex flex-row items-center justify-between w-full">
           <div className="flex items-center space-x-4">
-            <div className="relative">
-              {currentUser && (
-                <div className="flex items-center space-x-2">
-                  <Avatar>
-                    <AvatarImage src="" />
-                    <AvatarFallback className="uppercase bg-blue-500 text-white">
-                      {currentUser.schoolName[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-gray-700">
-                    {currentUser.schoolName}
-                  </span>
-                </div>
-              )}
-            </div>
+            <h4 className="text-2xl">
+              {currentUser ? currentUser.schoolName : ""}
+            </h4>
           </div>
-          <div className="flex gap-3">
+          <div className="flex items-center gap-4">
             <IoNotifications
-              style={{ width: 32, height: 32, cursor: "pointer" }}
+              style={{ width: 24, height: 24, cursor: "pointer" }}
               color="rgb(37, 99, 235)"
             />
-            <IoMdLogOut
-              onClick={() => handleLogout()}
-              style={{ width: 32, height: 32, cursor: "pointer" }}
-              color="rgb(37, 99, 235)"
-            />
+            <DropdownMenuDemo />
           </div>
         </div>
       </div>

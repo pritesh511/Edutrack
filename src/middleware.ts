@@ -38,13 +38,15 @@ export async function middleware(request: NextRequest) {
           "/dashboard/student",
           "/dashboard/attendance",
           "/dashboard/report",
-          "/dashboard/chat"
+          "/dashboard/chat",
+          "/dashboard/profile"
         ],
         teacher: [
           "/dashboard/student",
           "/dashboard/attendance",
           "/dashboard/report",
-          "/dashboard/chat"
+          "/dashboard/chat",
+          "/dashboard/profile"
         ],
       };
 
@@ -76,6 +78,7 @@ export const config = {
     "/dashboard/student",
     "/dashboard/attendance",
     "/dashboard/report",
-    "/dashboard/chat"
+    "/dashboard/chat",
+    "/dashboard/profile"
   ],
 };
