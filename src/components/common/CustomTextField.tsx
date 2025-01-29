@@ -43,6 +43,7 @@ const CustomTextField = (props: Props) => {
         </Label>
       )}
       <Input
+        id={fieldName}
         onClick={onClickInput}
         placeholder={placeholder}
         name={fieldName}

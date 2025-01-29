@@ -1,3 +1,4 @@
+"use client";
 import AttendancePage from "@/components/dashboard/pages/AttendancePage";
 import React from "react";
 

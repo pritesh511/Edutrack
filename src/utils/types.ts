@@ -70,6 +70,12 @@ export interface CurrentUser {
   email: string;
   role: string;
   teacherId: string | null;
+  schoolOwnerName: string;
+  mobileNo: string;
+  address: string;
+  city: string;
+  district: string;
+  pincode: string;
 }
 
 export interface ChatGroup {

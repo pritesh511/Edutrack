@@ -6,7 +6,6 @@ import {
 import ChatGroup from "@/models/chatgroup.model";
 import Standard from "@/models/standard.model";
 import Subject from "@/models/subject.model";
-import Teacher from "@/models/teacher.model";
 import { NextRequest, NextResponse } from "next/server";
 
 databseConnect();

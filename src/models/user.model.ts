@@ -6,6 +6,36 @@ const userSchema = new mongoose.Schema({
     require: [true, "Please enter school name"],
     unique: true,
   },
+  schoolOwnerName: {
+    type: String,
+    require: [true, "Please enter school owner name"],
+    default: "",
+  },
+  mobileNo: {
+    type: String,
+    require: [true, "Please enter mobile number"],
+    default: "",
+  },
+  address: {
+    type: String,
+    require: [true, "Please enter address"],
+    default: "",
+  },
+  city: {
+    type: String,
+    require: [true, "Please enter city"],
+    default: "",
+  },
+  district: {
+    type: String,
+    require: [true, "Please enter district"],
+    default: "",
+  },
+  pincode: {
+    type: String,
+    require: [true, "Please enter pincode"],
+    default: "",
+  },
   email: {
     type: String,
     require: [true, "Please enter email"],

@@ -1,3 +1,4 @@
+"use client";
 import StudentTabView from "@/components/dashboard/pages/StudentPage";
 import React from "react";
 

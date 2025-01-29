@@ -1,3 +1,4 @@
+"use client";
 import SubjectTabView from "@/components/dashboard/pages/SubjectPage";
 import React from "react";
 

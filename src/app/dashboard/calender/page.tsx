@@ -1,3 +1,4 @@
+"use client";
 import TaskCalender from "@/components/dashboard/pages/TaskCalender";
 import React from "react";
 

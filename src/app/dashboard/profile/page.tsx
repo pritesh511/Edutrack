@@ -1,4 +1,5 @@
 "use client";
+import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,18 +14,39 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSelector } from "react-redux";
 import { getUserData } from "@/redux/slices/userSlice";
-import moment from "moment";
+
+interface AccountSettingForm {
+  schoolName: string;
+  schoolOwnerName: string;
+  email: string;
+  mobileNo: string;
+  address: string;
+  city: string;
+  district: string;
+  pincode: string;
+}
 
 const ProfilePage = () => {
   const { currentUser } = useSelector(getUserData);
+  const [accountSettingForm, setAccountSettingForm] =
+    useState<AccountSettingForm>({
+      schoolName: "",
+      schoolOwnerName: "",
+      email: "",
+      mobileNo: "",
+      address: "",
+      city: "",
+      district: "",
+      pincode: "",
+    });
 
   return (
     <div className="w-full mx-auto">
       <div className="flex items-center gap-6 mb-8">
         {currentUser && (
-          <Avatar className="h-24 w-24">
+          <Avatar className="h-20 w-20">
             <AvatarImage src={"abcd"} />
-            <AvatarFallback className="uppercase bg-blue-500 text-white">
+            <AvatarFallback className="uppercase bg-blue-500 text-white text-2xl">
               {currentUser.schoolName[0]}
             </AvatarFallback>
           </Avatar>
@@ -52,8 +74,14 @@ const ProfilePage = () => {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label className="font-semibold">Full Name</Label>
+                  <Label className="font-semibold">School Name</Label>
                   <p className="text-sm">{currentUser?.schoolName}</p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="font-semibold">School Owner Name</Label>
+                  <p className="text-sm">
+                    {currentUser?.schoolOwnerName || "---"}
+                  </p>
                 </div>
                 <div className="space-y-2">
                   <Label className="font-semibold">Email</Label>
@@ -61,16 +89,30 @@ const ProfilePage = () => {
                 </div>
                 <div className="space-y-2">
                   <Label className="font-semibold">Phone Number</Label>
-                  <p className="text-sm">+91 8200309139</p>
-                </div>
-                <div className="space-y-2">
-                  <Label className="font-semibold">Department</Label>
-                  <p className="text-sm">{currentUser?.role}</p>
-                </div>
-                <div className="space-y-2">
-                  <Label className="font-semibold">Joining Date</Label>
                   <p className="text-sm">
-                    {moment(new Date()).format("DD/MM/YYYY")}
+                    {`${currentUser?.mobileNo}` || "---"}
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="font-semibold">Address</Label>
+                  <p className="text-sm">
+                    {`${currentUser?.address}` || "---"}
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="font-semibold">City</Label>
+                  <p className="text-sm">{`${currentUser?.city}` || "---"}</p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="font-semibold">District</Label>
+                  <p className="text-sm">
+                    {`${currentUser?.district}` || "---"}
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="font-semibold">Pincode</Label>
+                  <p className="text-sm">
+                    {`${currentUser?.pincode}` || "---"}
                   </p>
                 </div>
               </div>
@@ -112,14 +154,6 @@ const ProfilePage = () => {
                     defaultValue="+91 8200309139"
                     disabled={true}
                   />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password">New Password</Label>
-                  <Input id="password" type="password" disabled={true} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <Input id="confirmPassword" type="password" disabled={true} />
                 </div>
                 <Button type="submit" disabled={true}>
                   Save Changes

@@ -1,3 +1,4 @@
+"use client";
 import DashboardTabView from "@/components/dashboard/pages/DashboardPage";
 import React from "react";
 

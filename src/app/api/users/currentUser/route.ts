@@ -15,7 +15,13 @@ export async function GET(request: NextRequest) {
           schoolName: user.schoolName,
           email: user.email,
           role: user.role,
-          teacherId: user.teacherId
+          teacherId: user.teacherId,
+          schoolOwnerName: user.schoolOwnerName,
+          mobileNo: user.mobileNo,
+          address: user.address,
+          city: user.city,
+          district: user.district,
+          pincode: user.pincode,
         },
       },
       { status: 200 }

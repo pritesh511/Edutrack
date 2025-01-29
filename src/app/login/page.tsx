@@ -25,6 +25,7 @@ import { USER_TYPES } from "@/utils/constant";
 import { io, Socket } from "socket.io-client";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import Image from "next/image";
 
 let socket: Socket;
 
@@ -100,83 +101,95 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md p-4 shadow-lg">
-        <CardHeader>
-          <h1 className="text-2xl font-bold text-center">Login</h1>
-        </CardHeader>
-        <CardContent className="p-4">
-          <div className="flex flex-col gap-4">
-            <CustomSelect
-              label="Role"
-              placeholder={"Select Teacher"}
-              options={USER_TYPES}
-              value={loginData.role}
-              handleChangeSelect={(value) => handleSelectRole("role", value)}
-            />
-            {renderOnConditionBase(
-              loginData.role === "teacher",
-              <CustomTextField
-                label="School Email*"
-                fieldName="schoolEmail"
-                placeholder="Enter school email"
-                value={loginData.schoolEmail}
-                onChangeInput={(event) => handleChangeData(event)}
-                error={errors?.schoolEmail}
-                onClickInput={() => handleClickInput("schoolEmail")}
-              />,
-              <></>
-            )}
-            <CustomTextField
-              label="Email*"
-              fieldName="email"
-              placeholder="Enter your email"
-              value={loginData.email}
-              onChangeInput={(event) => handleChangeData(event)}
-              error={errors?.email}
-              onClickInput={() => handleClickInput("email")}
-            />
-            <div className="relative">
-              <CustomTextField
-                label="Password*"
-                fieldName="password"
-                placeholder="Enter your password"
-                value={loginData.password}
-                onChangeInput={(event) => handleChangeData(event)}
-                error={errors?.password}
-                type={isShowPassword ? "text" : "password"}
-                onClickInput={() => handleClickInput("password")}
+    <div className="min-h-screen w-full grid grid-cols-1 md:grid-cols-2 bg-gray-50">
+      <div className="md:block hidden w-full h-full">
+        <Image
+          src={"/assets/authImage.jpg"}
+          alt="auth-image"
+          className="h-screen w-full"
+          objectFit="cover"
+          width={400}
+          height={400}
+        />
+      </div>
+      <div className="flex items-center justify-center py-8 px-4 overflow-auto">
+        <Card className="w-full max-w-md p-4 shadow-lg">
+          <CardHeader>
+            <h1 className="text-2xl font-bold text-center">Login</h1>
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="flex flex-col gap-4">
+              <CustomSelect
+                label="Role"
+                placeholder={"Select Teacher"}
+                options={USER_TYPES}
+                value={loginData.role}
+                handleChangeSelect={(value) => handleSelectRole("role", value)}
               />
-              <div
-                className="absolute right-3 top-9 cursor-pointer p-1"
-                onClick={() => setIsShowPassword(!isShowPassword)}
-              >
-                {renderOnConditionBase(
-                  isShowPassword,
-                  <FaEye className="opacity-25" />,
-                  <FaEyeSlash className="opacity-25" />
-                )}
+              {renderOnConditionBase(
+                loginData.role === "teacher",
+                <CustomTextField
+                  label="School Email*"
+                  fieldName="schoolEmail"
+                  placeholder="Enter school email"
+                  value={loginData.schoolEmail}
+                  onChangeInput={(event) => handleChangeData(event)}
+                  error={errors?.schoolEmail}
+                  onClickInput={() => handleClickInput("schoolEmail")}
+                />,
+                <></>
+              )}
+              <CustomTextField
+                label="Email*"
+                fieldName="email"
+                placeholder="Enter your email"
+                value={loginData.email}
+                onChangeInput={(event) => handleChangeData(event)}
+                error={errors?.email}
+                onClickInput={() => handleClickInput("email")}
+              />
+              <div className="relative">
+                <CustomTextField
+                  label="Password*"
+                  fieldName="password"
+                  placeholder="Enter your password"
+                  value={loginData.password}
+                  onChangeInput={(event) => handleChangeData(event)}
+                  error={errors?.password}
+                  type={isShowPassword ? "text" : "password"}
+                  onClickInput={() => handleClickInput("password")}
+                />
+                <div
+                  className="absolute right-3 top-9 cursor-pointer p-1"
+                  onClick={() => setIsShowPassword(!isShowPassword)}
+                >
+                  {renderOnConditionBase(
+                    isShowPassword,
+                    <FaEye className="opacity-25" />,
+                    <FaEyeSlash className="opacity-25" />
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        </CardContent>
-        <CardFooter className="flex flex-col items-center gap-4 p-4">
-          <Button
-            size="lg"
-            className="w-full"
-            onClick={handleLogin}
-            disabled={isPending}
-          >
-            {isPending ? <CircularProgress /> : "Login"}
-          </Button>
-          <p className="text-sm text-gray-600">
-            Don&apos;t have an account?
-            <Link href="/signup" className="text-blue-600 underline ml-1">
-              Sign Up
-            </Link>
-          </p>
-        </CardFooter>
-      </Card>
+          </CardContent>
+          <CardFooter className="flex flex-col items-center gap-4 p-4">
+            <Button
+              size="lg"
+              className="w-full"
+              onClick={handleLogin}
+              disabled={isPending}
+            >
+              {isPending ? <CircularProgress /> : "Login"}
+            </Button>
+            <p className="text-sm text-gray-600">
+              Don&apos;t have an account?
+              <Link href="/signup" className="text-blue-600 underline ml-1">
+                Signup
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 };

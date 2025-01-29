@@ -57,9 +57,9 @@ const StudentTabView = () => {
   useEffect(() => {
     if (standardDrodownData?.standards) {
       trigger({
-        standard: standardDrodownData?.standards[0].value,
+        standard: standardDrodownData?.standards[0]?.value,
       });
-      setSelectedStd(standardDrodownData?.standards[0].value);
+      setSelectedStd(standardDrodownData?.standards[0]?.value);
     }
   }, [standardDrodownData]);
 

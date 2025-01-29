@@ -56,11 +56,23 @@ export const loginSchema = Yup.object().shape({
   password: Yup.string().required("Please enter password"),
 });
 
-export const signupSchema = Yup.object().shape({
+export const schoolBasicInfoSchema = Yup.object().shape({
   schoolName: Yup.string().required("Please enter school name"),
+  schoolOwnerName: Yup.string().required("Please enter school owner name"),
   email: Yup.string()
     .required("Please enter email")
     .email("Please enter valid email"),
+  mobileNo: Yup.string().required("Please enter mobile number"),
+});
+
+export const schoolAddressInfoSchema = Yup.object().shape({
+  address: Yup.string().required("Please enter school address"),
+  city: Yup.string().required("Please enter school city"),
+  district: Yup.string().required("Please enter school district"),
+  pincode: Yup.string().required("Please enter school pincode"),
+});
+
+export const schoolAccountInfoSchema = Yup.object().shape({
   password: Yup.string()
     .matches(passwordRules, { message: "Please create a stronger password" })
     .required("Please enter password"),

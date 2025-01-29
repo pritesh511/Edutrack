@@ -44,7 +44,13 @@ export async function POST(request: NextRequest) {
         email: findUser.email,
         schoolName: findUser.schoolName,
         role: role,
-        teacherId: null
+        teacherId: null,
+        schoolOwnerName: findUser.schoolOwnerName,
+        mobileNo: findUser.mobileNo,
+        address: findUser.address,
+        city: findUser.city,
+        district: findUser.district,
+        pincode: findUser.pincode,
       };
 
       const token = jwt.sign(tokenUser, process.env.TOKEN_SECRET!, {
@@ -62,7 +68,13 @@ export async function POST(request: NextRequest) {
             schoolName: user.schoolName,
             email: user.email,
             role: role,
-            teacherId: null
+            teacherId: null,
+            schoolOwnerName: findUser.schoolOwnerName,
+        mobileNo: findUser.mobileNo,
+        address: findUser.address,
+        city: findUser.city,
+        district: findUser.district,
+        pincode: findUser.pincode,
           },
           token: token,
         },
@@ -115,7 +127,13 @@ export async function POST(request: NextRequest) {
         schoolName: findTeacher.name,
         email: findTeacher.email,
         role: role,
-        teacherId: findTeacher._id
+        teacherId: findTeacher._id,
+        schoolOwnerName: findSchool.schoolOwnerName,
+        mobileNo: findSchool.mobileNo,
+        address: findSchool.address,
+        city: findSchool.city,
+        district: findSchool.district,
+        pincode: findSchool.pincode,
       };
 
       const token = jwt.sign(tokenUser, process.env.TOKEN_SECRET!, {

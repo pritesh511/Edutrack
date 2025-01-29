@@ -397,7 +397,7 @@ const AddStudentModal = React.memo(function AddStudentModal(props: Props) {
               value={
                 formData.classTeacher
                   ? formData.classTeacher
-                  : teacherDrodownData?.teachers[0].value || ""
+                  : teacherDrodownData?.teachers[0]?.value || ""
               }
               handleChangeSelect={(value) =>
                 handleSelectValue("classTeacher", value)

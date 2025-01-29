@@ -39,6 +39,7 @@ const CustomTextarea = (props: Props) => {
         </Label>
       )}
       <Textarea
+        id={fieldName}
         name={fieldName}
         value={value}
         onChange={handleChange}
