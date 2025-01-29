@@ -44,7 +44,7 @@ const SubjectTabView = () => {
   return (
     <>
       {renderOnConditionBase(
-        ADMIN_EMAIL === ADMIN_EMAIL,
+        ADMIN_EMAIL === process.env.ADMIN_EMAIL,
         <Card>
           <CardContent className="p-6">
             <div className="flex justify-between items-center mb-6">
