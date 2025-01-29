@@ -13,10 +13,13 @@ import {
 } from "@/components/ui/card";
 import CircularProgress from "@/components/common/CircularProgress";
 import CustomTextField from "@/components/common/CustomTextField";
-import { transformYupErrorsIntoObject } from "@/helpers/helper";
+import {
+  renderOnConditionBase,
+  transformYupErrorsIntoObject,
+} from "@/helpers/helper";
 import { signupSchema } from "@/utils/schema";
-import CustomSelect from "@/components/common/CustomSelect";
-import { USER_TYPES } from "@/utils/constant";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 
 const SignPage = () => {
   const router = useRouter();
@@ -27,6 +30,8 @@ const SignPage = () => {
     confirm_password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<any>({});
 
   const handleChangeData = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,26 +102,50 @@ const SignPage = () => {
               error={errors?.email}
               onClickInput={() => handleClickInput("email")}
             />
-            <CustomTextField
-              label="Password*"
-              fieldName="password"
-              placeholder="Enter your password"
-              value={schoolData.password}
-              type="password"
-              onChangeInput={(event) => handleChangeData(event)}
-              error={errors?.password}
-              onClickInput={() => handleClickInput("password")}
-            />
-            <CustomTextField
-              label="Confirm Password*"
-              fieldName="confirm_password"
-              placeholder="Enter Confirm password"
-              value={schoolData.confirm_password}
-              type="password"
-              onChangeInput={(event) => handleChangeData(event)}
-              error={errors?.confirm_password}
-              onClickInput={() => handleClickInput("confirm_password")}
-            />
+            <div className="relative">
+              <CustomTextField
+                label="Password*"
+                fieldName="password"
+                placeholder="Enter your password"
+                value={schoolData.password}
+                type={isShowPassword ? "text" : "password"}
+                onChangeInput={(event) => handleChangeData(event)}
+                error={errors?.password}
+                onClickInput={() => handleClickInput("password")}
+              />
+              <div
+                className="absolute right-3 top-9 cursor-pointer p-1"
+                onClick={() => setIsShowPassword(!isShowPassword)}
+              >
+                {renderOnConditionBase(
+                  isShowPassword,
+                  <FaEye className="opacity-25" />,
+                  <FaEyeSlash className="opacity-25" />
+                )}
+              </div>
+            </div>
+            <div className="relative">
+              <CustomTextField
+                label="Confirm Password*"
+                fieldName="confirm_password"
+                placeholder="Enter Confirm password"
+                value={schoolData.confirm_password}
+                type={isShowConfirmPassword ? "text" : "password"}
+                onChangeInput={(event) => handleChangeData(event)}
+                error={errors?.confirm_password}
+                onClickInput={() => handleClickInput("confirm_password")}
+              />
+              <div
+                className="absolute right-3 top-9 cursor-pointer p-1"
+                onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
+              >
+                {renderOnConditionBase(
+                  isShowConfirmPassword,
+                  <FaEye className="opacity-25" />,
+                  <FaEyeSlash className="opacity-25" />
+                )}
+              </div>
+            </div>
           </div>
         </CardContent>
         <CardFooter className="flex flex-col items-center gap-4 p-4">

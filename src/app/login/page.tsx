@@ -23,6 +23,8 @@ import { setCurrentUser } from "@/redux/slices/userSlice";
 import CustomSelect from "@/components/common/CustomSelect";
 import { USER_TYPES } from "@/utils/constant";
 import { io, Socket } from "socket.io-client";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 
 let socket: Socket;
 
@@ -36,6 +38,7 @@ const LoginPage = () => {
     role: "admin",
   });
   const [isPending, setTransition] = useTransition();
+  const [isShowPassword, setIsShowPassword] = useState(false);
   const [errors, setErrors] = useState<any>({});
 
   const handleChangeData = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -133,16 +136,28 @@ const LoginPage = () => {
               error={errors?.email}
               onClickInput={() => handleClickInput("email")}
             />
-            <CustomTextField
-              label="Password*"
-              fieldName="password"
-              placeholder="Enter your password"
-              value={loginData.password}
-              onChangeInput={(event) => handleChangeData(event)}
-              error={errors?.password}
-              type="password"
-              onClickInput={() => handleClickInput("password")}
-            />
+            <div className="relative">
+              <CustomTextField
+                label="Password*"
+                fieldName="password"
+                placeholder="Enter your password"
+                value={loginData.password}
+                onChangeInput={(event) => handleChangeData(event)}
+                error={errors?.password}
+                type={isShowPassword ? "text" : "password"}
+                onClickInput={() => handleClickInput("password")}
+              />
+              <div
+                className="absolute right-3 top-9 cursor-pointer p-1"
+                onClick={() => setIsShowPassword(!isShowPassword)}
+              >
+                {renderOnConditionBase(
+                  isShowPassword,
+                  <FaEye className="opacity-25" />,
+                  <FaEyeSlash className="opacity-25" />
+                )}
+              </div>
+            </div>
           </div>
         </CardContent>
         <CardFooter className="flex flex-col items-center gap-4 p-4">
