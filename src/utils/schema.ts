@@ -81,6 +81,19 @@ export const schoolAccountInfoSchema = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Passwords must match"),
 });
 
+export const schoolProfileSettingSchema = Yup.object().shape({
+  schoolName: Yup.string().required("Please enter school name"),
+  schoolOwnerName: Yup.string().required("Please enter school owner name"),
+  email: Yup.string()
+    .required("Please enter email")
+    .email("Please enter valid email"),
+  mobileNo: Yup.string().required("Please enter mobile number"),
+  address: Yup.string().required("Please enter school address"),
+  city: Yup.string().required("Please enter school city"),
+  district: Yup.string().required("Please enter school district"),
+  pincode: Yup.string().required("Please enter school pincode"),
+});
+
 export const contactUsSchema = Yup.object().shape({
   name: Yup.string().required("Please enter name"),
   email: Yup.string()

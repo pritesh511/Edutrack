@@ -82,6 +82,59 @@ export async function GET() {
   }
 }
 
+export async function PUT(request: NextRequest) {
+  try {
+    const userId = request?.nextUrl?.searchParams?.get("userId");
+    const reqBody = await request.json();
+    const {
+      schoolName,
+      schoolOwnerName,
+      email,
+      mobileNo,
+      address,
+      city,
+      district,
+      pincode,
+    } = reqBody;
+
+    const findUser = await User.findOne({ _id: userId });
+    if (!findUser) {
+      return NextResponse.json(
+        {
+          message: "User not found",
+        },
+        { status: 400 }
+      );
+    }
+
+    const updateFields: Record<string, any> = {};
+
+    if (schoolName) updateFields.schoolName = schoolName;
+    if (schoolOwnerName) updateFields.schoolOwnerName = schoolOwnerName;
+    if (email) updateFields.email = email;
+    if (mobileNo) updateFields.mobileNo = mobileNo;
+    if (address) updateFields.address = address;
+    if (city) updateFields.city = city;
+    if (district) updateFields.district = district;
+    if (pincode) updateFields.pincode = pincode;
+
+    await User.findOneAndUpdate({ _id: userId }, { $set: updateFields });
+
+    return NextResponse.json(
+      { message: "Profile updated successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      {
+        message: "Internal Server Error",
+      },
+      { status: 500 }
+    );
+  }
+}
+
 export async function DELETE(request: NextRequest) {
   try {
     const userId = request?.nextUrl?.searchParams.get("userId");

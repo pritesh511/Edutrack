@@ -7,21 +7,25 @@ databseConnect();
 
 export async function GET(request: NextRequest) {
   try {
+    const userId = await getDataFromToken(request);
     const user = await getUserDataFromToken(request);
+
+    const userData = await User.findOne({ _id: userId }).select("-__v");
+
     return NextResponse.json(
       {
         user: {
-          _id: user.id,
-          schoolName: user.schoolName,
-          email: user.email,
+          _id: userData.id,
+          schoolName: userData.schoolName,
+          email: userData.email,
           role: user.role,
-          teacherId: user.teacherId,
-          schoolOwnerName: user.schoolOwnerName,
-          mobileNo: user.mobileNo,
-          address: user.address,
-          city: user.city,
-          district: user.district,
-          pincode: user.pincode,
+          teacherId: userData.teacherId,
+          schoolOwnerName: userData.schoolOwnerName,
+          mobileNo: userData.mobileNo,
+          address: userData.address,
+          city: userData.city,
+          district: userData.district,
+          pincode: userData.pincode,
         },
       },
       { status: 200 }

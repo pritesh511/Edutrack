@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,8 +12,15 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useSelector } from "react-redux";
-import { getUserData } from "@/redux/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserData, setCurrentUser } from "@/redux/slices/userSlice";
+import CustomTextField from "@/components/common/CustomTextField";
+import CustomTextarea from "@/components/common/CustomTextarea";
+import toast from "react-hot-toast";
+import { transformYupErrorsIntoObject } from "@/helpers/helper";
+import { schoolProfileSettingSchema } from "@/utils/schema";
+import axiosInstance from "@/helpers/axios/axiosInstance";
+import CircularProgress from "@/components/common/CircularProgress";
 
 interface AccountSettingForm {
   schoolName: string;
@@ -27,6 +34,7 @@ interface AccountSettingForm {
 }
 
 const ProfilePage = () => {
+  const dispatch = useDispatch();
   const { currentUser } = useSelector(getUserData);
   const [accountSettingForm, setAccountSettingForm] =
     useState<AccountSettingForm>({
@@ -39,6 +47,82 @@ const ProfilePage = () => {
       district: "",
       pincode: "",
     });
+  const [errors, setErrors] = useState<any>({});
+  const [isFormLoading, setIsFormLoading] = useState(false);
+
+  const handleChangeData = (
+    event: React.ChangeEvent<{ name: string; value: string }>
+  ) => {
+    const { name, value } = event.target;
+
+    setAccountSettingForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setErrors((prev: any) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  const handleClickInput = (name: string) => {
+    setErrors((prev: any) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  const getCurrentUser = async () => {
+    try {
+      const response = await axiosInstance.get("/api/users/currentUser");
+      dispatch(setCurrentUser(response.data.user));
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (currentUser) {
+      setAccountSettingForm({
+        schoolName: currentUser.schoolName,
+        schoolOwnerName: currentUser.schoolOwnerName,
+        email: currentUser.email,
+        mobileNo: currentUser.mobileNo,
+        address: currentUser.address,
+        city: currentUser.city,
+        district: currentUser.district,
+        pincode: currentUser.pincode,
+      });
+    }
+  }, [currentUser]);
+
+  const handleSubmitForm = async (event: React.FormEvent) => {
+    event.preventDefault();
+    try {
+      await schoolProfileSettingSchema.validate(accountSettingForm, {
+        abortEarly: false,
+      });
+      setIsFormLoading(true);
+
+      const { data } = await axiosInstance.put(
+        `/api/users?userId=${currentUser?._id}`,
+        accountSettingForm
+      );
+
+      toast.success(data.message);
+      getCurrentUser();
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        toast.error(error.response?.data?.message);
+      } else {
+        const errors = transformYupErrorsIntoObject(error);
+        setErrors(errors);
+      }
+    } finally {
+      setIsFormLoading(false);
+    }
+  };
 
   return (
     <div className="w-full mx-auto">
@@ -129,34 +213,82 @@ const ProfilePage = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <form className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    defaultValue={currentUser?.schoolName}
-                    disabled={true}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    defaultValue={currentUser?.email}
-                    disabled={true}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    defaultValue="+91 8200309139"
-                    disabled={true}
-                  />
-                </div>
-                <Button type="submit" disabled={true}>
-                  Save Changes
+              <form className="space-y-4" onSubmit={handleSubmitForm}>
+                <CustomTextField
+                  label="School Name*"
+                  fieldName="schoolName"
+                  placeholder="School Name"
+                  value={accountSettingForm.schoolName}
+                  onChangeInput={(event) => handleChangeData(event)}
+                  error={errors?.schoolName}
+                  onClickInput={() => handleClickInput("schoolName")}
+                />
+                <CustomTextField
+                  label="School Owner Name*"
+                  fieldName="schoolOwnerName"
+                  placeholder="Owner Name"
+                  value={accountSettingForm.schoolOwnerName}
+                  onChangeInput={(event) => handleChangeData(event)}
+                  error={errors?.schoolOwnerName}
+                  onClickInput={() => handleClickInput("schoolOwnerName")}
+                />
+                <CustomTextField
+                  label="Email*"
+                  fieldName="email"
+                  placeholder="Email"
+                  value={accountSettingForm.email}
+                  onChangeInput={(event) => handleChangeData(event)}
+                  error={errors?.email}
+                  onClickInput={() => handleClickInput("email")}
+                />
+                <CustomTextField
+                  label="Mobile No*"
+                  fieldName="mobileNo"
+                  placeholder="Mobile No"
+                  value={accountSettingForm.mobileNo}
+                  type="number"
+                  onChangeInput={(event) => handleChangeData(event)}
+                  error={errors?.mobileNo}
+                  onClickInput={() => handleClickInput("mobileNo")}
+                />
+                <CustomTextarea
+                  label="Address*"
+                  fieldName="address"
+                  value={accountSettingForm.address}
+                  handleChange={(event) => handleChangeData(event)}
+                  placeholder="Address"
+                  error={errors?.address}
+                  onClick={() => handleClickInput("address")}
+                />
+                <CustomTextField
+                  label="City*"
+                  fieldName="city"
+                  placeholder="City"
+                  value={accountSettingForm.city}
+                  onChangeInput={(event) => handleChangeData(event)}
+                  error={errors?.city}
+                  onClickInput={() => handleClickInput("city")}
+                />
+                <CustomTextField
+                  label="District*"
+                  fieldName="district"
+                  placeholder="District"
+                  value={accountSettingForm.district}
+                  onChangeInput={(event) => handleChangeData(event)}
+                  error={errors?.district}
+                  onClickInput={() => handleClickInput("district")}
+                />
+                <CustomTextField
+                  label="Pincode*"
+                  fieldName="pincode"
+                  placeholder="Pincode Number"
+                  value={accountSettingForm.pincode}
+                  onChangeInput={(event) => handleChangeData(event)}
+                  error={errors?.pincode}
+                  onClickInput={() => handleClickInput("pincode")}
+                />
+                <Button type="submit">
+                  {isFormLoading ? <CircularProgress /> : "Save Changes"}
                 </Button>
               </form>
             </CardContent>
