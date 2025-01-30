@@ -26,6 +26,7 @@ import { io, Socket } from "socket.io-client";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import Image from "next/image";
+import axiosInstance from "@/helpers/axios/axiosInstance";
 
 let socket: Socket;
 
@@ -78,7 +79,11 @@ const LoginPage = () => {
       try {
         await loginSchema.validate(loginData, { abortEarly: false });
 
-        const response = await axios.post("/api/users/login", loginData);
+        const response = await axiosInstance.post(
+          "/api/users/login",
+          loginData
+        );
+        console.log(response);
         toast.success(response.data.message);
         dispatch(setCurrentUser(response.data.user));
         if (response.data.user.role === "admin") {
@@ -90,8 +95,9 @@ const LoginPage = () => {
           message: `${response.data.user.schoolName} is login now.`,
         });
       } catch (validationsErrors: any) {
-        if (validationsErrors.response?.data.message) {
-          toast.error(validationsErrors.response.data.message);
+        console.log(validationsErrors.message.message);
+        if (validationsErrors.message.message) {
+          toast.error(validationsErrors.message.message);
         } else {
           const errors = transformYupErrorsIntoObject(validationsErrors);
           setErrors(errors);

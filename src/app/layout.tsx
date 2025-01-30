@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "@/redux/StoreProvider";
+import { Toaster } from "react-hot-toast";
 
 const poppins = Poppins({
   weight: "400",
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en" className={poppins.className}>
       <body>
         <StoreProvider>{children}</StoreProvider>
+        <Toaster />
       </body>
     </html>
   );

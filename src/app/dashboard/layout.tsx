@@ -26,7 +26,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </Suspense>
       </div>
       <MobileSidebarOverlay />
-      <Toaster />
     </div>
   );
 };

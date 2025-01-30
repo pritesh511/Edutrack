@@ -95,11 +95,13 @@ const Header = () => {
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem
-              onClick={() => handleChangeRoute("/dashboard/profile")}
-            >
-              Profile
-            </DropdownMenuItem>
+            {currentUser?.role === "admin" && (
+              <DropdownMenuItem
+                onClick={() => handleChangeRoute("/dashboard/profile")}
+              >
+                Profile
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem>Settings</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
