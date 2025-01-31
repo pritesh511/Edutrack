@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useActionState, useEffect, useState } from "react";
 import { Calendar, SlotInfo, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -22,6 +22,8 @@ import { transformYupErrorsIntoObject } from "@/helpers/helper";
 import { eventSchema } from "@/utils/schema";
 import { CalenderEvent } from "@/utils/types";
 import CircularProgress from "@/components/common/CircularProgress";
+import { addEvent } from "@/actions/calenderEvent";
+import ServerCustomTextField from "@/components/common/ServerCustomTextField";
 
 const localizer = momentLocalizer(moment);
 
@@ -37,12 +39,29 @@ const TaskCalendar = () => {
     end: new Date(),
   });
 
+  // const [state, formAction, pending] = useActionState(addEvent, null);
+
+  // console.log(state, pending);
+
+  // useEffect(() => {
+  //   if (state?.validationErrors) {
+  //     setErrors(state?.validationErrors);
+  //   } else if (state?.error) {
+  //     toast.error(state.error);
+  //   }
+
+  //   console.log(state);
+  // }, [state]);
+
   const handleSelectSlot = (slotInfo: SlotInfo) => {
     setNewEvent({ ...newEvent, start: slotInfo.start, end: slotInfo.end });
     setIsDialogOpen(true);
   };
 
-  const handleAddEvent = async () => {
+  const handleAddEvent = async (
+    event: React.SyntheticEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
     try {
       await eventSchema.validate(newEvent, { abortEarly: false });
       const { data, error } = await postEvent(newEvent);
@@ -109,7 +128,7 @@ const TaskCalendar = () => {
           <DialogHeader>
             <DialogTitle>Add New Event</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <form className="space-y-4" onSubmit={handleAddEvent}>
             <CustomTextField
               fieldName={"title"}
               label="Event Title"
@@ -121,6 +140,13 @@ const TaskCalendar = () => {
               }
               onClickInput={() => handleClickInput("title")}
             />
+            {/* <ServerCustomTextField
+              label="Titke"
+              fieldName="title"
+              error={errors?.title}
+              placeholder={"Enter event title"}
+              onClickInput={() => handleClickInput("title")}
+            /> */}
             <div className="flex justify-end space-x-2">
               <Button
                 disabled={isLoading}
@@ -129,11 +155,15 @@ const TaskCalendar = () => {
               >
                 Cancel
               </Button>
-              <Button disabled={isLoading} onClick={handleAddEvent}>
+              <Button
+                disabled={isLoading}
+                // onClick={handleAddEvent}
+                type="submit"
+              >
                 {isLoading ? <CircularProgress /> : "Add Event"}
               </Button>
             </div>
-          </div>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
