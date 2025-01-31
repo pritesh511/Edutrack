@@ -46,7 +46,6 @@ export async function middleware(request: NextRequest) {
           "/dashboard/attendance",
           "/dashboard/report",
           "/dashboard/chat",
-          "/dashboard/profile"
         ],
       };
 
