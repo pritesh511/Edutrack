@@ -1,8 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, use } from "react";
 import { IoMdArrowBack } from "react-icons/io";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useLazyGetGroupsDetailsQuery } from "@/redux/query/chatgroup";
 import {
   Popover,
@@ -27,12 +27,11 @@ interface Message {
   time: Date;
 }
 
-const ChatDetailPage = () => {
+const ChatDetailPage = ({ params }: { params: Promise<{ slug: string }> }) => {
   const router = useRouter();
-  const params = useParams();
-  const slug = params?.slug;
-  const [fetchGroupDetails, { data, isFetching }] =
-    useLazyGetGroupsDetailsQuery();
+  const paramsSlug = use(params);
+  const slug = paramsSlug.slug;
+  const [fetchGroupDetails, { data }] = useLazyGetGroupsDetailsQuery();
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState<Message[]>([]);
   const [joinedGroupList, setJoinedGroupList] = useState<string[]>([]);
