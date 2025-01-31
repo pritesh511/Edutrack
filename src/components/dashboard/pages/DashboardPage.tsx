@@ -1,12 +1,11 @@
 "use client";
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { GoUnverified } from "react-icons/go";
 import { IoBookSharp, IoPeople } from "react-icons/io5";
 import { BsPersonWorkspace } from "react-icons/bs";
 import { useGetDashboardDataQuery } from "@/redux/query/dashboard";
 import DashboardChart from "../DashboardChart";
-import { config } from "@/utils/config";
 import { useGetEventsQuery } from "@/redux/query/calender";
 import CustomTableHead from "@/components/common/CustomTableHead";
 import { renderOnConditionBase } from "@/helpers/helper";
@@ -24,7 +23,7 @@ import OverallClassPerformanceChart from "../OverallClassPerformanceChart";
 // };
 
 const DashboardTabView = () => {
-  // const data = await fetchDashboardData();
+  // const data = fetchDashboardData();
   const { data } = useGetDashboardDataQuery("");
   const { data: eventData, isLoading } = useGetEventsQuery("");
 
@@ -144,7 +143,7 @@ const DashboardTabView = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <CardContent className="p-6">
-            <h3 className="text-lg font-semibold mb-3">Event Schedule</h3>
+            <CardTitle className="mb-4">Classes Per Student</CardTitle>
             <CustomTable
               tableHeader={<EventTableHeader />}
               tableBody={<EventTableBody />}
