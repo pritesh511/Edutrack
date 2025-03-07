@@ -15,15 +15,11 @@ import { Loader } from "lucide-react";
 import moment from "moment";
 import CustomTable from "@/components/common/CustomTable";
 import OverallClassPerformanceChart from "../OverallClassPerformanceChart";
-
-// const fetchDashboardData = async () => {
-//   const response = await fetch(config.API_URL + "/api/dashboard");
-//   const data = response.json();
-//   return data;
-// };
+import { fetchDashboardData } from "@/actions/calenderEvent";
 
 const DashboardTabView = () => {
-  // const data = fetchDashboardData();
+  // const dashboardData = fetchDashboardData();
+  // console.log(dashboardData);
   const { data } = useGetDashboardDataQuery("");
   const { data: eventData, isLoading } = useGetEventsQuery("");
 

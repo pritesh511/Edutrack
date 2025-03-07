@@ -70,6 +70,7 @@ export interface CurrentUser {
   email: string;
   role: string;
   teacherId: string | null;
+  teacherName: string | null;
   schoolOwnerName: string;
   mobileNo: string;
   address: string;

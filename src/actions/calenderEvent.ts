@@ -1,6 +1,7 @@
 "use server";
 import axiosInstance from "@/helpers/axios/axiosInstance";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
+import { config } from "@/utils/config";
 import { BASE_URL } from "@/utils/constant";
 import { eventSchema } from "@/utils/schema";
 import axios from "axios";
@@ -33,4 +34,11 @@ export const addEvent = async (_prevState: any, formData: FormData) => {
 
     return { error: error?.message || "Something went wrong" };
   }
+};
+
+
+export const fetchDashboardData = async () => {
+  const response = await fetch(config.API_URL + "/dashboard");
+  const data = response.json();
+  return data;
 };

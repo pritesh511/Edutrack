@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import React, { useEffect, useRef, useState, use } from "react";
+import React, { useEffect, useRef, useState, use, useMemo } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import { useLazyGetGroupsDetailsQuery } from "@/redux/query/chatgroup";
@@ -38,6 +38,14 @@ const ChatDetailPage = ({ params }: { params: Promise<{ slug: string }> }) => {
   const messageBoxRef = useRef<HTMLDivElement | null>(null);
   const submitBtnRef = useRef<HTMLButtonElement | null>(null);
   const { currentUser } = useSelector(getUserData);
+
+  const username = useMemo(
+    () =>
+      currentUser?.role === "teacher"
+        ? currentUser?.teacherName
+        : currentUser?.schoolName,
+    [currentUser]
+  );
 
   useEffect(() => {
     socket = io("/", { path: "/api/socket" });
@@ -90,7 +98,7 @@ const ChatDetailPage = ({ params }: { params: Promise<{ slug: string }> }) => {
   const handleSendMessage = (event: any) => {
     event.preventDefault();
     const user = {
-      username: currentUser?.schoolName,
+      username: username,
       avatar: "/path/to/john-avatar.png",
     };
 
@@ -169,20 +177,16 @@ const ChatDetailPage = ({ params }: { params: Promise<{ slug: string }> }) => {
             <div className="flex flex-col" key={index}>
               <p
                 className={`text-[10px] ml-[53px] mb-1 mr-2 text-gray-600 ${
-                  message.name === currentUser?.schoolName
-                    ? "text-end"
-                    : "text-start"
+                  message.name === username ? "text-end" : "text-start"
                 }`}
               >
-                {message.name === currentUser?.schoolName ? "" : message.name}{" "}
+                {message.name === username ? "" : message.name}{" "}
                 {moment(message.time).format("LT")}
               </p>
               <div
                 key={index}
                 className={`flex items-start ${
-                  message.name === currentUser?.schoolName
-                    ? "justify-end"
-                    : "justify-start"
+                  message.name === username ? "justify-end" : "justify-start"
                 }`}
               >
                 <div className="mr-3">
@@ -199,7 +203,7 @@ const ChatDetailPage = ({ params }: { params: Promise<{ slug: string }> }) => {
                 </div>
                 <div
                   className={`flex flex-col max-w-[70%] p-3 rounded-lg text-sm ${
-                    message.name === currentUser?.schoolName
+                    message.name === username
                       ? "bg-green-200 text-right self-end"
                       : "bg-blue-200 text-left self-start"
                   }`}
