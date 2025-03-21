@@ -6,19 +6,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { MultiSelect } from "@/components/common/MultiSelect";
+import { MultiSelect } from "@/components/common/custom/MultiSelect";
 import { EDUCAtION_LIST } from "@/utils/constant";
 import { useGetStandardDropdownQuery } from "@/redux/query/standard";
 import { useGetSubjectDropdownQuery } from "@/redux/query/subject";
 import toast from "react-hot-toast";
 import { teacherSchema } from "@/utils/schema";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
-import CustomTextField from "@/components/common/CustomTextField";
+import CustomTextField from "@/components/common/custom/CustomTextField";
 import {
   usePostTeacherMutation,
   usePutTeacherMutation,
 } from "@/redux/query/teacher";
-import CircularProgress from "@/components/common/CircularProgress";
+import CircularProgress from "@/components/common/common/CircularProgress";
 import { Teacher } from "@/utils/types";
 
 interface TeacherForm {

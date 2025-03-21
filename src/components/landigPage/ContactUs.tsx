@@ -6,9 +6,9 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
 import axios from "axios";
-import CircularProgress from "../common/CircularProgress";
-import CustomTextField from "../common/CustomTextField";
-import CustomTextarea from "../common/CustomTextarea";
+import CircularProgress from "../common/common/CircularProgress";
+import CustomTextField from "../common/custom/CustomTextField";
+import CustomTextarea from "../common/custom/CustomTextarea";
 import { contactUsSchema } from "@/utils/schema";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
 

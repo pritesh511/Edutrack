@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import CustomTextField from "@/components/common/CustomTextField";
+import CustomTextField from "@/components/common/custom/CustomTextField";
 import {
   useDeleteEventMutation,
   useGetEventsQuery,
@@ -21,7 +21,7 @@ import toast from "react-hot-toast";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
 import { eventSchema } from "@/utils/schema";
 import { CalenderEvent } from "@/utils/types";
-import CircularProgress from "@/components/common/CircularProgress";
+import CircularProgress from "@/components/common/common/CircularProgress";
 import { addEvent } from "@/actions/calenderEvent";
 import ServerCustomTextField from "@/components/common/ServerCustomTextField";
 

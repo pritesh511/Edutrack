@@ -2,8 +2,8 @@
 import DynamicForm, {
   FormFieldConfig,
 } from "@/components/common/form/CommonForm";
-import Loader from "@/components/common/Loader";
-import NoDataFound from "@/components/common/NoDataFound";
+import Loader from "@/components/common/common/Loader";
+import NoDataFound from "@/components/common/common/NoDataFound";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { renderOnConditionBase } from "@/helpers/helper";

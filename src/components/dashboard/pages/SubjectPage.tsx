@@ -6,8 +6,8 @@ import AddSubjectDialog from "../dialogs/AddSubjectDialog";
 import toast from "react-hot-toast";
 import { Subject } from "@/utils/types";
 import { renderOnConditionBase } from "@/helpers/helper";
-import NoDataFound from "@/components/common/NoDataFound";
-import Loader from "@/components/common/Loader";
+import NoDataFound from "@/components/common/common/NoDataFound";
+import Loader from "@/components/common/common/Loader";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import {

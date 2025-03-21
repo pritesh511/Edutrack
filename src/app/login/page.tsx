@@ -11,16 +11,16 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import CircularProgress from "@/components/common/CircularProgress";
+import CircularProgress from "@/components/common/common/CircularProgress";
 import {
   renderOnConditionBase,
   transformYupErrorsIntoObject,
 } from "@/helpers/helper";
-import CustomTextField from "@/components/common/CustomTextField";
+import CustomTextField from "@/components/common/custom/CustomTextField";
 import { loginSchema } from "@/utils/schema";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "@/redux/slices/userSlice";
-import CustomSelect from "@/components/common/CustomSelect";
+import CustomSelect from "@/components/common/custom/CustomSelect";
 import { USER_TYPES } from "@/utils/constant";
 import { io, Socket } from "socket.io-client";
 import { FaEye } from "react-icons/fa";

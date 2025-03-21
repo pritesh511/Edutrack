@@ -8,15 +8,15 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
-import CircularProgress from "@/components/common/CircularProgress";
+import CircularProgress from "@/components/common/common/CircularProgress";
 import { chatGroupSchema } from "@/utils/schema";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
-import CustomTextField from "@/components/common/CustomTextField";
+import CustomTextField from "@/components/common/custom/CustomTextField";
 import {
   usePostGroupMutation,
   usePutChatGroupMutation,
 } from "@/redux/query/chatgroup";
-import { MultiSelect } from "@/components/common/MultiSelect";
+import { MultiSelect } from "@/components/common/custom/MultiSelect";
 import { useGetTeacherDropdownQuery } from "@/redux/query/teacher";
 import { ChatGroup } from "@/utils/types";
 

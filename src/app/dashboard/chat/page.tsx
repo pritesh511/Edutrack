@@ -8,15 +8,15 @@ import {
   useGetGroupsQuery,
 } from "@/redux/query/chatgroup";
 import { renderOnConditionBase } from "@/helpers/helper";
-import Loader from "@/components/common/Loader";
-import NoDataFound from "@/components/common/NoDataFound";
+import Loader from "@/components/common/common/Loader";
+import NoDataFound from "@/components/common/common/NoDataFound";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import toast from "react-hot-toast";
 import { ChatGroup, Teacher } from "@/utils/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import AvatarGroup from "@/components/common/AvatarGroup";
+import AvatarGroup from "@/components/common/common/AvatarGroup";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { getUserData } from "@/redux/slices/userSlice";

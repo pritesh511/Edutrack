@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
-import CircularProgress from "@/components/common/CircularProgress";
+import CircularProgress from "@/components/common/common/CircularProgress";
 import { Subject } from "@/utils/types";
 import {
   useEditSubjectMutation,
@@ -17,8 +17,8 @@ import {
 } from "@/redux/query/subject";
 import { subjectSchema } from "@/utils/schema";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
-import CustomTextField from "@/components/common/CustomTextField";
-import CustomTextarea from "@/components/common/CustomTextarea";
+import CustomTextField from "@/components/common/custom/CustomTextField";
+import CustomTextarea from "@/components/common/custom/CustomTextarea";
 
 interface Props {
   closeModal: () => void;

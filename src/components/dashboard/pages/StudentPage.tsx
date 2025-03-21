@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 const AddStudentDialog = React.lazy(
   () => import("../dialogs/AddStudentDialog")
 );
-import CustomTableHead from "@/components/common/CustomTableHead";
-import CustomTableRow from "@/components/common/CustomTableRow";
-import CustomTableCell from "@/components/common/CustomTableCell";
-import CustomTable from "@/components/common/CustomTable";
+import CustomTableHead from "@/components/common/custom/CustomTableHead";
+import CustomTableRow from "@/components/common/custom/CustomTableRow";
+import CustomTableCell from "@/components/common/custom/CustomTableCell";
+import CustomTable from "@/components/common/custom/CustomTable";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { format } from "date-fns";
@@ -17,11 +17,11 @@ import {
   useLazyGetStudentsQuery,
 } from "@/redux/query/student";
 import { renderOnConditionBase } from "@/helpers/helper";
-import Loader from "@/components/common/Loader";
+import Loader from "@/components/common/common/Loader";
 import toast from "react-hot-toast";
 import { Student } from "@/utils/types";
 import { IoEye } from "react-icons/io5";
-import CustomSelect from "@/components/common/CustomSelect";
+import CustomSelect from "@/components/common/custom/CustomSelect";
 import { useLazyGetStandardDropdownQuery } from "@/redux/query/standard";
 
 const StudentTabView = () => {

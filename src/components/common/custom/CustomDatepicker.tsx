@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Label } from "../ui/label";
+import { Label } from "../../ui/label";
 import { SlCalender } from "react-icons/sl";
 
 interface Props {

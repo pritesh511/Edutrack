@@ -7,13 +7,13 @@ import { BsPersonWorkspace } from "react-icons/bs";
 import { useGetDashboardDataQuery } from "@/redux/query/dashboard";
 import DashboardChart from "../DashboardChart";
 import { useGetEventsQuery } from "@/redux/query/calender";
-import CustomTableHead from "@/components/common/CustomTableHead";
+import CustomTableHead from "@/components/common/custom/CustomTableHead";
 import { renderOnConditionBase } from "@/helpers/helper";
-import CustomTableRow from "@/components/common/CustomTableRow";
-import CustomTableCell from "@/components/common/CustomTableCell";
+import CustomTableRow from "@/components/common/custom/CustomTableRow";
+import CustomTableCell from "@/components/common/custom/CustomTableCell";
 import { Loader } from "lucide-react";
 import moment from "moment";
-import CustomTable from "@/components/common/CustomTable";
+import CustomTable from "@/components/common/custom/CustomTable";
 import OverallClassPerformanceChart from "../OverallClassPerformanceChart";
 import { fetchDashboardData } from "@/actions/calenderEvent";
 

@@ -14,13 +14,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserData, setCurrentUser } from "@/redux/slices/userSlice";
-import CustomTextField from "@/components/common/CustomTextField";
-import CustomTextarea from "@/components/common/CustomTextarea";
+import CustomTextField from "@/components/common/custom/CustomTextField";
+import CustomTextarea from "@/components/common/custom/CustomTextarea";
 import toast from "react-hot-toast";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
 import { schoolProfileSettingSchema } from "@/utils/schema";
 import axiosInstance from "@/helpers/axios/axiosInstance";
-import CircularProgress from "@/components/common/CircularProgress";
+import CircularProgress from "@/components/common/common/CircularProgress";
 
 interface AccountSettingForm {
   schoolName: string;
