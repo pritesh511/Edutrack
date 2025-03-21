@@ -9,17 +9,40 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import {
   useDeleteStandardMutation,
+  useEditStandardMutation,
   useGetStandardQuery,
+  usePostStandardMutation,
 } from "@/redux/query/standard";
 import toast from "react-hot-toast";
 import { Standard } from "@/utils/types";
 import { Card, CardContent } from "@/components/ui/card";
+import FormDialog from "@/components/common/form/FormDialog";
+import {
+  standardFormConfig,
+  standardIntialValues,
+} from "@/utils/mocks/standard.mock";
+import { useFormOperations } from "@/helpers/hooks/useFormOperations";
 
 export default function ClassesTabView() {
   const [openModal, setOpenModal] = useState(false);
   const [isEditStandard, setIsEditStandard] = useState<Standard | null>(null);
   const { data, isLoading } = useGetStandardQuery("");
   const [deleteStandard] = useDeleteStandardMutation();
+  const [postStandard] = usePostStandardMutation();
+  const [editStandard] = useEditStandardMutation();
+
+  const { formValues, handleSubmit, isSubmitting } = useFormOperations({
+    postMutation: (values) => postStandard(values).unwrap(),
+    editMutation: (id, values) => editStandard({ id, form: values }).unwrap(),
+    entityName: "Standard",
+    initialValues: standardIntialValues,
+    onSuccessCall: () => {
+      setOpenModal(false);
+    },
+    editData: isEditStandard
+      ? { id: isEditStandard._id, values: isEditStandard }
+      : undefined,
+  });
 
   const handleCloseModal = useCallback(() => {
     setOpenModal(false);
@@ -95,10 +118,14 @@ export default function ClassesTabView() {
           )}
         </div>
 
-        <AddStandardDialog
-          closeModal={handleCloseModal}
-          isModalOpen={openModal}
-          isEditStandard={isEditStandard}
+        <FormDialog
+          isOpen={openModal}
+          onClose={handleCloseModal}
+          title={isEditStandard ? "Edit Standard" : "Add Standard"}
+          formConfig={standardFormConfig()}
+          initialValues={formValues}
+          onSubmit={handleSubmit}
+          isSubmitting={isSubmitting}
         />
       </CardContent>
     </Card>

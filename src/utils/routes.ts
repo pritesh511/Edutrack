@@ -63,6 +63,13 @@ export const dashboardRoutes = [
     access: ["admin", "teacher"],
   },
   {
+    id: "competition",
+    icon: SiBookstack,
+    label: "Competition",
+    path: "/dashboard/competition",
+    access: ["admin", "teacher"],
+  },
+  {
     id: "reports",
     icon: BsFileEarmarkTextFill,
     label: "Reports",
