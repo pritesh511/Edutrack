@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "../../ui/label";
+import { Label } from "../ui/label";
 import { getMultiselectValue } from "@/helpers/helper";
 
 type Option = {

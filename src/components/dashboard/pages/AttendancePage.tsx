@@ -1,10 +1,10 @@
 "use client";
-import CustomSelect from "@/components/common/custom/CustomSelect";
-import CustomTable from "@/components/common/custom/CustomTable";
-import CustomTableCell from "@/components/common/custom/CustomTableCell";
-import CustomTableHead from "@/components/common/custom/CustomTableHead";
-import CustomTableRow from "@/components/common/custom/CustomTableRow";
-import Loader from "@/components/common/common/Loader";
+import CustomSelect from "@/components/custom/CustomSelect";
+import CustomTable from "@/components/custom/CustomTable";
+import CustomTableCell from "@/components/custom/CustomTableCell";
+import CustomTableHead from "@/components/custom/CustomTableHead";
+import CustomTableRow from "@/components/custom/CustomTableRow";
+import Loader from "@/components/common/Loader";
 import { Card, CardContent } from "@/components/ui/card";
 import { renderOnConditionBase } from "@/helpers/helper";
 import { useLazyGetStandardDropdownQuery } from "@/redux/query/standard";

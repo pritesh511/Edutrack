@@ -2,8 +2,8 @@
 import { Button } from "@/components/ui/button";
 import React, { useCallback, useState } from "react";
 import { renderOnConditionBase } from "@/helpers/helper";
-import Loader from "@/components/common/common/Loader";
-import NoDataFound from "@/components/common/common/NoDataFound";
+import Loader from "@/components/common/Loader";
+import NoDataFound from "@/components/common/NoDataFound";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import {

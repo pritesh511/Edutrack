@@ -11,8 +11,8 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import CircularProgress from "@/components/common/common/CircularProgress";
-import CustomTextField from "@/components/common/custom/CustomTextField";
+import CircularProgress from "@/components/common/CircularProgress";
+import CustomTextField from "@/components/custom/CustomTextField";
 import {
   renderOnConditionBase,
   transformYupErrorsIntoObject,
@@ -24,8 +24,8 @@ import {
 } from "@/utils/schema";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
-import CustomStepper from "@/components/common/custom/CustomStepper";
-import CustomTextarea from "@/components/common/custom/CustomTextarea";
+import CustomStepper from "@/components/custom/CustomStepper";
+import CustomTextarea from "@/components/custom/CustomTextarea";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

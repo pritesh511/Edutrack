@@ -7,10 +7,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import CustomTextField from "@/components/common/custom/CustomTextField";
+import CustomTextField from "@/components/custom/CustomTextField";
 import { useGetStandardDropdownQuery } from "@/redux/query/standard";
-import CustomSelect from "@/components/common/custom/CustomSelect";
-import CustomTextarea from "@/components/common/custom/CustomTextarea";
+import CustomSelect from "@/components/custom/CustomSelect";
+import CustomTextarea from "@/components/custom/CustomTextarea";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
 import { studentSchema } from "@/utils/schema";
 import toast from "react-hot-toast";
@@ -18,10 +18,10 @@ import {
   useEditStudentMutation,
   usePostStudentMutation,
 } from "@/redux/query/student";
-import CircularProgress from "@/components/common/common/CircularProgress";
+import CircularProgress from "@/components/common/CircularProgress";
 import { Student } from "@/utils/types";
 import { useGetTeacherDropdownQuery } from "@/redux/query/teacher";
-import CustomDatepicker from "@/components/common/custom/CustomDatepicker";
+import CustomDatepicker from "@/components/custom/CustomDatepicker";
 import { useSelector } from "react-redux";
 import { getUserData } from "@/redux/slices/userSlice";
 

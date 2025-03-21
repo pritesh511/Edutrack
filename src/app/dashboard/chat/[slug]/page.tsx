@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { io, Socket } from "socket.io-client";
-import CustomTextField from "@/components/common/custom/CustomTextField";
+import CustomTextField from "@/components/custom/CustomTextField";
 import { useSelector } from "react-redux";
 import { getUserData } from "@/redux/slices/userSlice";
 import { IoSend } from "react-icons/io5";

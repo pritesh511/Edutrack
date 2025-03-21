@@ -1,6 +1,6 @@
 import React from "react";
-import { Label } from "../../ui/label";
-import { Textarea } from "../../ui/textarea";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
 
 interface Props {
   label?: string;

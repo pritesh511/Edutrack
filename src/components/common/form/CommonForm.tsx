@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import CircularProgress from "../common/CircularProgress";
+import CircularProgress from "../CircularProgress";
 
 export type FormFieldConfig = {
   id: string;
