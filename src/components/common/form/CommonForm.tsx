@@ -14,18 +14,37 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import CircularProgress from "../CircularProgress";
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
+import { SlCalender } from "react-icons/sl";
 
-export type FormFieldConfig = {
+export type FormSubFieldConfig = {
   id: string;
   name: string;
   label?: string;
-  validate?: boolean;
-  type: "string" | "number" | "textarea" | "select" | "checkbox" | "array";
+  required: boolean;
+  type:
+    | "string"
+    | "number"
+    | "textarea"
+    | "select"
+    | "checkbox"
+    | "datepicker"
+    | "array";
   placeholder?: string;
   errorMessage?: string;
   options?: { value: string; label: string }[];
-  subfields?: FormFieldConfig[];
+  subfields: FormSubFieldConfig[];
   disabled?: boolean;
+  minDate?: Date;
+  maxDate?: Date;
+};
+
+export type FormFieldConfig = {
+  title: string;
+  groupSize: 1 | 2;
+  section: boolean;
+  subfields: FormSubFieldConfig[];
 };
 
 interface DynamicFormProps {
@@ -55,34 +74,49 @@ const DynamicForm = ({
 
   // Generate validation schema
   const validationSchema = formConfig.reduce((acc: any, field) => {
-    if (field.validate) {
-      let schema;
-      switch (field.type) {
-        case "number":
-          schema = Yup.number().typeError("Must be a number");
-          break;
-        case "checkbox":
-          schema = Yup.boolean();
-          break;
-        case "array":
-          schema = Yup.array().of(
-            Yup.object().shape(
-              field.subfields?.reduce((nestedAcc: any, nestedField) => {
-                if (nestedField.validate) {
-                  nestedAcc[nestedField.name] = Yup.string().required(
-                    nestedField.errorMessage
-                  );
-                }
-                return nestedAcc;
-              }, {}) || {}
-            )
-          );
-          break;
-        default:
-          schema = Yup.string();
+    field.subfields.forEach((subfield) => {
+      if (subfield.required) {
+        let schema;
+        switch (subfield.type) {
+          case "number":
+            schema = Yup.number()
+              .min(1, subfield.errorMessage)
+              .typeError("Must be a number");
+            break;
+          case "checkbox":
+            schema = Yup.boolean();
+            break;
+          case "datepicker":
+            schema = Yup.string()
+              .test("is-valid-date", "Invalid date", function (value) {
+                if (!value) return true;
+                const date = new Date(value);
+                return date.toISOString().split("T")[0] === value;
+              })
+              .required(subfield.errorMessage || "Required");
+            break;
+          case "array":
+            schema = Yup.array().of(
+              Yup.object().shape(
+                subfield.subfields?.reduce((nestedAcc: any, nestedField) => {
+                  if (nestedField.required) {
+                    nestedAcc[nestedField.name] = Yup.string().required(
+                      nestedField.errorMessage
+                    );
+                  }
+                  return nestedAcc;
+                }, {}) || {}
+              )
+            );
+            break;
+          default:
+            schema = Yup.string();
+        }
+        acc[subfield.name] = schema.required(
+          subfield.errorMessage || "Required"
+        );
       }
-      acc[field.name] = schema.required(field.errorMessage || "Required");
-    }
+    });
     return acc;
   }, {});
 
@@ -94,13 +128,13 @@ const DynamicForm = ({
     },
   });
 
-  const renderField = (field: FormFieldConfig) => {
+  const renderField = (field: FormSubFieldConfig) => {
     const isError = formik.touched[field.name] && formik.errors[field.name];
-    console.log("isError::", isError);
+    const isDisabled = field.disabled;
     switch (field.type) {
       case "string":
         return (
-          <div key={field.id} className="space-y-2">
+          <div key={field.id}>
             {field.label && (
               <Label
                 className={`${isError ? "text-destructive" : ""}`}
@@ -126,7 +160,7 @@ const DynamicForm = ({
         );
       case "number":
         return (
-          <div key={field.id} className="space-y-2">
+          <div key={field.id}>
             {field.label && (
               <Label
                 className={`${isError ? "text-destructive" : ""}`}
@@ -153,7 +187,7 @@ const DynamicForm = ({
         );
       case "textarea":
         return (
-          <div key={field.id} className="space-y-2">
+          <div key={field.id}>
             {field.label && (
               <Label
                 className={`${isError ? "text-destructive" : ""}`}
@@ -177,9 +211,52 @@ const DynamicForm = ({
             />
           </div>
         );
+      case "datepicker":
+        return (
+          <div key={field.id} className="flex flex-col">
+            {field.label && (
+              <Label
+                className={isError ? "text-destructive" : ""}
+                htmlFor={field.id}
+              >
+                {field.label}
+              </Label>
+            )}
+            <DatePicker
+              showIcon
+              className={`
+                  border rounded-md text-sm w-full h-10 outline-none focus:border-primary ${
+                    isError ? "border-destructive" : "border-input"
+                  } ${isDisabled ? "bg-border" : ""}
+                `}
+              selected={
+                formik.values[field.name]
+                  ? new Date(formik.values[field.name])
+                  : null
+              }
+              dateFormat="yyyy-MM-dd"
+              placeholderText={field.placeholder} // Fixed typo from 'placeholer' to 'placeholder'
+              icon={<SlCalender />}
+              disabled={isDisabled}
+              showYearDropdown={true}
+              showMonthDropdown={true}
+              dropdownMode="select"
+              minDate={field.minDate}
+              maxDate={field.maxDate}
+              onChange={(date) => {
+                if (date) {
+                  const dateStr = date.toISOString().split("T")[0];
+                  formik.setFieldValue(field.name, dateStr);
+                } else {
+                  formik.setFieldValue(field.name, "");
+                }
+              }}
+            />
+          </div>
+        );
       case "select":
         return (
-          <div key={field.id} className="space-y-2">
+          <div key={field.id}>
             {field.label && (
               <Label
                 className={`${isError ? "text-destructive" : ""}`}
@@ -267,18 +344,54 @@ const DynamicForm = ({
     }
   };
 
+  const renderSubfields = (fields: FormSubFieldConfig[]) => {
+    return (
+      <>
+        {fields.map((field) => {
+          return (
+            <div className="flex flex-col" key={field.id}>
+              <div>{renderField(field)}</div>
+              {formik.touched[field.name] && formik.errors[field.name] && (
+                <div className="text-sm text-red-500 mt-1">
+                  {String(formik.errors[field.name])}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </>
+    );
+  };
+
   return (
     <form onSubmit={formik.handleSubmit} className="space-y-4">
-      {formConfig.map((field) => (
-        <div key={field.id}>
-          {renderField(field)}
-          {formik.touched[field.name] && formik.errors[field.name] && (
-            <div className="text-sm text-red-500 mt-2">
-              {String(formik.errors[field.name])}
+      {formConfig.map((field, index) => {
+        return (
+          <div
+            className={`${
+              field.section ? "p-4 border border-input rounded-xl" : ""
+            }`}
+            key={`field-${index}`}
+          >
+            {field.title && (
+              <h4
+                className={`text-lg font-medium ${
+                  field.section ? "mt-1" : "mt-5"
+                } mb-2`}
+              >
+                {field.title}
+              </h4>
+            )}
+            <div
+              className={`${
+                field.groupSize == 1 ? "group-size-1" : "group-size-2"
+              }`}
+            >
+              {renderSubfields(field.subfields)}
             </div>
-          )}
-        </div>
-      ))}
+          </div>
+        );
+      })}
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? <CircularProgress /> : "Submit"}
       </Button>

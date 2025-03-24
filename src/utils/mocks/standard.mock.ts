@@ -8,22 +8,29 @@ export const standardIntialValues = {
 export const standardFormConfig = () => {
   return [
     {
-      id: "standard",
-      name: "standard",
-      label: "Standard Name",
-      type: "string",
-      validate: true,
-      placeholder: "Enter standard name",
-      errorMessage: "Standard name is required",
-    },
-    {
-      id: "description",
-      name: "description",
-      label: "Description",
-      type: "textarea",
-      validate: true,
-      placeholder: "Enter description",
-      errorMessage: "Description is required",
-    },
+      title: "Parent's Details",
+      groupSize: 2,
+      section: true,
+      subfields: [
+        {
+          id: "standard",
+          name: "standard",
+          label: "Standard Name",
+          type: "string",
+          required: true,
+          placeholder: "Enter standard name",
+          errorMessage: "Standard name is required",
+        },
+        {
+          id: "description",
+          name: "description",
+          label: "Description",
+          type: "textarea",
+          required: true,
+          placeholder: "Enter description",
+          errorMessage: "Description is required",
+        },
+      ]
+    }
   ] as FormFieldConfig[];
 };

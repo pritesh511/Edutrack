@@ -109,3 +109,15 @@ body {
   font-size: 12px;
   background-color: hsl(221 82.4% 53.1%);
 }
+
+.group-size-1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px
+}
+
+.group-size-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px
+}
