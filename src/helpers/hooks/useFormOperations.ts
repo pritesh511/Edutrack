@@ -8,7 +8,7 @@ interface UseFormOperationsProps<T> {
   entityName: string;
   initialValues: T;
   onSuccessCall: Function;
-  editData?: { id: string; values?: T };
+  editData?: { id: string; values?: any };
 }
 
 export const useFormOperations = <T extends {}>({

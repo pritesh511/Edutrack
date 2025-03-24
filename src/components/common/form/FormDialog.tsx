@@ -16,6 +16,8 @@ interface FormDialogProps<T> {
   initialValues: T;
   onSubmit: (values: T) => Promise<boolean>;
   isSubmitting: boolean;
+  className?: string;
+  isViewMode?: boolean;
 }
 
 const FormDialog = <T extends {}>({
@@ -26,6 +28,8 @@ const FormDialog = <T extends {}>({
   initialValues,
   onSubmit,
   isSubmitting,
+  className,
+  isViewMode,
 }: FormDialogProps<T>) => {
   const handleClose = () => {
     if (!isSubmitting) onClose();
@@ -33,7 +37,7 @@ const FormDialog = <T extends {}>({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent>
+      <DialogContent className={className}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
@@ -43,6 +47,7 @@ const FormDialog = <T extends {}>({
             onSubmit={onSubmit}
             initialValues={initialValues}
             isSubmitting={isSubmitting}
+            isViewMode={isViewMode}
           />
         </div>
       </DialogContent>

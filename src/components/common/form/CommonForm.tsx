@@ -52,6 +52,7 @@ interface DynamicFormProps {
   onSubmit: (values: any) => void;
   initialValues: FormikValues;
   isSubmitting: boolean;
+  isViewMode?: boolean;
 }
 
 const DynamicForm = ({
@@ -59,6 +60,7 @@ const DynamicForm = ({
   onSubmit,
   initialValues,
   isSubmitting,
+  isViewMode,
 }: DynamicFormProps) => {
   // Generate initial values
   // const initialValues = formConfig.reduce((acc: Record<string, any>, field) => {
@@ -137,7 +139,9 @@ const DynamicForm = ({
           <div key={field.id}>
             {field.label && (
               <Label
-                className={`${isError ? "text-destructive" : ""}`}
+                className={`${isError ? "text-destructive" : ""} ${
+                  isViewMode || isDisabled ? "text-gray-500" : ""
+                }`}
                 htmlFor={field.id}
               >
                 {field.label}
@@ -155,6 +159,7 @@ const DynamicForm = ({
                   ? "outline outline-1 outline-destructive outline-offset-2"
                   : ""
               }`}
+              disabled={isViewMode || isDisabled}
             />
           </div>
         );
@@ -163,7 +168,9 @@ const DynamicForm = ({
           <div key={field.id}>
             {field.label && (
               <Label
-                className={`${isError ? "text-destructive" : ""}`}
+                className={`${isError ? "text-destructive" : ""} ${
+                  isViewMode || isDisabled ? "text-gray-500" : ""
+                }`}
                 htmlFor={field.id}
               >
                 {field.label}
@@ -182,6 +189,7 @@ const DynamicForm = ({
                   ? "outline outline-1 outline-destructive outline-offset-2"
                   : ""
               }`}
+              disabled={isViewMode || isDisabled}
             />
           </div>
         );
@@ -190,7 +198,9 @@ const DynamicForm = ({
           <div key={field.id}>
             {field.label && (
               <Label
-                className={`${isError ? "text-destructive" : ""}`}
+                className={`${isError ? "text-destructive" : ""} ${
+                  isViewMode || isDisabled ? "text-gray-500" : ""
+                }`}
                 htmlFor={field.id}
               >
                 {field.label}
@@ -208,6 +218,7 @@ const DynamicForm = ({
                   ? "outline outline-1 outline-destructive outline-offset-2"
                   : ""
               }`}
+              disabled={isViewMode || isDisabled}
             />
           </div>
         );
@@ -216,7 +227,9 @@ const DynamicForm = ({
           <div key={field.id} className="flex flex-col">
             {field.label && (
               <Label
-                className={isError ? "text-destructive" : ""}
+                className={`${isError ? "text-destructive" : ""} ${
+                  isViewMode || isDisabled ? "text-gray-500" : ""
+                }`}
                 htmlFor={field.id}
               >
                 {field.label}
@@ -237,7 +250,7 @@ const DynamicForm = ({
               dateFormat="yyyy-MM-dd"
               placeholderText={field.placeholder} // Fixed typo from 'placeholer' to 'placeholder'
               icon={<SlCalender />}
-              disabled={isDisabled}
+              disabled={isViewMode || isDisabled}
               showYearDropdown={true}
               showMonthDropdown={true}
               dropdownMode="select"
@@ -259,7 +272,9 @@ const DynamicForm = ({
           <div key={field.id}>
             {field.label && (
               <Label
-                className={`${isError ? "text-destructive" : ""}`}
+                className={`${isError ? "text-destructive" : ""} ${
+                  isViewMode || isDisabled ? "text-gray-500" : ""
+                }`}
                 htmlFor={field.id}
               >
                 {field.label}
@@ -269,9 +284,10 @@ const DynamicForm = ({
               name={field.name}
               value={formik.values[field.name]}
               onValueChange={(value) => formik.setFieldValue(field.name, value)}
+              disabled={isViewMode || isDisabled}
             >
               <SelectTrigger
-                className={`${
+                className={`h-10 ${
                   isError
                     ? "outline outline-1 outline-destructive outline-offset-2"
                     : ""
@@ -299,8 +315,16 @@ const DynamicForm = ({
               onCheckedChange={(checked) =>
                 formik.setFieldValue(field.name, checked)
               }
+              disabled={isViewMode || isDisabled}
             />
-            {field.label && <Label htmlFor={field.id}>{field.label}</Label>}
+            {field.label && (
+              <Label
+                className={`${isViewMode || isDisabled ? "text-gray-500" : ""}`}
+                htmlFor={field.id}
+              >
+                {field.label}
+              </Label>
+            )}
           </div>
         );
       case "array":
@@ -392,7 +416,7 @@ const DynamicForm = ({
           </div>
         );
       })}
-      <Button type="submit" disabled={isSubmitting}>
+      <Button type="submit" disabled={isSubmitting || isViewMode}>
         {isSubmitting ? <CircularProgress /> : "Submit"}
       </Button>
     </form>

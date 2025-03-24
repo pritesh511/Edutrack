@@ -2,9 +2,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-const AddStudentDialog = React.lazy(
-  () => import("../../../components/dashboard/dialogs/AddStudentDialog")
-);
 import CustomTableHead from "@/components/custom/CustomTableHead";
 import CustomTableRow from "@/components/custom/CustomTableRow";
 import CustomTableCell from "@/components/custom/CustomTableCell";
@@ -14,15 +11,24 @@ import { MdDelete } from "react-icons/md";
 import { format } from "date-fns";
 import {
   useDeleteStudentMutation,
+  useEditStudentMutation,
   useLazyGetStudentsQuery,
+  usePostStudentMutation,
 } from "@/redux/query/student";
 import { renderOnConditionBase } from "@/helpers/helper";
 import Loader from "@/components/common/Loader";
-import toast from "react-hot-toast";
 import { Student } from "@/utils/types";
 import { IoEye } from "react-icons/io5";
 import CustomSelect from "@/components/custom/CustomSelect";
 import { useLazyGetStandardDropdownQuery } from "@/redux/query/standard";
+import FormDialog from "@/components/common/form/FormDialog";
+import { useFormOperations } from "@/helpers/hooks/useFormOperations";
+import {
+  studentFormconfig,
+  studentIntialvalue,
+} from "@/utils/mocks/student.mock";
+import { useGetTeacherDropdownQuery } from "@/redux/query/teacher";
+import { useDeleteEntity } from "@/helpers/hooks/useDeleteEntity";
 
 const StudentTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +39,25 @@ const StudentTabView = () => {
   const [fetchStandardDropdownData, { data: standardDrodownData }] =
     useLazyGetStandardDropdownQuery();
   const [deleteStudent] = useDeleteStudentMutation();
+  const [postStudent] = usePostStudentMutation();
+  const [editStudent] = useEditStudentMutation();
+  const { data: teacherDrodownData } = useGetTeacherDropdownQuery("");
+
+  const { formValues, handleSubmit, isSubmitting } = useFormOperations({
+    postMutation: (values) => postStudent(values).unwrap(),
+    editMutation: (id, values) => editStudent({ id, form: values }).unwrap(),
+    entityName: "Standard",
+    initialValues: studentIntialvalue,
+    onSuccessCall: () => {
+      setIsModalOpen(false);
+    },
+    editData: isEditStudent
+      ? {
+          id: isEditStudent._id,
+          values: isEditStudent,
+        }
+      : undefined,
+  });
 
   const StudentTableHeader = () => {
     const headers = [
@@ -73,18 +98,11 @@ const StudentTabView = () => {
     setIsEditStudent(null);
   }, []);
 
-  const handleDeleteStudent = async (id: string) => {
-    try {
-      const { data, error } = await deleteStudent(id);
-      if (error) {
-        toast.error((error as any)?.data.message);
-      } else {
-        toast.success(data.message);
-      }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Something went wrong");
-    }
-  };
+  const { handleDelete } = useDeleteEntity({
+    entityName: "Student",
+    successMessage: "Student deleted successfully!",
+    errorMessage: "Could not delete Student",
+  });
 
   const StudentTableBody = () => {
     return (
@@ -154,7 +172,9 @@ const StudentTabView = () => {
                             <Button
                               size="icon"
                               variant="destructive"
-                              onClick={() => handleDeleteStudent(student._id)}
+                              onClick={() =>
+                                handleDelete(student._id, deleteStudent)
+                              }
                             >
                               <MdDelete />
                             </Button>
@@ -212,11 +232,19 @@ const StudentTabView = () => {
           />
         </CardContent>
       </Card>
-      <AddStudentDialog
-        closeModal={() => handleCloseModal()}
-        isModalOpen={isModalOpen}
-        isEditStudent={isEditStudent}
-        isViewStudent={isViewStudent}
+      <FormDialog
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        title={isEditStudent ? "Edit Student" : "Add Student"}
+        formConfig={studentFormconfig(
+          standardDrodownData?.standards || [],
+          teacherDrodownData?.teachers || []
+        )}
+        initialValues={formValues}
+        onSubmit={handleSubmit}
+        isSubmitting={isSubmitting}
+        isViewMode={isViewStudent}
+        className="md:max-w-lg lg:max-w-4xl student-dialog"
       />
     </>
   );
