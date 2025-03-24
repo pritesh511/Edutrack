@@ -8,9 +8,9 @@ export const standardIntialValues = {
 export const standardFormConfig = () => {
   return [
     {
-      title: "Parent's Details",
-      groupSize: 2,
-      section: true,
+      title: "",
+      groupSize: 1,
+      section: false,
       subfields: [
         {
           id: "standard",
