@@ -145,6 +145,9 @@ const DynamicForm = ({
                 htmlFor={field.id}
               >
                 {field.label}
+                {field.required && (
+                  <span className="text-destructive ml-1">*</span>
+                )}
               </Label>
             )}
             <Input
@@ -174,6 +177,9 @@ const DynamicForm = ({
                 htmlFor={field.id}
               >
                 {field.label}
+                {field.required && (
+                  <span className="text-destructive ml-1">*</span>
+                )}
               </Label>
             )}
             <Input
@@ -204,6 +210,9 @@ const DynamicForm = ({
                 htmlFor={field.id}
               >
                 {field.label}
+                {field.required && (
+                  <span className="text-destructive ml-1">*</span>
+                )}
               </Label>
             )}
             <Textarea
@@ -224,7 +233,10 @@ const DynamicForm = ({
         );
       case "datepicker":
         return (
-          <div key={field.id} className="flex flex-col">
+          <div
+            key={field.id}
+            className="flex flex-col h-full justify-end gap-[2px]"
+          >
             {field.label && (
               <Label
                 className={`${isError ? "text-destructive" : ""} ${
@@ -233,6 +245,9 @@ const DynamicForm = ({
                 htmlFor={field.id}
               >
                 {field.label}
+                {field.required && (
+                  <span className="text-destructive ml-1">*</span>
+                )}
               </Label>
             )}
             <DatePicker
@@ -278,6 +293,9 @@ const DynamicForm = ({
                 htmlFor={field.id}
               >
                 {field.label}
+                {field.required && (
+                  <span className="text-destructive ml-1">*</span>
+                )}
               </Label>
             )}
             <Select
@@ -323,6 +341,9 @@ const DynamicForm = ({
                 htmlFor={field.id}
               >
                 {field.label}
+                {field.required && (
+                  <span className="text-destructive ml-1">*</span>
+                )}
               </Label>
             )}
           </div>
@@ -361,7 +382,9 @@ const DynamicForm = ({
         //   />
         // );
         return (
-          <div>{field.subfields?.map((subfield) => renderField(subfield))}</div>
+          <div className="h-full">
+            {field.subfields?.map((subfield) => renderField(subfield))}
+          </div>
         );
       default:
         return null;
@@ -374,7 +397,7 @@ const DynamicForm = ({
         {fields.map((field) => {
           return (
             <div className="flex flex-col" key={field.id}>
-              <div>{renderField(field)}</div>
+              <div className="h-full">{renderField(field)}</div>
               {formik.touched[field.name] && formik.errors[field.name] && (
                 <div className="text-sm text-red-500 mt-1">
                   {String(formik.errors[field.name])}
