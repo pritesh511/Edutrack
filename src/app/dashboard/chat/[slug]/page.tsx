@@ -48,7 +48,9 @@ const ChatDetailPage = ({ params }: { params: Promise<{ slug: string }> }) => {
   );
 
   useEffect(() => {
-    socket = io("/", { path: "/api/socket" });
+    socket = io("https://edutrack-pritesh511s-projects.vercel.app", {
+      path: "/api/socket",
+    });
     console.log("socket::", socket);
 
     if (typeof slug === "string") {
