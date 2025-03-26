@@ -7,7 +7,7 @@ export const calenderApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   tagTypes: ["Calender"],
   endpoints: (builder) => ({
-    getEvents: builder.query<{ events: CalenderEvent[] }, string>({
+    getEvents: builder.query<{ data: { events: CalenderEvent[] } }, string>({
       query: () => `dashboard/calender`,
       providesTags: ["Calender"],
     }),

@@ -112,7 +112,7 @@ const TaskCalendar = () => {
     <div className="h-full p-4">
       <Calendar
         localizer={localizer}
-        events={data?.events}
+        events={data?.data.events}
         onSelectEvent={(event) => handleDeleteEvent(event)}
         onSelectSlot={handleSelectSlot}
         selectable
