@@ -1,88 +1,73 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
-import Image from "next/image";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import {
+  FaChalkboardTeacher,
+  FaUserGraduate,
+  FaComments,
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+} from "react-icons/fa";
 import LandingPageHeader from "@/components/landigPage/LandingPageHeader";
 import ContactUs from "@/components/landigPage/ContactUs";
+import HeroSection from "@/components/dashboard/HeroSection";
 
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
       <LandingPageHeader />
 
-      {/* Hero Section */}
-      <section className="bg-gray-50 py-20 text-center">
-        <div className="container mx-auto">
-          <img
-            src="https://aws.vedmarg.com/wp-content/uploads/2022/09/ved-blog-1.png"
-            alt="School Management"
-            className="mx-auto mb-8 max-w-md"
-          />
-          <h2 className="text-4xl font-bold mb-4">Welcome to EduTrack</h2>
-          <p className="text-lg text-gray-600 mb-8">
-            Streamlining education with modern solutions.
-          </p>
-          <Link href={"/signup"}>
-            <Button
-              size="lg"
-              className="bg-blue-700 hover:bg-blue-800 text-white"
-            >
-              Get Started
-            </Button>
-          </Link>
-        </div>
-      </section>
+      {/* Hero Section - Dynamically loaded */}
+      <HeroSection />
 
-      {/* About Us Section */}
-      <section id="about" className="py-20 bg-white">
-        <div className="container mx-auto text-center px-6">
-          <h3 className="text-3xl font-bold mb-8">About Us</h3>
-          <p className="text-lg text-gray-700">
-            We provide comprehensive educational management solutions that
-            simplify administrative processes and enhance learning outcomes.
-          </p>
-        </div>
-      </section>
+      {/* Features Section */}
+      <section id="features" className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Everything You Need in One Platform
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Streamline operations, enhance learning, and improve communication
+              across your institution.
+            </p>
+          </div>
 
-      {/* Services Section */}
-      <section id="services" className="py-20 bg-gray-100">
-        <div className="container mx-auto text-center px-6">
-          <h3 className="text-3xl font-bold mb-8">Our Services</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
+                icon: (
+                  <FaUserGraduate className="w-12 h-12 mb-4 text-blue-600" />
+                ),
                 title: "Student Management",
                 description:
-                  "Manage student records, attendance, and performance.",
-                icon: "https://cdn-icons-png.flaticon.com/512/271/271229.png",
+                  "Comprehensive student profiles with academic tracking and behavior monitoring.",
               },
               {
-                title: "Teacher Scheduling",
+                icon: (
+                  <FaChalkboardTeacher className="w-12 h-12 mb-4 text-blue-600" />
+                ),
+                title: "Staff Administration",
                 description:
-                  "Schedule classes and manage teacher workloads efficiently.",
-                icon: "https://cdn-icons-png.flaticon.com/512/3176/3176361.png",
+                  "Efficiently manage staff schedules, payroll, and professional development.",
               },
               {
-                title: "Parent Communication",
+                icon: <FaComments className="w-12 h-12 mb-4 text-blue-600" />,
+                title: "Parent Portal",
                 description:
-                  "Enhance communication between schools and parents.",
-                icon: "https://cdn-icons-png.flaticon.com/512/906/906175.png",
+                  "Real-time communication and progress updates for parents and guardians.",
               },
-            ].map((service, index) => (
+            ].map((feature, index) => (
               <Card
                 key={index}
-                className="text-center shadow-md hover:shadow-lg transition"
+                className="h-full p-8 hover:shadow-xl transition-shadow duration-300"
               >
-                <CardContent>
-                  <img
-                    src={service.icon}
-                    alt={service.title}
-                    className="mx-auto mb-4 w-20"
-                  />
-                  <h4 className="text-xl font-bold mb-2">{service.title}</h4>
-                  <p className="text-gray-600">{service.description}</p>
+                <CardContent className="text-center">
+                  {feature.icon}
+                  <h3 className="text-2xl font-semibold mb-4">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -90,54 +75,87 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-20 bg-blue-50">
-        <div className="container mx-auto text-center px-6">
-          <h3 className="text-3xl font-bold mb-8">What Our Users Say</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Stats Section */}
+      <section className="bg-blue-50 py-20">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             {[
-              "Streamlined our school processes!",
-              "Amazing features and support!",
-              "Highly recommended!",
-            ].map((testimonial, index) => (
-              <blockquote
-                key={index}
-                className="bg-white p-6 rounded shadow-md flex flex-col items-center"
-              >
-                <Image
-                  className="mb-4 rounded-md"
-                  src={"/assets/testimonial_avtar.jpg"}
-                  alt="Testimonial-image"
-                  width={80}
-                  height={80}
-                />
-                <p className="text-gray-600">“{testimonial}”</p>
-                <footer className="mt-4 text-sm text-gray-500">
-                  - Satisfied User
-                </footer>
-              </blockquote>
+              { number: "50K+", label: "Students Empowered" },
+              { number: "1K+", label: "Schools Transformed" },
+              { number: "24/7", label: "Dedicated Support" },
+            ].map((stat, index) => (
+              <div key={index} className="p-6">
+                <div className="text-5xl font-bold text-blue-600 mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-lg text-gray-700">{stat.label}</div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Contact Us Section */}
+      {/* Testimonials Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Trusted by Educators Worldwide
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Join thousands of institutions revolutionizing their educational
+              management.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((item) => (
+              <Card key={item} className="p-6 h-full">
+                <CardContent>
+                  <div className="flex items-start mb-4">
+                    <Avatar className="w-12 h-12">
+                      <AvatarImage src={`/assets/avatar-${item}.jpg`} />
+                      <AvatarFallback>U{item}</AvatarFallback>
+                    </Avatar>
+                    <div className="ml-4">
+                      <div className="font-semibold">Sarah Johnson</div>
+                      <div className="text-sm text-gray-500">
+                        Principal, Green Valley High
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-gray-600">
+                    "EduTrack has revolutionized how we manage our school. The
+                    parent engagement features have been particularly
+                    transformative."
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <ContactUs />
 
       {/* Footer */}
-      <footer className="bg-blue-700 text-white text-center py-6">
-        <div className="flex justify-center space-x-4 mb-4">
-          <a href="#" className="hover:text-gray-300">
-            <FaFacebook size={24} />
-          </a>
-          <a href="#" className="hover:text-gray-300">
-            <FaTwitter size={24} />
-          </a>
-          <a href="#" className="hover:text-gray-300">
-            <FaInstagram size={24} />
-          </a>
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-center space-x-4 mb-4">
+            <a href="#" className="hover:text-gray-300">
+              <FaFacebook size={24} />
+            </a>
+            <a href="#" className="hover:text-gray-300">
+              <FaTwitter size={24} />
+            </a>
+            <a href="#" className="hover:text-gray-300">
+              <FaInstagram size={24} />
+            </a>
+          </div>
+          <div className="pt-8 border-t border-gray-800 text-center text-gray-400">
+            © {new Date().getFullYear()} EduTrack. All rights reserved.
+          </div>
         </div>
-        <p>&copy; {new Date().getFullYear()} EduTrack. All rights reserved.</p>
       </footer>
     </div>
   );
