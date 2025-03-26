@@ -7,12 +7,15 @@ export const standardApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   tagTypes: ["Standard"],
   endpoints: (builder) => ({
-    getStandard: builder.query<{ standards: Standard[] }, string>({
+    getStandard: builder.query<{ data: { standards: Standard[] } }, string>({
       query: () => `dashboard/standard`,
       providesTags: ["Standard"],
     }),
-    getStandardDropdown: builder.query<{ standards: DropdownOption[] }, string>({
-      query: () => `dashboard/standard?dropdown=true`
+    getStandardDropdown: builder.query<
+      { data: { standards: DropdownOption[] } },
+      string
+    >({
+      query: () => `dashboard/standard?dropdown=true`,
     }),
     postStandard: builder.mutation({
       query: (form) => ({
@@ -49,5 +52,5 @@ export const {
   usePostStandardMutation,
   useEditStandardMutation,
   useGetStandardDropdownQuery,
-  useLazyGetStandardDropdownQuery
+  useLazyGetStandardDropdownQuery,
 } = standardApi;

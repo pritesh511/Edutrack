@@ -3,188 +3,132 @@ import {
   getDataFromToken,
   getUserDataFromToken,
 } from "@/helpers/getDataFromToken";
-import Standard from "@/models/standard.model";
-import Teacher from "@/models/teacher.model";
+import {
+  ApiResponse,
+  create,
+  deleteOne,
+  find,
+  findOne,
+  throwError,
+  updateOne,
+} from "@/helpers/server/common";
 import { NextRequest, NextResponse } from "next/server";
 
 databseConnect();
 
 export async function POST(request: NextRequest) {
   try {
+    const rcResponse = new ApiResponse();
     const reqBody = await request.json();
-
-    // get id from token
     const userId = await getDataFromToken(request);
 
     const { standard, description } = reqBody;
 
-    const findStd = await Standard.findOne({ standard, user: userId });
-
+    const findStd = await findOne("Standard", { standard, user: userId });
     if (findStd) {
-      return NextResponse.json(
-        {
-          message: "Std name already has been taken",
-        },
-        { status: 400 }
-      );
+      return throwError("Std name already has been taken", 400);
     }
 
-    const standardResp = await new Standard({
+    rcResponse.data = await create("Standard", {
       standard,
       description,
       user: userId,
     });
-
-    await standardResp.save();
-
-    return NextResponse.json(
-      {
-        message: "You have successfully add standard",
-      },
-      { status: 200 }
-    );
+    rcResponse.message = "You have successfully add standard";
+    return NextResponse.json(rcResponse);
   } catch (error: any) {
-    console.log(error.message);
-    return NextResponse.json(
-      {
-        message: error.message,
-      },
-      { status: 500 }
-    );
+    return throwError();
   }
 }
 
 export async function GET(request: NextRequest) {
   try {
+    const rcResponse = new ApiResponse();
     const userId = await getDataFromToken(request);
-
     const loginUser = await getUserDataFromToken(request);
-
-    const standards = await Standard.find({ user: userId }).select(
-      "-user -__v"
-    );
-
     const isdropdownTrue = request?.nextUrl?.searchParams.get("dropdown");
+
+    const standards = await find("Standard", { user: userId });
 
     if (isdropdownTrue) {
       if (loginUser.role === "admin") {
-        const dropdownOptions = standards.map((std) => {
+        const dropdownOptions = standards.map((std: any) => {
           return {
             label: std.standard,
             value: std._id,
           };
         });
 
-        return NextResponse.json(
-          {
-            standards: dropdownOptions,
-          },
-          { status: 200 }
-        );
+        rcResponse.data.standards = dropdownOptions;
+        return NextResponse.json(rcResponse);
       } else {
-        const teacher = await Teacher.findOne({ _id: loginUser.teacherId });
+        const teacher = await findOne("Teacher", { _id: loginUser.teacherId });
 
         const dropdownOptions = teacher.standards.flatMap(
           (teacherStd: string) =>
             standards
-              .filter((std) => teacherStd.toString() === std._id.toString())
-              .map((std) => ({
+              .filter(
+                (std: any) => teacherStd.toString() === std._id.toString()
+              )
+              .map((std: any) => ({
                 label: std.standard,
                 value: std._id,
               }))
         );
 
-        return NextResponse.json(
-          {
-            standards: dropdownOptions,
-          },
-          { status: 200 }
-        );
+        rcResponse.data.standards = dropdownOptions;
+        return NextResponse.json(rcResponse);
       }
     }
 
-    return NextResponse.json(
-      {
-        standards,
-      },
-      { status: 200 }
-    );
+    rcResponse.data.standards = standards;
+    return NextResponse.json(rcResponse);
   } catch (error: any) {
-    console.log(error.message);
-    return NextResponse.json(
-      {
-        message: error.message,
-      },
-      { status: 500 }
-    );
+    return throwError();
   }
 }
 
 export async function DELETE(request: NextRequest) {
   try {
+    const rcResponse = new ApiResponse();
     const standardId = request?.nextUrl?.searchParams.get("standardId");
-
     if (!standardId) {
-      return NextResponse.json(
-        {
-          message: "Standard ID is required",
-        },
-        { status: 400 }
-      );
+      return throwError("Standard ID is required", 400);
     }
 
-    const findStandard = await Standard.findOne({ _id: standardId });
+    const findStandard = await findOne("Standard", { _id: standardId });
     if (!findStandard) {
-      return NextResponse.json(
-        {
-          message: "Standard not found",
-        },
-        { status: 404 }
-      );
+      return throwError("Standard not found", 404);
     }
 
-    const linkedTeachers = await Teacher.find({
+    const linkedTeachers = await find("Teacher", {
       standards: { $in: [standardId] },
     });
     if (linkedTeachers.length > 0) {
-      return NextResponse.json(
-        {
-          message: "Cannot delete the standard as it is linked with teachers",
-        },
-        { status: 400 }
+      return throwError(
+        "Cannot delete the standard as it is linked with teachers",
+        400
       );
     }
 
-    await Standard.deleteOne({ _id: standardId });
-    return NextResponse.json(
-      {
-        message: "Standard deleted successfully",
-      },
-      { status: 200 }
-    );
+    rcResponse.data = await deleteOne("Standard", { _id: standardId });
+    rcResponse.message = "Standard deleted successfully";
+    return NextResponse.json(rcResponse);
   } catch (error: any) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        message: "Internal server error",
-      },
-      { status: 500 }
-    );
+    return throwError();
   }
 }
 
 export async function PUT(request: NextRequest) {
   try {
+    const rcResponse = new ApiResponse();
     const standardId = request?.nextUrl?.searchParams.get("standardId");
     const reqBody = await request.json();
     const { standard, description } = reqBody;
-    const findStandard = await Standard.findOne({ _id: standardId });
 
+    const findStandard = await findOne("Standard", { _id: standardId });
     if (!findStandard) {
-      return NextResponse.json(
-        { message: "Standard not found" },
-        { status: 404 }
-      );
+      return throwError("Standard not found", 404);
     }
 
     // Construct update object dynamically
@@ -193,19 +137,13 @@ export async function PUT(request: NextRequest) {
     if (description !== undefined) updateFields.description = description;
 
     // Update only the fields provided
-    await Standard.updateOne({ _id: standardId }, { $set: updateFields });
-
-    return NextResponse.json(
-      { message: "Standard updated successfully" },
-      { status: 200 }
+    rcResponse.data = await updateOne(
+      "Standard",
+      { _id: standardId },
+      { $set: updateFields }
     );
+    return NextResponse.json(rcResponse);
   } catch (error: any) {
-    console.log(error.message);
-    return NextResponse.json(
-      {
-        message: "Internal server error",
-      },
-      { status: 500 }
-    );
+    return throwError();
   }
 }

@@ -58,9 +58,9 @@ export default function StandardPage() {
         headerTitle="Standards"
         onButtonClick={() => setOpenModal(true)}
         isDataLoading={isLoading}
-        isNoData={data?.standards.length == 0}
+        isNoData={data?.data.standards.length == 0}
       >
-        {data?.standards.map((std) => (
+        {data?.data.standards.map((std) => (
           <div
             key={std._id}
             className="p-4 border rounded-lg shadow-sm transition duration-300 flex flex-row items-center justify-between"
