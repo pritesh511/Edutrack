@@ -1,8 +1,14 @@
 import Calender from "@/models/calender.model";
+import ChatGroup from "@/models/chatgroup.model";
+import Standard from "@/models/standard.model";
+import Subject from "@/models/subject.model";
 import { NextResponse } from "next/server";
 
 const models: any = {
   Calender,
+  ChatGroup,
+  Standard,
+  Subject
 };
 
 export class ApiResponse {
@@ -29,9 +35,21 @@ export const throwError = (
   return NextResponse.json(rcResponse, { status: status });
 };
 
-export const find = async (collection: any, query: any) => {
+export const find = async (
+  collection: any,
+  query: any,
+  populates: any = []
+) => {
   try {
-    const queryBuilder = models[collection].find(query).select("-user -__v");
+    let queryBuilder = models[collection].find(query).select("-user -__v");
+
+    // applied populates if provided
+    if (populates.length > 0) {
+      populates.forEach((field: any) => {
+        queryBuilder = queryBuilder.populate(field, "-user -password -__v");
+      });
+    }
+
     return await queryBuilder;
   } catch (error: any) {
     throw error;
@@ -47,9 +65,28 @@ export const create = async (collection: any, body: any) => {
   }
 };
 
-export const findOne = async (collection: any, query: any) => {
+export const findOne = async (collection: any, query: any, populates: any = []) => {
   try {
-    const queryBuilder = models[collection].findOne(query).select("-user -__v");
+    let queryBuilder = models[collection].findOne(query).select("-user -__v");
+
+    // applied populates if provided
+    if (populates.length > 0) {
+      populates.forEach((field: any) => {
+        queryBuilder = queryBuilder.populate(field, "-user -password -__v");
+      });
+    }
+
+    return await queryBuilder;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
+export const updateOne = async (collection: any, query: any, body: any) => {
+  try {
+    const queryBuilder = models[collection]
+      .updateOne(query, body)
+      .select("-user -__v");
     return await queryBuilder;
   } catch (error: any) {
     throw error;
@@ -67,4 +104,4 @@ export const deleteOne = async (collection: any, query: any) => {
   }
 };
 
-export default { ApiResponse, throwError, find, findOne, deleteOne };
+export default { ApiResponse, throwError, find, findOne, deleteOne, updateOne };

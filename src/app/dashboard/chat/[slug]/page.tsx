@@ -124,7 +124,7 @@ const ChatDetailPage = ({ params }: { params: Promise<{ slug: string }> }) => {
           <Button variant={"secondary"} size={"icon"} onClick={router.back}>
             <IoMdArrowBack />
           </Button>
-          <p className="text-white">{data?.group.groupName}</p>
+          <p className="text-white">{data?.data.group.groupName}</p>
         </div>
         <Popover>
           <PopoverTrigger asChild>
@@ -132,7 +132,7 @@ const ChatDetailPage = ({ params }: { params: Promise<{ slug: string }> }) => {
           </PopoverTrigger>
           <PopoverContent className="w-50 px-2 py-2" align="end">
             <div>
-              {data?.group.members.map((member) => {
+              {data?.data.group.members.map((member) => {
                 return (
                   <div
                     key={member._id}

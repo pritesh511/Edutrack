@@ -7,11 +7,11 @@ export const chatgroupApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   tagTypes: ["ChatGroup"],
   endpoints: (builder) => ({
-    getGroups: builder.query<{ groups: ChatGroup[] }, string>({
+    getGroups: builder.query<{ data: { groups: ChatGroup[] } }, string>({
       query: () => `dashboard/chatgroup`,
       providesTags: ["ChatGroup"],
     }),
-    getGroupsDetails: builder.query<{ group: ChatGroup }, string>({
+    getGroupsDetails: builder.query<{ data: { group: ChatGroup } }, string>({
       query: (id: string) => `dashboard/chatgroup?groupId=${id}`,
       providesTags: ["ChatGroup"],
     }),

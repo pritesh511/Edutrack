@@ -77,10 +77,10 @@ const ChatPage = () => {
             <Loader />,
             <>
               {renderOnConditionBase(
-                data?.groups.length == 0,
+                data?.data?.groups.length == 0,
                 <NoDataFound />,
                 <>
-                  {data?.groups.map((group) => (
+                  {data?.data?.groups.map((group) => (
                     <Link
                       href={`/dashboard/chat/${group._id}`}
                       key={group._id}

@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       end,
       user: userId,
     });
-    rcResponse.message = "Successfully added event"; 
+    rcResponse.message = "Successfully added event";
     return NextResponse.json(rcResponse);
   } catch (error: any) {
     console.log(error);
@@ -48,18 +48,17 @@ export async function GET(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const rcResponse = new ApiResponse();
-    const eventId = request?.nextUrl?.searchParams.get("eventId");
     const userId = await getDataFromToken(request);
-
+    
+    const eventId = request?.nextUrl?.searchParams.get("eventId");
     if (!eventId) {
-      return throwError("Evnet Id not found", 402);
+      return throwError("Evnet Id not found", 400);
     }
 
     const event = await findOne("Calender", {
       user: userId,
       _id: eventId,
     });
-
     if (!event) {
       return throwError("Evnet not found", 400);
     }
