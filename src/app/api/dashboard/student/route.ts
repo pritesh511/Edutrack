@@ -1,12 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { databseConnect } from "@/dbConfig/dbConfig";
-import Student from "@/models/student.model";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
+import {
+  ApiResponse,
+  create,
+  deleteOne,
+  find,
+  findOne,
+  throwError,
+  updateOne,
+} from "@/helpers/server/common";
 
 databseConnect();
 
 export async function POST(request: NextRequest) {
   try {
+    const rcResponse = new ApiResponse();
     const reqBody = await request.json();
 
     const userId = await getDataFromToken(request);
@@ -27,18 +36,16 @@ export async function POST(request: NextRequest) {
       classTeacher,
     } = reqBody;
 
-    const isRoleNumberTaken = await Student.findOne({ roleNo, standard: standard, user: userId });
-
+    const isRoleNumberTaken = await findOne("Student", {
+      roleNo,
+      standard: standard,
+      user: userId,
+    });
     if (isRoleNumberTaken) {
-      return NextResponse.json(
-        {
-          message: "Role number is already been taken",
-        },
-        { status: 400 }
-      );
+      return throwError("Role number is already been taken", 400);
     }
 
-    const saveStudent = new Student({
+    rcResponse.data = await create("Student", {
       name,
       roleNo,
       standard,
@@ -54,28 +61,17 @@ export async function POST(request: NextRequest) {
       classTeacher,
       user: userId,
     });
+    rcResponse.message = "You have successfully added student";
 
-    await saveStudent.save();
-
-    return NextResponse.json(
-      {
-        message: "You have successfully added student",
-      },
-      { status: 200 }
-    );
+    return NextResponse.json(rcResponse);
   } catch (error: any) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        message: "Internal Server Error",
-      },
-      { status: 500 }
-    );
+    return throwError();
   }
 }
 
 export async function GET(request: NextRequest) {
   try {
+    const rcResponse = new ApiResponse();
     const queryParams = request?.nextUrl?.searchParams;
     const filters: any = {};
     const userId = await getDataFromToken(request);
@@ -88,56 +84,34 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    const students = await Student.find(filters)
-      .select("-user -__v")
-      .populate("standard")
-      .populate("classTeacher");
-
-    return NextResponse.json(
-      {
-        students,
-      },
-      { status: 200 }
-    );
+    const populates = ["standard", "classTeacher"];
+    const students = await find("Student", filters, populates);
+    rcResponse.data.students = students;
+    return NextResponse.json(rcResponse);
   } catch (error: any) {
-    console.error(error);
-    return NextResponse.json(
-      {
-        message: "Internal Server Error",
-      },
-      { status: 500 }
-    );
+    return throwError();
   }
 }
 
 export async function DELETE(request: NextRequest) {
   try {
+    const rcResponse = new ApiResponse();
     const studentId = request?.nextUrl?.searchParams?.get("studentId");
 
-    const findStudent = await Student.findOne({ _id: studentId });
-
+    const findStudent = await findOne("Student", { _id: studentId });
     if (findStudent) {
-      await Student.deleteOne({ _id: studentId });
-      return NextResponse.json(
-        {
-          message: "Student deleted successfully",
-        },
-        { status: 200 }
-      );
+      rcResponse.data = await deleteOne("Student", { _id: studentId });
+      rcResponse.message = "Student deleted successfully";
+      return NextResponse.json(rcResponse);
     }
   } catch (error: any) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        message: "Internal Server Error",
-      },
-      { status: 500 }
-    );
+    return throwError();
   }
 }
 
 export async function PUT(request: NextRequest) {
   try {
+    const rcResponse = new ApiResponse();
     const studentId = request?.nextUrl?.searchParams?.get("studentId");
     const reqBody = await request.json();
     const {
@@ -172,21 +146,15 @@ export async function PUT(request: NextRequest) {
     if (motherMobileNo) updateFields.motherMobileNo = motherMobileNo;
     if (classTeacher) updateFields.classTeacher = classTeacher;
 
-    await Student.updateOne({ _id: studentId }, { $set: updateFields });
+    rcResponse.data = await updateOne(
+      "Student",
+      { _id: studentId },
+      { $set: updateFields }
+    );
+    rcResponse.message = "Student updated successfully";
 
-    return NextResponse.json(
-      {
-        message: "Student updated successfully",
-      },
-      { status: 200 }
-    );
+    return NextResponse.json(rcResponse);
   } catch (error: any) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        message: "Internal Server Error",
-      },
-      { status: 500 }
-    );
+    return throwError();
   }
 }

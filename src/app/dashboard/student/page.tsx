@@ -80,11 +80,11 @@ const StudentTabView = () => {
   };
 
   useEffect(() => {
-    if (standardDrodownData?.standards) {
+    if (standardDrodownData?.data.standards) {
       trigger({
-        standard: standardDrodownData?.standards[0]?.value,
+        standard: standardDrodownData?.data.standards[0]?.value,
       });
-      setSelectedStd(standardDrodownData?.standards[0]?.value);
+      setSelectedStd(standardDrodownData?.data.standards[0]?.value);
     }
   }, [standardDrodownData]);
 
@@ -118,7 +118,7 @@ const StudentTabView = () => {
           </CustomTableRow>,
           <>
             {renderOnConditionBase(
-              data?.students.length == 0,
+              data?.data.students.length == 0,
               <CustomTableRow>
                 <CustomTableCell
                   colSpan={7}
@@ -127,7 +127,7 @@ const StudentTabView = () => {
                 />
               </CustomTableRow>,
               <>
-                {data?.students.map((student) => {
+                {data?.data.students.map((student) => {
                   return (
                     <CustomTableRow key={student.roleNo}>
                       <CustomTableCell width={"5%"} cellName={student.roleNo} />
@@ -211,7 +211,7 @@ const StudentTabView = () => {
             <div className="flex gap-2">
               <CustomSelect
                 placeholder={"Select Teacher"}
-                options={standardDrodownData?.standards || []}
+                options={standardDrodownData?.data.standards || []}
                 value={selectedStd}
                 className="h-10 w-[120px]"
                 handleChangeSelect={(value) => {
@@ -237,7 +237,7 @@ const StudentTabView = () => {
         onClose={handleCloseModal}
         title={isEditStudent ? "Edit Student" : "Add Student"}
         formConfig={studentFormconfig(
-          standardDrodownData?.standards || [],
+          standardDrodownData?.data.standards || [],
           teacherDrodownData?.teachers || []
         )}
         initialValues={formValues}

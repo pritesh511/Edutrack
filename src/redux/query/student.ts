@@ -8,7 +8,7 @@ export const studentApi = createApi({
   tagTypes: ["Student"],
   endpoints: (builder) => ({
     getStudents: builder.query<
-      { students: Array<Student> }, Record<string, string | number | undefined>>({
+      { data: { students: Array<Student> } }, Record<string, string | number | undefined>>({
       query: (params: any) => {
         const queryString = new URLSearchParams(
           params as Record<string, string>

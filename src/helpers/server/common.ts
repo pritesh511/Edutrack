@@ -1,6 +1,7 @@
 import Calender from "@/models/calender.model";
 import ChatGroup from "@/models/chatgroup.model";
 import Standard from "@/models/standard.model";
+import Student from "@/models/student.model";
 import Subject from "@/models/subject.model";
 import { NextResponse } from "next/server";
 
@@ -8,7 +9,8 @@ const models: any = {
   Calender,
   ChatGroup,
   Standard,
-  Subject
+  Subject,
+  Student
 };
 
 export class ApiResponse {
