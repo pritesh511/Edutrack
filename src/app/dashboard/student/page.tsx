@@ -238,7 +238,7 @@ const StudentTabView = () => {
         title={isEditStudent ? "Edit Student" : "Add Student"}
         formConfig={studentFormconfig(
           standardDrodownData?.data.standards || [],
-          teacherDrodownData?.teachers || []
+          teacherDrodownData?.data.teachers || []
         )}
         initialValues={formValues}
         onSubmit={handleSubmit}

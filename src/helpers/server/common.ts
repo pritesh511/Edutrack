@@ -3,6 +3,7 @@ import ChatGroup from "@/models/chatgroup.model";
 import Standard from "@/models/standard.model";
 import Student from "@/models/student.model";
 import Subject from "@/models/subject.model";
+import Teacher from "@/models/teacher.model";
 import { NextResponse } from "next/server";
 
 const models: any = {
@@ -10,7 +11,8 @@ const models: any = {
   ChatGroup,
   Standard,
   Subject,
-  Student
+  Student,
+  Teacher
 };
 
 export class ApiResponse {

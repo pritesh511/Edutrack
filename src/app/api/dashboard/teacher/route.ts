@@ -1,18 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { databseConnect } from "@/dbConfig/dbConfig";
-import Teacher from "@/models/teacher.model";
 import {
   getDataFromToken,
   getUserDataFromToken,
 } from "@/helpers/getDataFromToken";
-import Student from "@/models/student.model";
 import bcryptjs from "bcryptjs";
-import ChatGroup from "@/models/chatgroup.model";
+import {
+  ApiResponse,
+  create,
+  deleteOne,
+  find,
+  findOne,
+  throwError,
+  updateOne,
+} from "@/helpers/server/common";
 
 databseConnect();
 
 export async function POST(request: NextRequest) {
   try {
+    const rcResponse = new ApiResponse();
     const reqBody = await request.json();
 
     const { name, email, experience, educations, standards, subjects } =
@@ -24,7 +31,7 @@ export async function POST(request: NextRequest) {
     const salt = await bcryptjs.genSalt(10);
     const hashPassword = await bcryptjs.hash("Teacher@123", salt);
 
-    const teachersResp = new Teacher({
+    rcResponse.data = await create("Teacher", {
       name,
       email,
       experience,
@@ -34,182 +41,115 @@ export async function POST(request: NextRequest) {
       password: hashPassword,
       user: userId,
     });
-
-    await teachersResp.save();
-
-    return NextResponse.json(
-      {
-        message: "You have successfully added a teacher",
-      },
-      { status: 200 }
-    );
+    rcResponse.message = "You have successfully added a teacher";
+    return NextResponse.json(rcResponse);
   } catch (error: any) {
-    console.error("Error in POST:", error);
-    return NextResponse.json(
-      {
-        message: "Internal Server Error",
-      },
-      { status: 500 }
-    );
+    return throwError();
   }
 }
 
 export async function GET(request: NextRequest) {
   try {
+    const rcResponse = new ApiResponse();
     const userId = await getDataFromToken(request);
-
     const loginUser = await getUserDataFromToken(request);
 
-    const teachersData = await Teacher.find({ user: userId }).select(
-      "-user -__v"
-    );
+    const teachersData = await find("Teacher", { user: userId });
 
     const isdropdownTrue = request?.nextUrl?.searchParams.get("dropdown");
 
     if (isdropdownTrue) {
       if (loginUser.role === "admin") {
-        const dropdownOptions = teachersData.map((teacher) => {
+        const dropdownOptions = teachersData.map((teacher: any) => {
           return {
             label: teacher.name,
             value: teacher._id,
           };
         });
 
-        return NextResponse.json(
-          {
-            teachers: dropdownOptions,
-          },
-          { status: 200 }
-        );
+        rcResponse.data.teachers = dropdownOptions;
+        return NextResponse.json(rcResponse);
       } else {
-        const findTeacher = await Teacher.findOne({ _id: loginUser.teacherId });
+        const findTeacher = await findOne("Teacher", {
+          _id: loginUser.teacherId,
+        });
 
         const dropdownOptions = teachersData
           .filter(
-            (teacher) => teacher._id.toString() == findTeacher._id.toString()
+            (teacher: any) =>
+              teacher._id.toString() == findTeacher._id.toString()
           )
-          .map((teacher) => {
+          .map((teacher: any) => {
             return {
               label: teacher.name,
               value: teacher._id,
             };
           });
 
-        return NextResponse.json(
-          {
-            teachers: dropdownOptions,
-          },
-          { status: 200 }
-        );
+        rcResponse.data.teachers = dropdownOptions;
       }
     }
 
-    const teachers = await Teacher.find({ user: userId })
-      .select("-user -password -__v")
-      .populate("standards")
-      .populate("subjects")
-      .lean();
+    const populates = ["standards", "subjects"];
+    const teachers = await find("Teacher", { user: userId }, populates);
+    rcResponse.data.teachers = teachers;
 
-    return NextResponse.json(
-      {
-        teachers,
-      },
-      { status: 200 }
-    );
+    return NextResponse.json(rcResponse);
   } catch (error: any) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        message: "Internal Server Error",
-      },
-      { status: 500 }
-    );
+    return throwError();
   }
 }
 
 export async function DELETE(request: NextRequest) {
   try {
+    const rcResponse = new ApiResponse();
     const teacherId = request?.nextUrl?.searchParams.get("teacherId");
 
     if (!teacherId) {
-      return NextResponse.json(
-        {
-          message: "Teacher ID is required",
-        },
-        { status: 400 }
-      );
+      return throwError("Teacher ID is required", 400);
     }
 
-    const findTeacher = await Teacher.findOne({ _id: teacherId });
+    const findTeacher = await findOne("Teacher", { _id: teacherId });
     if (!findTeacher) {
-      return NextResponse.json(
-        {
-          message: "Subject not found",
-        },
-        { status: 404 }
-      );
+      return throwError("Subject not found", 404);
     }
 
-    const linkedTeachers = await Student.find({
+    const linkedTeachers = await find("Student", {
       classTeacher: teacherId,
     });
     if (linkedTeachers.length > 0) {
-      return NextResponse.json(
-        {
-          message: "Cannot delete the teacher as it is linked with student",
-        },
-        { status: 400 }
-      );
+      return throwError("Cannot delete the teacher as it is linked with student", 400);
     }
 
-    const isLinkedWithChatGroup = await ChatGroup.find({
+    const isLinkedWithChatGroup = await find("ChatGroup", {
       members: { $in: [teacherId] },
     });
     if (isLinkedWithChatGroup.length > 0) {
-      return NextResponse.json(
-        {
-          message: "Cannot delete the teacher as it is linked with chat group",
-        },
-        { status: 400 }
-      );
+      return throwError("Cannot delete the teacher as it is linked with chat group", 400);
     }
 
     if (findTeacher) {
-      await Teacher.deleteOne({ _id: teacherId });
-      return NextResponse.json(
-        {
-          message: "Teacher deleted successfully",
-        },
-        { status: 200 }
-      );
+      rcResponse.data = await deleteOne("Teacher", { _id: teacherId });
+      rcResponse.message = "Teacher deleted successfully";
+      return NextResponse.json(rcResponse);
     }
   } catch (error: any) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        message: "Internal server error",
-      },
-      { status: 500 }
-    );
+    return throwError();
   }
 }
 
 export async function PUT(request: NextRequest) {
   try {
+    const rcResponse = new ApiResponse();
     const teacherId = request?.nextUrl?.searchParams.get("teacherId");
 
     const reqBody = await request.json();
     const { name, email, experience, educations, standards, subjects } =
       reqBody;
 
-    const findTeacher = await Teacher.findOne({ _id: teacherId });
+    const findTeacher = await findOne("Teacher", { _id: teacherId });
     if (!findTeacher) {
-      return NextResponse.json(
-        {
-          message: "Teacher Not Found",
-        },
-        { status: 400 }
-      );
+      return throwError("Teacher Not Found", 400);
     }
 
     const updateFields: Record<string, any> = {};
@@ -222,21 +162,10 @@ export async function PUT(request: NextRequest) {
     if (subjects.length > 0) updateFields.subjects = subjects;
 
     // update data
-    await Teacher.updateOne({ _id: teacherId }, { $set: updateFields });
-
-    return NextResponse.json(
-      {
-        message: "Teacher updated successfully",
-      },
-      { status: 200 }
-    );
+    rcResponse.data = await updateOne("Teacher", { _id: teacherId }, { $set: updateFields });
+    rcResponse.message = "Teacher updated successfully";
+    return NextResponse.json(rcResponse);
   } catch (error: any) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        message: "Internal Server Error",
-      },
-      { status: 500 }
-    );
+    return throwError();
   }
 }

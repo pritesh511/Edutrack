@@ -56,10 +56,10 @@ const TeacherTabView = () => {
             <Loader />,
             <>
               {renderOnConditionBase(
-                data?.teachers.length === 0,
+                data?.data.teachers.length === 0,
                 <NoDataFound />,
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {data?.teachers.map((teacher) => (
+                  {data?.data.teachers.map((teacher) => (
                     <Card key={teacher._id} className="shadow-md rounded-lg">
                       <CardContent className="p-6 space-y-4">
                         <div className="flex flex-col items-center">

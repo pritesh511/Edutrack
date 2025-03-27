@@ -7,11 +7,11 @@ export const teacherApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   tagTypes: ["Teacher"],
   endpoints: (builder) => ({
-    getTeachers: builder.query<{ teachers: Teacher[] }, string>({
+    getTeachers: builder.query<{ data: { teachers: Teacher[] } }, string>({
       query: () => `dashboard/teacher`,
       providesTags: ["Teacher"],
     }),
-    getTeacherDropdown: builder.query<{ teachers: DropdownOption[] }, string>({
+    getTeacherDropdown: builder.query<{ data: { teachers: DropdownOption[] } }, string>({
       query: () => `dashboard/teacher?dropdown=true`,
     }),
     deleteTeacher: builder.mutation({
