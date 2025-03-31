@@ -33,6 +33,7 @@ const LandingPageHeader = () => {
 
   const navLinks = [
     { name: "About Us", href: "#about" },
+    { name: "Blog", href: "/blog" },
     { name: "Services", href: "#services" },
     { name: "Contact Us", href: "#contact" },
   ];

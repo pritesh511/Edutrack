@@ -92,3 +92,10 @@ export interface CalenderEvent {
   start: Date;
   end: Date;
 }
+
+export interface BlogType {
+  _id: string;
+  title: string;
+  description: string;
+  createdAt: Date;
+}

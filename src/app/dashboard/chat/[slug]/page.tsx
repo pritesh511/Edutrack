@@ -27,10 +27,10 @@ interface Message {
   time: Date;
 }
 
-const ChatDetailPage = ({ params }: { params: Promise<{ slug: string }> }) => {
+const ChatDetailPage = ({ params }: { params: { slug: string } }) => {
   const router = useRouter();
-  const paramsSlug = use(params);
-  const slug = paramsSlug.slug;
+  // const paramsSlug = use(params);
+  const slug = params?.slug;
   const [fetchGroupDetails, { data }] = useLazyGetGroupsDetailsQuery();
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState<Message[]>([]);

@@ -62,18 +62,25 @@ export const dashboardRoutes = [
     path: "/dashboard/attendance",
     access: ["admin", "teacher"],
   },
-  {
-    id: "competition",
-    icon: SiBookstack,
-    label: "Competition",
-    path: "/dashboard/competition",
-    access: ["admin", "teacher"],
-  },
+  // {
+  //   id: "competition",
+  //   icon: SiBookstack,
+  //   label: "Competition",
+  //   path: "/dashboard/competition",
+  //   access: ["admin", "teacher"],
+  // },
   {
     id: "reports",
     icon: BsFileEarmarkTextFill,
     label: "Reports",
     path: "/dashboard/report",
     access: ["admin", "teacher"],
+  },
+  {
+    id: "blog",
+    icon: BsFileEarmarkTextFill,
+    label: "Blog",
+    path: "/dashboard/blog",
+    access: ["admin"],
   },
 ];

@@ -1,3 +1,4 @@
+import Blog from "@/models/blog.model";
 import Calender from "@/models/calender.model";
 import ChatGroup from "@/models/chatgroup.model";
 import Standard from "@/models/standard.model";
@@ -12,7 +13,8 @@ const models: any = {
   Standard,
   Subject,
   Student,
-  Teacher
+  Teacher,
+  Blog
 };
 
 export class ApiResponse {
