@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 const LandingPageHeader = () => {
+  const pathname = usePathname();
   const [currentUser, setCurrentUser] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -45,7 +47,7 @@ const LandingPageHeader = () => {
         isMenuOpen ? "bg-white" : ""
       )}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo Section */}
           <Link href="/" className="flex items-center gap-2">
@@ -77,16 +79,16 @@ const LandingPageHeader = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
                 href={link.href}
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-blue-600 text-gray-700"
-                  // isScrolled ? "text-gray-700" : "text-white"
+                  "text-sm font-medium transition-colors hover:text-blue-600 text-gray-700",
+                  pathname === link.href ? "text-blue-600" : "text-gray-700"
                 )}
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
 
             <div className="flex items-center gap-2 ml-4">

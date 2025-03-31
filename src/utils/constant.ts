@@ -2,6 +2,8 @@ import { config } from "./config";
 
 export const BASE_URL = config.API_URL;
 
+export const BLOG_API_URL = BASE_URL + "dashboard/blog"
+
 export const ADMIN_EMAIL = "gurukul@gmail.com";
 
 export const EDUCAtION_LIST = [
