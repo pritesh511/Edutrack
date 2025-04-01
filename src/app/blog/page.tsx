@@ -17,9 +17,9 @@ export default async function BlogPage() {
   const posts = await getPosts();
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       <LandingPageHeader />
-      <div className="py-8">
+      <div className="py-8 h-full flex-1">
         <div className="max-w-7xl mx-auto px-4">
           <header className="mb-8">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">Blog</h1>

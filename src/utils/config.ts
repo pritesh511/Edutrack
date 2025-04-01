@@ -1,4 +1,4 @@
-"use client";
+// utils/config.js or utils/config.ts
 
 // Switches between different environments
 const configSwitcher = (environmentType: string) => {
@@ -19,7 +19,7 @@ const configSwitcher = (environmentType: string) => {
       break;
     default:
       configuration = {
-        /* Default Local Config */
+        // Default configuration (can be updated as needed)
         API_URL: `http://localhost:3000/api/`,
         ImageUrl: `http://localhost:3000`,
       };
@@ -28,9 +28,8 @@ const configSwitcher = (environmentType: string) => {
   return configuration;
 };
 
-// Just change the string to 'local', 'sandbox', 'staging' or 'prod' to switch between different environments.
-// export const config = configSwitcher(window.location.hostname);
-export const config =
+// When on the server, provide a default hostname such as "localhost"
+export const config = 
   typeof window !== "undefined"
     ? configSwitcher(window.location.hostname)
-    : { API_URL: "", ImageUrl: "" };
+    : configSwitcher("localhost");
