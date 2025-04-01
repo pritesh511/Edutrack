@@ -1,17 +1,7 @@
 import Footer from "@/components/landigPage/Footer";
 import LandingPageHeader from "@/components/landigPage/LandingPageHeader";
 import MainBlogPosts from "@/components/landigPage/MainBlogPost";
-
-async function getPosts() {
-  const res = await fetch("http://localhost:3000/api/dashboard/blog", {
-    // This setting ensures the fetched data is cached and revalidated every 60 seconds.
-    next: { revalidate: 60 },
-  });
-  if (!res.ok) {
-    throw new Error("Failed to fetch posts");
-  }
-  return res.json();
-}
+import { getPosts } from "@/helpers/api/fetch";
 
 export default async function BlogPage() {
   const posts = await getPosts();
@@ -26,7 +16,7 @@ export default async function BlogPage() {
             <p className="text-gray-600">Latest posts from our blog</p>
           </header>
           {/* Main Blog Posts */}
-          <MainBlogPosts posts={posts.data} />
+          <MainBlogPosts posts={posts} />
         </div>
       </div>
       <Footer />
