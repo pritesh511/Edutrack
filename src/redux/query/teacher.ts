@@ -16,7 +16,7 @@ export const teacherApi = createApi({
     }),
     deleteTeacher: builder.mutation({
       query: (id: string) => ({
-        url: `dashboard/teacher?teacherId=${id}`,
+        url: `dashboard/teacher/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Teacher"],
@@ -31,7 +31,7 @@ export const teacherApi = createApi({
     }),
     putTeacher: builder.mutation({
       query: ({ form, id }) => ({
-        url: `dashboard/teacher?teacherId=${id}`,
+        url: `dashboard/teacher/${id}`,
         method: "PUT",
         body: form,
       }),

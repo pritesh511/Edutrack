@@ -30,7 +30,7 @@ export const standardApi = createApi({
     }),
     editStandard: builder.mutation({
       query: ({ id, form }) => ({
-        url: `dashboard/standard?standardId=${id}`,
+        url: `dashboard/standard/${id}`,
         method: "PUT",
         body: form,
       }),
@@ -38,7 +38,7 @@ export const standardApi = createApi({
     }),
     deleteStandard: builder.mutation({
       query: (id: string) => ({
-        url: `dashboard/standard?standardId=${id}`,
+        url: `dashboard/standard/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Standard"],

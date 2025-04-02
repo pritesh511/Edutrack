@@ -12,7 +12,7 @@ export const chatgroupApi = createApi({
       providesTags: ["ChatGroup"],
     }),
     getGroupsDetails: builder.query<{ data: { group: ChatGroup } }, string>({
-      query: (id: string) => `dashboard/chatgroup?groupId=${id}`,
+      query: (id: string) => `dashboard/chatgroup/${id}`,
       providesTags: ["ChatGroup"],
     }),
     postGroup: builder.mutation({
@@ -25,7 +25,7 @@ export const chatgroupApi = createApi({
     }),
     putChatGroup: builder.mutation({
       query: ({ form, id }) => ({
-        url: `dashboard/chatgroup?groupId=${id}`,
+        url: `dashboard/chatgroup/${id}`,
         method: "PUT",
         body: form,
       }),
@@ -33,7 +33,7 @@ export const chatgroupApi = createApi({
     }),
     deleteGroup: builder.mutation({
       query: (id: string) => ({
-        url: `dashboard/chatgroup?groupId=${id}`,
+        url: `dashboard/chatgroup/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["ChatGroup"],

@@ -24,7 +24,7 @@ export const subjectApi = createApi({
     }),
     editSubject: builder.mutation({
       query: ({ form, id }) => ({
-        url: `dashboard/subject?subjectId=${id}`,
+        url: `dashboard/subject/${id}`,
         method: "PUT",
         body: form,
       }),
@@ -32,7 +32,7 @@ export const subjectApi = createApi({
     }),
     deleteSubject: builder.mutation({
       query: (id: string) => ({
-        url: `dashboard/subject?subjectId=${id}`,
+        url: `dashboard/subject/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Subject"],

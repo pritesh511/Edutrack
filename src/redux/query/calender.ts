@@ -21,7 +21,7 @@ export const calenderApi = createApi({
     }),
     deleteEvent: builder.mutation({
       query: (id: string) => ({
-        url: `dashboard/calender?eventId=${id}`,
+        url: `dashboard/calender/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Calender"],

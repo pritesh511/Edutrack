@@ -21,7 +21,7 @@ export const blogApi = createApi({
     }),
     editBlog: builder.mutation({
       query: ({ id, form }) => ({
-        url: `dashboard/blog?blogId=${id}`,
+        url: `dashboard/blog/${id}`,
         method: "PUT",
         body: form,
       }),
@@ -29,7 +29,7 @@ export const blogApi = createApi({
     }),
     deleteBlog: builder.mutation({
       query: (id: string) => ({
-        url: `dashboard/blog?blogId=${id}`,
+        url: `dashboard/blog/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Blog"],

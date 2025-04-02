@@ -47,7 +47,7 @@ export const find = async (
   populates: any = []
 ) => {
   try {
-    let queryBuilder = models[collection].find(query).select("-user -__v");
+    let queryBuilder = models[collection].find(query).select("-user -__v").lean();
 
     // applied populates if provided
     if (populates.length > 0) {
