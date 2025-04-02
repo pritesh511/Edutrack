@@ -1,10 +1,11 @@
 import Footer from "@/components/landigPage/Footer";
 import LandingPageHeader from "@/components/landigPage/LandingPageHeader";
-import { BASE_URL } from "@/utils/constant";
 import React from "react";
 
 const getPost = async (id: string) => {
-  const data = await fetch(BASE_URL + `/dashboard/blog/${id}`);
+  const data = await fetch(
+    process.env.NEXT_PUBLIC_BASE_URL + `/dashboard/blog/${id}`
+  );
   const response = await data.json();
   return response.data;
 };
