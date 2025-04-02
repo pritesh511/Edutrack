@@ -18,7 +18,7 @@ import CustomTextarea from "@/components/custom/CustomTextarea";
 import toast from "react-hot-toast";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
 import { schoolProfileSettingSchema } from "@/utils/schema";
-import fetch from "@/helpers/axios/fetch";
+import fetch from "@/helpers/axios/axiosInstance";
 import CircularProgress from "@/components/common/CircularProgress";
 
 interface AccountSettingForm {

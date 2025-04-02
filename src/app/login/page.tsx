@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,7 +25,7 @@ import { io, Socket } from "socket.io-client";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import Image from "next/image";
-import fetch from "@/helpers/axios/fetch";
+import fetch from "@/helpers/axios/axiosInstance";
 
 let socket: Socket;
 
