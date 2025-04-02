@@ -1,4 +1,4 @@
-import { databseConnect } from "@/dbConfig/dbConfig";
+import { databaseConnect } from "@/dbConfig/dbConfig";
 import {
   getDataFromToken,
   getUserDataFromToken,
@@ -12,7 +12,7 @@ import {
 } from "@/helpers/server/common";
 import { NextRequest, NextResponse } from "next/server";
 
-databseConnect();
+databaseConnect();
 
 export async function POST(request: NextRequest) {
   try {

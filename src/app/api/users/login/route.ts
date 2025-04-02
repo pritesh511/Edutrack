@@ -1,11 +1,11 @@
-import { databseConnect } from "@/dbConfig/dbConfig";
+import { databaseConnect } from "@/dbConfig/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import User from "@/models/user.model";
 import jwt from "jsonwebtoken";
 import Teacher from "@/models/teacher.model";
 
-databseConnect();
+databaseConnect();
 
 export async function POST(request: NextRequest) {
   try {

@@ -1,9 +1,9 @@
 import { NextResponse, NextRequest } from "next/server";
 import User from "@/models/user.model";
-import { databseConnect } from "@/dbConfig/dbConfig";
+import { databaseConnect } from "@/dbConfig/dbConfig";
 import bcryptjs from "bcryptjs";
 
-databseConnect();
+databaseConnect();
 
 export async function POST(request: NextRequest) {
   try {

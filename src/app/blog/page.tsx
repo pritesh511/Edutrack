@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Footer from "@/components/landigPage/Footer";
 import LandingPageHeader from "@/components/landigPage/LandingPageHeader";
 import MainBlogPosts from "@/components/landigPage/MainBlogPost";
@@ -29,3 +30,8 @@ export default async function BlogPage() {
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Blog page",
+  description: "This is school management system blog page",
+};

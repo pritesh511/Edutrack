@@ -1,8 +1,8 @@
-import { databseConnect } from "@/dbConfig/dbConfig";
+import { databaseConnect } from "@/dbConfig/dbConfig";
 import { ApiResponse, create, find, throwError } from "@/helpers/server/common";
 import { NextRequest, NextResponse } from "next/server";
 
-databseConnect();
+databaseConnect();
 
 export async function POST(request: NextRequest) {
   try {

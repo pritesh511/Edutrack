@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { databseConnect } from "@/dbConfig/dbConfig";
+import { databaseConnect } from "@/dbConfig/dbConfig";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import Teacher from "@/models/teacher.model";
 import Student from "@/models/student.model";
 import Standard from "@/models/standard.model";
 import Subject from "@/models/subject.model";
 
-databseConnect();
+databaseConnect();
 
 export async function GET(request: NextRequest) {
   try {

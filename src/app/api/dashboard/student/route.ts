@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { databseConnect } from "@/dbConfig/dbConfig";
+import { databaseConnect } from "@/dbConfig/dbConfig";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import {
   ApiResponse,
@@ -9,7 +9,7 @@ import {
   throwError,
 } from "@/helpers/server/common";
 
-databseConnect();
+databaseConnect();
 
 export async function POST(request: NextRequest) {
   try {
