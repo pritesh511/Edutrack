@@ -7,7 +7,7 @@ import { BASE_URL } from "@/utils/constant";
 export const dynamic = "force-dynamic";
 
 const getPosts = async () => {
-  const data = await fetch(BASE_URL + `dashboard/blog`);
+  const data = await fetch(process.env.NEXT_PUBLIC_BASE_URL + `dashboard/blog`);
   const response = await data.json();
   return response.data;
 };
