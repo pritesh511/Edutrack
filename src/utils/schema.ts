@@ -15,29 +15,10 @@ export const teacherSchema = Yup.object().shape({
   subjects: Yup.array().min(1, "Please select subject"),
 });
 
-export const studentSchema = Yup.object().shape({
-  name: Yup.string().required("Please enter teacher name"),
-  roleNo: Yup.number()
-    .required("Please enter role no")
-    .min(1, "Role no should more than 0"),
-  standard: Yup.string().required("Please select standard"),
-  dob: Yup.date().required("Please select date of birth"),
-  address: Yup.string().required("Please enter address"),
-  fatherName: Yup.string().required("Please enter father name"),
-  fatherMobileNo: Yup.string().required("Please enter father mobile number"),
-  motherName: Yup.string().required("Please enter mother name"),
-  classTeacher: Yup.string().required("Please select class teacher"),
-});
-
 export const subjectSchema = Yup.object().shape({
   subjectName: Yup.string().required("Please enter subject"),
   description: Yup.string().required("Please enter subject description"),
   file: Yup.mixed().required("Image is required").nullable(),
-});
-
-export const standardSchema = Yup.object().shape({
-  standard: Yup.string().required("Please enter subject"),
-  description: Yup.string().required("Please enter standard description"),
 });
 
 export const loginSchema = Yup.object().shape({

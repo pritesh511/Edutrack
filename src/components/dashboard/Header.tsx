@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useDispatch, useSelector } from "react-redux";
-import axiosInstance from "@/helpers/axios/axiosInstance";
+import fetch from "@/helpers/axios/axiosInstance";
 import {
   getUserData,
   setCurrentUser,
@@ -35,7 +35,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axiosInstance.get("/api/users/logout");
+      const response = await fetch.get("/api/users/logout");
       toast.success(response.data.message);
       dispatch(setEmptyCurrentUser());
       router.push("/login");
@@ -46,16 +46,16 @@ const Header = () => {
 
   const getCurrentUser = async () => {
     try {
-      const response = await axiosInstance.get("/api/users/currentUser");
+      const response = await fetch.get("/api/users/currentUser");
       setCurrentUserName(response.data.user.schoolName);
       dispatch(setCurrentUser(response.data.user));
     } catch (error: any) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 
   useEffect(() => {
-    if (!currentUserName) {
+    if (currentUser === null && !currentUserName) {
       getCurrentUser();
     }
 

@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import User from "@/models/user.model";
 import { getDataFromToken, getUserDataFromToken } from "@/helpers/getDataFromToken";
 import { databaseConnect } from "@/dbConfig/dbConfig";
+import { findOne, throwError } from "@/helpers/server/common";
 
 databaseConnect();
 
@@ -10,7 +11,7 @@ export async function GET(request: NextRequest) {
     const userId = await getDataFromToken(request);
     const user = await getUserDataFromToken(request);
 
-    const userData = await User.findOne({ _id: userId }).select("-__v");
+    const userData = await findOne("User", { _id: userId });
 
     return NextResponse.json(
       {
@@ -32,11 +33,6 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     );
   } catch (error: any) {
-    return NextResponse.json(
-      {
-        message: error.message,
-      },
-      { status: 500 }
-    );
+    return throwError();
   }
 }

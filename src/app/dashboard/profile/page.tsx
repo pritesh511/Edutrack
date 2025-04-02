@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserData, setCurrentUser } from "@/redux/slices/userSlice";
@@ -19,7 +18,7 @@ import CustomTextarea from "@/components/custom/CustomTextarea";
 import toast from "react-hot-toast";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
 import { schoolProfileSettingSchema } from "@/utils/schema";
-import axiosInstance from "@/helpers/axios/axiosInstance";
+import fetch from "@/helpers/axios/fetch";
 import CircularProgress from "@/components/common/CircularProgress";
 
 interface AccountSettingForm {
@@ -75,7 +74,7 @@ const ProfilePage = () => {
 
   const getCurrentUser = async () => {
     try {
-      const response = await axiosInstance.get("/api/users/currentUser");
+      const response = await fetch.get("/api/users/currentUser");
       dispatch(setCurrentUser(response.data.user));
     } catch (error: any) {
       console.log(error);
@@ -105,7 +104,7 @@ const ProfilePage = () => {
       });
       setIsFormLoading(true);
 
-      const { data } = await axiosInstance.put(
+      const { data } = await fetch.put(
         `/api/users?userId=${currentUser?._id}`,
         accountSettingForm
       );

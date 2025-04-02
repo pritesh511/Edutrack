@@ -5,6 +5,7 @@ import Standard from "@/models/standard.model";
 import Student from "@/models/student.model";
 import Subject from "@/models/subject.model";
 import Teacher from "@/models/teacher.model";
+import User from "@/models/user.model";
 import { NextResponse } from "next/server";
 
 const models: any = {
@@ -14,17 +15,18 @@ const models: any = {
   Subject,
   Student,
   Teacher,
-  Blog
+  Blog,
+  User
 };
 
 export class ApiResponse {
   constructor() {
-    this.staus = 200;
+    this.status = 200;
     this.data = {};
     this.success = true;
     this.message = "OK";
   }
-  staus: number;
+  status: number;
   data: any;
   success: boolean;
   message: string;
@@ -36,7 +38,7 @@ export const throwError = (
 ) => {
   const rcResponse = new ApiResponse();
   rcResponse.message = errorMsg;
-  rcResponse.staus = status;
+  rcResponse.status = status;
   rcResponse.success = false;
   return NextResponse.json(rcResponse, { status: status });
 };

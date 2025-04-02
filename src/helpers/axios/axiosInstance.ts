@@ -6,31 +6,27 @@ import {
   setAppLoaderTrue,
 } from "@/redux/slices/dashboardSlice";
 
-const axiosInstance = axios.create({
+const fetch = axios.create({
   baseURL: config.API_URL,
 });
 
-axiosInstance.interceptors.request.use(
+fetch.interceptors.request.use(
   (request: any) => {
-    // Dispatch showLoader action
     store.dispatch(setAppLoaderTrue());
     return request;
   },
   (error: any) => {
-    // Ensure loader is hidden even on request error
     store.dispatch(setAppLoaderFalse());
     return Promise.reject(error);
   }
 );
 
-axiosInstance.interceptors.response.use(
+fetch.interceptors.response.use(
   (response: any) => {
-    // Dispatch hideLoader action
     store.dispatch(setAppLoaderFalse());
     return response;
   },
   (error: any) => {
-    // Ensure loader is hidden even on response error
     store.dispatch(setAppLoaderFalse());
 
     const errorObject = {
@@ -38,17 +34,11 @@ axiosInstance.interceptors.response.use(
       message: "Server not responding",
     };
     if (error.response) {
-      if (error.response.status === 500) return Promise.reject(errorObject);
-      errorObject.code = error.response.status;
-      errorObject.message = error.response.data;
-      return Promise.reject(errorObject);
-    } else if (error.request) {
-      return Promise.reject(errorObject);
-    } else {
-      errorObject.message = "Something went wrong";
+      errorObject.code = error.response.data.status;
+      errorObject.message = error.response.data.message;
       return Promise.reject(errorObject);
     }
   }
 );
 
-export default axiosInstance;
+export default fetch;

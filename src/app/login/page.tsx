@@ -26,7 +26,7 @@ import { io, Socket } from "socket.io-client";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import Image from "next/image";
-import axiosInstance from "@/helpers/axios/axiosInstance";
+import fetch from "@/helpers/axios/fetch";
 
 let socket: Socket;
 
@@ -79,10 +79,7 @@ const LoginPage = () => {
       try {
         await loginSchema.validate(loginData, { abortEarly: false });
 
-        const response = await axiosInstance.post(
-          "/api/users/login",
-          loginData
-        );
+        const response = await fetch.post("/api/users/login", loginData);
         console.log(response);
         toast.success(response.data.message);
         dispatch(setCurrentUser(response.data.user));

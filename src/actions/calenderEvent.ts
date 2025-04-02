@@ -1,5 +1,4 @@
 "use server";
-import axiosInstance from "@/helpers/axios/axiosInstance";
 import { transformYupErrorsIntoObject } from "@/helpers/helper";
 import { config } from "@/utils/config";
 import { BASE_URL } from "@/utils/constant";
