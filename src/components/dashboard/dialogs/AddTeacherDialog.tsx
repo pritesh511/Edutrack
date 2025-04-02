@@ -214,7 +214,7 @@ const AddTeacherDialog = React.memo(function AddTeacherDialog(props: Props) {
               customWidth={420}
               label="Standard*"
               placeholder="Select Standard"
-              options={standardDrodownData?.standards || []}
+              options={standardDrodownData?.data.standards || []}
               value={formData.standards}
               onChange={(values) => handleChangeSelect("standards", values)}
               error={errors?.standards}

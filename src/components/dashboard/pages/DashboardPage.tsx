@@ -48,7 +48,7 @@ const DashboardTabView = () => {
           </CustomTableRow>,
           <>
             {renderOnConditionBase(
-              eventData?.events?.length == 0,
+              eventData?.data.events?.length == 0,
               <CustomTableRow>
                 <CustomTableCell
                   colSpan={7}
@@ -57,7 +57,7 @@ const DashboardTabView = () => {
                 />
               </CustomTableRow>,
               <>
-                {eventData?.events?.map((event) => {
+                {eventData?.data.events?.map((event) => {
                   return (
                     <CustomTableRow key={event.title}>
                       <CustomTableCell cellName={event.title} size="sm" />

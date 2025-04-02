@@ -164,7 +164,7 @@ const AddChatGroupDialog = React.memo(function AddChatGroupDialogtsx(
               customWidth={462}
               placeholder="Select Teacher"
               label="Teachers*"
-              options={teachersDropdown?.teachers || []}
+              options={teachersDropdown?.data.teachers || []}
               value={formData.members}
               onChange={(values) => handleChangeSelect("members", values)}
               error={errors?.members}

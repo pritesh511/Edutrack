@@ -25,11 +25,11 @@ const AttendancePage = () => {
     useLazyGetStandardDropdownQuery();
 
   useEffect(() => {
-    if (standardDrodownData?.standards) {
+    if (standardDrodownData?.data.standards) {
       trigger({
-        standard: standardDrodownData?.standards[0]?.value,
+        standard: standardDrodownData?.data.standards[0]?.value,
       });
-      setSelectedStd(standardDrodownData?.standards[0]?.value);
+      setSelectedStd(standardDrodownData?.data.standards[0]?.value);
     }
   }, [standardDrodownData]);
 
@@ -39,7 +39,7 @@ const AttendancePage = () => {
 
   useEffect(() => {
     if (data) {
-      const copyData = data.students.map((student) => ({
+      const copyData = data.data.students.map((student) => ({
         ...student,
         attendance: student.attendance
           ? [...student.attendance, { date: new Date(), status: "present" }]
@@ -180,7 +180,7 @@ const AttendancePage = () => {
             <div className="flex gap-2">
               <CustomSelect
                 placeholder={"Select Teacher"}
-                options={standardDrodownData?.standards || []}
+                options={standardDrodownData?.data.standards || []}
                 value={selectedStd}
                 className="h-10 w-[124px]"
                 handleChangeSelect={(value) => {

@@ -1,7 +1,13 @@
 import Footer from "@/components/landigPage/Footer";
 import LandingPageHeader from "@/components/landigPage/LandingPageHeader";
 import MainBlogPosts from "@/components/landigPage/MainBlogPost";
-import { getPosts } from "@/helpers/api/fetch";
+import { BASE_URL } from "@/utils/constant";
+
+const getPosts = async () => {
+  const data = await fetch(BASE_URL + `/dashboard/blog`);
+  const response = await data.json();
+  return response.data;
+};
 
 export default async function BlogPage() {
   const posts = await getPosts();

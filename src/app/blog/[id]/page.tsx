@@ -1,7 +1,13 @@
 import Footer from "@/components/landigPage/Footer";
 import LandingPageHeader from "@/components/landigPage/LandingPageHeader";
-import { getPost } from "@/helpers/api/fetch";
+import { BASE_URL } from "@/utils/constant";
 import React from "react";
+
+const getPost = async (id: string) => {
+  const data = await fetch(BASE_URL + `/dashboard/blog/${id}`);
+  const response = await data.json();
+  return response.data;
+};
 
 const BlogDetails = async ({ params }: { params: any }) => {
   const { id } = await params;

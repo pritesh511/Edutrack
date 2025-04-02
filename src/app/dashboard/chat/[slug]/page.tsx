@@ -27,7 +27,7 @@ interface Message {
   time: Date;
 }
 
-const ChatDetailPage = ({ params }: { params: { slug: string } }) => {
+const ChatDetailPage = ({ params }: { params: any }) => {
   const router = useRouter();
   // const paramsSlug = use(params);
   const slug = params?.slug;

@@ -41,11 +41,11 @@ export default function OverallClassPerformanceChart() {
   }, [data]);
 
   function processStudents() {
-    if (data?.students) {
+    if (data?.data.students) {
       const counts: any = {};
       const order: any = [];
 
-      data?.students.forEach((student) => {
+      data?.data.students.forEach((student) => {
         const stdName = student.standard.standard;
         const key = stdName.toLowerCase().replace(" ", "_");
         if (!counts[key]) {
