@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Footer from "@/components/landigPage/Footer";
 import LandingPageHeader from "@/components/landigPage/LandingPageHeader";
 import MainBlogPosts from "@/components/landigPage/MainBlogPost";
-import { BASE_URL } from "@/utils/constant";
 
 export const dynamic = "force-dynamic";
 
